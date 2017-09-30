@@ -1,16 +1,23 @@
 const invariant = require('invariant');
 const _ = require('lodash');
-const debug = require('debug')('opentmi-client');
+const Query = require('./utils/query');
+const RestResource = require('./utils/rest');
 
-class Resource {
-  constructor(client) {
-    this._client = client;
-    this._path = '/api/v0/resources';
+class ResourceQuery extends Query {
+  type(type) {
+    return this.has({type});
   }
-  find(query = undefined) {
-    invariant(this._client.isConnected, 'Client should be connected');
-    return this._client.get({path: this._path, query: query ? query.query : undefined});
+  status(status) {
+    return this.has({status});
   }
 }
 
-module.exports = Resource;
+class Resources extends RestResource {
+  constructor(client) {
+    super(client, '/api/v0/resources');
+  }
+}
+
+Resources.Query = ResourceQuery;
+
+module.exports = Resources;
