@@ -8,13 +8,11 @@ class Admin {
     this._client = client;
   }
   version() {
-    invariant(this._client.isConnected, "Client should be connected")
-    debug("request opentmi version");
+    invariant(this._client.isConnected, 'Client should be connected');
+    debug('request opentmi version');
     return this._client
       .get('/api/v0/version')
-      .then((response) => {
-        return response.data;
-      });
+      .then(response => response.data);
   }
 }
 

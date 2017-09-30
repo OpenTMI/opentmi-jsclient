@@ -6,6 +6,7 @@ const {Client, Admin, Cluster} = require('../src');
 const client = new Client('http://localhost:3000');
 client
   .login("email", 'password')
+  .then(client.connect.bind(client))
   /*.then(() => {
     invariant(client.isConnected, "should be connected");
     console.log('create cluster object');
@@ -36,4 +37,4 @@ client
       .then(console.log);
   })*/
   .then(client.logout.bind(client))
-  .catch(error => console.error(error.message))
+  .catch(error => console.error(error.message));

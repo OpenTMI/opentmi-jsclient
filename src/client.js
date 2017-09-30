@@ -1,28 +1,51 @@
 const invariant = require('invariant');
-const io = require('socket.io-client');
 const _ = require('lodash');
-const axios = require('axios');
 const Promise = require('bluebird');
 const debug = require('debug')('opentmi-client');
+const {axios, SocketIO} = require('./transports');
 
 class Client {
-  constructor(host = '') {
+  /**
+   * Constructor for Client connection.
+   * Object manage all low level communication and authentication
+   * @param host OpenTMI host url (default='')
+   * @param Rest axios(default) -kind of object which provide REST API
+   * @param IO   socket.io-client(default) -kind of object which provide event based communication
+   */
+  constructor(host = '', Rest = axios, IO = SocketIO) {
+    this.Rest = Rest;
+    this.IO = IO;
     this._host = host;
     this._token = undefined;
     this._latency = undefined;
     this._ioRequests = {};
   }
+
+  /**
+   * Give current latency based on IO ping-pong packages
+   * @return {float}
+   */
   get latency() {
     return this._latency;
   }
+
+  /**
+   * Check if we have logged in - and have a token
+   * @return {boolean}
+   */
   get isConnected() {
     return _.isString(this._token);
   }
   get _headers() {
     return this.isConnected ? {Authorization: `Bearer ${this._token}`} : {};
   }
+
+  /**
+   * low level request for IO channel
+   * @param req object {event: <string>, data: <object>[, timeout: <number]}
+   */
   requestIO(req) {
-    /*class IOResponse {
+    /* class IOResponse {
       constructor(req) {
         this.Request = req;
         this._time = new Date();
@@ -30,8 +53,8 @@ class Client {
       setResponse(data) {
         this.Response = data;
       }
-    }*/
-    invariant(_.isString(this._token), "you are not logged in, jwt token missing");
+    } */
+    invariant(_.isString(this._token), 'you are not logged in, jwt token missing');
     invariant(_.isPlainObject(req), 'request should be object');
     _.defaults(req, {timeout: 600000, data: {}, time: new Date()});
     invariant(_.isString(req.event), 'event should be string');
@@ -41,28 +64,45 @@ class Client {
     this._ioRequests[req.time] = req;
     const pending = new Promise((resolve, reject) => {
       this._socket.emit(req.event, req.data, (error, data) => {
-        if(pending.isPending()) {
-          debug(`Response in ${(new Date() - req.time)}ms`)
-          error ? reject(error) : resolve(data);
+        if (pending.isPending()) {
+          debug(`Response in ${(new Date() - req.time)}ms`);
+          if (error) reject(error);
+          else resolve(data);
         } else {
           debug('Response received too late - Promise was rejected already');
         }
       });
     })
-    .timeout(req.timeout)
-    .catch(Promise.TimeoutError, error => {
-      throw error;
-    })
-    .finally(() => {
-      delete this._ioRequests[req.time];
-    });
+      .timeout(req.timeout)
+      .catch(Promise.TimeoutError, (error) => {
+        throw error;
+      })
+      .finally(() => {
+        delete this._ioRequests[req.time];
+      });
     return pending;
   }
+
+  /**
+   * Event emitter to the server
+   * @param event <string>
+   * @param data (optional) <object>
+   * @param timeout (optional) <number>
+   * @return {*}
+   */
   emit(event, data = {}, timeout = undefined) {
     return this.requestIO({event, data, timeout});
   }
+
+  /**
+   * REST request API
+   * @param req {object}, axios config -kind of object.
+   * default parameters:
+   * url: '/',
+   * method: 'get'
+   */
   request(req) {
-    const CancelToken = axios.CancelToken;
+    const CancelToken = this.Rest.CancelToken;
     const source = CancelToken.source();
     const config = _.defaults(
       req, {
@@ -73,26 +113,25 @@ class Client {
         cancelToken: source.token
       });
     debug(`Requesting: ${JSON.stringify(config)}`);
-    return axios
+    return this.Rest
       .request(config)
-      .catch(function(error) {
+      .catch((error) => {
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
           const data = _.get(error, 'response.data', {message: error.message});
           debug(`Request fails with status ${error.response.status}, ${JSON.stringify(data)}`);
-          if(error.response.status === 503) {
-            const retryAfterSeconds = _.get(response, 'retryAfter', 2);
-            req.retryCount = _.get(req, 'retryCount', 1)-1;
-            if (req.retryCount>0) {
+          if (error.response.status === 503) {
+            const retryAfterSeconds = _.get(data, 'retryAfter', 2);
+            req.retryCount = _.get(req, 'retryCount', 1) - 1;
+            if (req.retryCount > 0) {
               return Promise
-                    .delay(retryAfterSeconds*1000)
-                    .then(()=> this.request(req));
+                .delay(retryAfterSeconds * 1000)
+                .then(() => this.request(req));
             }
           }
           throw new Error(data.message);
-        }
-        else if (axios.isCancel(error)) {
+        } else if (this.Rest.isCancel(error)) {
           debug(`Request canceled: ${error.message}`);
         } else if (error.request) {
           // The request was made but no response was received
@@ -105,12 +144,26 @@ class Client {
         }
         throw error;
       });
-    //source.cancel('Operation canceled by the user
+    // source.cancel('Operation canceled by the user
   }
-  get(url, data=undefined) {
+
+  /**
+   * HTTP Get request to server
+   * @param url <string> path to the server
+   * @param data <object> json data
+   * @return {Promise}
+   */
+  get(url, data = undefined) {
     return this.request({url, data});
   }
-  post(url, data, headers=undefined) {
+  /**
+   * HTTP post request to server
+   * @param url <string> path to the server
+   * @param data <object> json data
+   * @param headers (optional) <object> headers as json object
+   * @return {Promise}
+   */
+  post(url, data, headers = undefined) {
     return this.request({url, method: 'post', data, headers});
   }
   update(url, data) {
@@ -123,59 +176,57 @@ class Client {
     invariant(this._socket, 'You should call login() first');
     return this._socket;
   }
-  _url(path='') {
-    return `${this._host}${path}`
+  _url(path = '') {
+    return `${this._host}${path}`;
   }
   login(email, password, token = undefined) {
-    invariant(!_.isString(this._token), "is logged out alread!");
-    if(_.isString(token)) {
+    invariant(!_.isString(this._token), 'is logged out alread!');
+    if (_.isString(token)) {
       this._token = token;
-      return this._connect();
     }
-    invariant(_.isString(email), "email should be string");
-    invariant(_.isString(password), "password should be string");
+    invariant(_.isString(email), 'email should be string');
+    invariant(_.isString(password), 'password should be string');
     return this
       .post('/auth/login', {email, password}, {})
       .then((response) => {
         debug(`Login response: ${JSON.stringify(response.data)}`);
         this._token = response.data.token;
-        return this._connect()
       })
       .catch((error) => {
-          debug(`Login error: ${error.message}`);
-          this._token = undefined;
-          throw error;
+        debug(`Login error: ${error.message}`);
+        this._token = undefined;
+        throw error;
       });
   }
   logout() {
-    invariant(_.isString(this._token), "you are not logged in, jwt token missing");
+    invariant(_.isString(this._token), 'you are not logged in, jwt token missing');
     this._token = undefined;
     return this._disconnect();
   }
-  _connect(namespace='') {
+  connect(namespace = '') {
     return new Promise((resolve, reject) => {
-      invariant(this._token, "token is not configured");
-      debug("Create socketIO connection")
+      invariant(this._token, 'token is not configured');
+      debug('Create socketIO connection');
       const options = {
         query: `token=${this._token}`
       };
       const sioUrl = `${this._url()}${namespace}`;
-      debug(`socketIO url: ${sioUrl}`)
-      this._socket = io(sioUrl, options);
+      debug(`socketIO url: ${sioUrl}`);
+      this._socket = this.IO(sioUrl, options);
       this._socket.once('connect', resolve);
       this._socket.once('reconnect', resolve);
       this._socket.once('connect_error', reject);
     })
-    .then(() => {
-        debug("SocketIO connected")
+      .then(() => {
+        debug('SocketIO connected');
         this._socket.on('error', (error) => {
           debug(error);
         });
         this._socket.on('reconnect', () => {
-          debug("socketIO reconnect");
+          debug('socketIO reconnect');
         });
         this._socket.on('reconnect_attempt', () => {
-          debug("socketIO reconnect_attempt");
+          debug('socketIO reconnect_attempt');
         });
         this._socket.on('reconnecting', (attempt) => {
           debug(`socketIO reconnecting, attempt: ${attempt}`);
@@ -188,27 +239,27 @@ class Client {
         });
         this._socket.on('exit', () => {
           debug('Server is attemt to exit...');
-        })
-        this._socket.on('pong', latency => {
-          this._latency=latency;
-          debug(`pong latency: ${latency}ms`)
+        });
+        this._socket.on('pong', (latency) => {
+          this._latency = latency;
+          debug(`pong latency: ${latency}ms`);
         });
         return this._socket;
-    })
-    .catch(error => {
-      debug(`socketIO connection fails: ${error.message}`);
-      throw error;
-    })
+      })
+      .catch((error) => {
+        debug(`socketIO connection fails: ${error.message}`);
+        throw error;
+      });
   }
   _disconnect() {
-    return new Promise((resolve, reject) => {
-      invariant(this._socket, "token is not configured");
+    return new Promise((resolve) => {
+      invariant(this._socket, 'token is not configured');
       this._socket.once('disconnect', resolve);
       this._socket.disconnect();
     })
-    .then(() => {
-        debug("SocketIO disconnected")
-    });
+      .then(() => {
+        debug('SocketIO disconnected');
+      });
   }
 }
 
