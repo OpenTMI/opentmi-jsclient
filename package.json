@@ -1,0 +1,22 @@
+{
+  "name": "opentmi-jsclient",
+  "version": "0.1.0",
+  "description": "OpenTMI javascript client",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "opentmi",
+    "client"
+  ],
+  "author": "Jussi Vatjus-Anttila",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.16.2",
+    "bluebird": "^3.5.0",
+    "invariant": "^2.2.2",
+    "lodash": "^4.17.4",
+    "socket.io-client": "^2.0.3"
+  }
+}
