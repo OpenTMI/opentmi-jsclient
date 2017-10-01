@@ -1,0 +1,25 @@
+{
+  "name": "opentmi-jsclient",
+  "description": "OpenTMI javascript client library",
+  "main": "lib/opentmi-client.js",
+  "authors": [
+    "Jussi Vatjus-Anttila <jussiva@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/opentmi/opentmi-jsclient",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "dist"
+  ],
+  "dependencies": {
+    "bluebird": "^3.4.0",
+    "lodash": "^4.13.1",
+    "urijs": "^1.18.1",
+    "socket.io-client": "^1.4.6",
+    "axios": "^0.16.2"
+  }
+}

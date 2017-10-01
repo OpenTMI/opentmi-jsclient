@@ -1,8 +1,16 @@
 const invariant = require('invariant');
 const _ = require('lodash');
-const debug = require('debug')('opentmi-client');
+// application modules
+const {debug} = require('./utils');
 
+/** Class manage OpenTMI clusters
+ * Most of these require admin access.
+ */
 class Cluster {
+  /**
+   * Constructor
+   * @param {Client} client - client object
+   */
   constructor(client) {
     this._clusters = undefined;
     this._client = client;
@@ -15,6 +23,10 @@ class Cluster {
     invariant(this._clusters, 'you should call refresh before status');
     return _.omit(this._clusters, ['workers']);
   }
+
+  /**
+   * Restart workers. Require admin access.
+   */
   restartWorkers() {
     invariant(this._client.isConnected, 'Client should be connected');
     debug('attempt to restart all workers');

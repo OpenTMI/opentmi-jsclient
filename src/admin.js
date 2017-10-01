@@ -1,7 +1,5 @@
 const invariant = require('invariant');
-const _ = require('lodash');
-const Promise = require('bluebird');
-const debug = require('debug')('opentmi-client');
+const {debug} = require('./utils');
 
 class Admin {
   constructor(client) {

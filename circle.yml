@@ -1,0 +1,21 @@
+machine:
+  node:
+    version: 6.11.3
+
+dependencies:
+  override:
+    - npm install
+
+test:
+  override:
+    - rm -f lib/opentmi-client.js lib/opentmi-client.min.js
+    - npm run lint
+    - npm run build
+    - REPORTER=tap npm test
+    - npm run doc
+
+general:
+  artifacts:
+    - doc
+    - dist
+    - coverage

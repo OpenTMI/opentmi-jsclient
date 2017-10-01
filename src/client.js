@@ -1,7 +1,8 @@
 const invariant = require('invariant');
 const _ = require('lodash');
 const Promise = require('bluebird');
-const debug = require('debug')('opentmi-client');
+// application modules
+const {debug} = require('./utils');
 const {axios, SocketIO} = require('./transports');
 
 class Client {
@@ -22,7 +23,7 @@ class Client {
   }
 
   /**
-   * Give current latency based on IO ping-pong packages
+   * get current latency based on IO ping-pong packages
    * @return {float}
    */
   get latency() {
@@ -42,7 +43,7 @@ class Client {
 
   /**
    * low level request for IO channel
-   * @param req object {event: <string>, data: <object>[, timeout: <number]}
+   * @param {object} req - event: <string>, data: <object>[, timeout: <number]
    */
   requestIO(req) {
     /* class IOResponse {
@@ -85,9 +86,9 @@ class Client {
 
   /**
    * Event emitter to the server
-   * @param event <string>
-   * @param data (optional) <object>
-   * @param timeout (optional) <number>
+   * @param {string} event - event name
+   * @param {object} data - optional data
+   * @param {number} timeout - optional timeout
    * @return {*}
    */
   emit(event, data = {}, timeout = undefined) {
@@ -96,7 +97,7 @@ class Client {
 
   /**
    * REST request API
-   * @param req {object}, axios config -kind of object.
+   * @param {object} req - axios config -kind of object.
    * default parameters:
    * url: '/',
    * method: 'get'
@@ -149,8 +150,8 @@ class Client {
 
   /**
    * HTTP Get request to server
-   * @param url <string> path to the server
-   * @param data <object> json data
+   * @param {string} url - path to the server
+   * @param {object} data - json data
    * @return {Promise}
    */
   get(url, data = undefined) {
@@ -158,9 +159,9 @@ class Client {
   }
   /**
    * HTTP post request to server
-   * @param url <string> path to the server
-   * @param data <object> json data
-   * @param headers (optional) <object> headers as json object
+   * @param {string} url - path to the server
+   * @param {object} data - optional json data
+   * @param {object} headers - optional headers as json object
    * @return {Promise}
    */
   post(url, data, headers = undefined) {
@@ -172,6 +173,18 @@ class Client {
   delete(url) {
     return this.request({url, method: 'delete'});
   }
+
+  /**
+   * get authentication token
+   * @return {string}
+   */
+  get token() {
+    return this._token;
+  }
+  /**
+   * get socketIO instance
+   * @return {SocketIO-client}
+   */
   get sio() {
     invariant(this._socket, 'You should call login() first');
     return this._socket;
@@ -179,6 +192,14 @@ class Client {
   _url(path = '') {
     return `${this._host}${path}`;
   }
+
+  /**
+   * Login to OpenTMI
+   * @param {string} email
+   * @param {string} password
+   * @param {string} token - optional token
+   * @return {Promise.<string>} - return a token
+   */
   login(email, password, token = undefined) {
     invariant(!_.isString(this._token), 'is logged out alread!');
     if (_.isString(token)) {
@@ -189,8 +210,10 @@ class Client {
     return this
       .post('/auth/login', {email, password}, {})
       .then((response) => {
+        invariant(response.data.token, 'there should be token');
         debug(`Login response: ${JSON.stringify(response.data)}`);
         this._token = response.data.token;
+        return this._token;
       })
       .catch((error) => {
         debug(`Login error: ${error.message}`);
@@ -198,11 +221,22 @@ class Client {
         throw error;
       });
   }
+
+  /**
+   * Logout
+   * @return {Promise}
+   */
   logout() {
     invariant(_.isString(this._token), 'you are not logged in, jwt token missing');
     this._token = undefined;
     return this._disconnect();
   }
+
+  /**
+   * Connect socketIO
+   * @param {string} namespace - optional namespace
+   * @return {Promise}
+   */
   connect(namespace = '') {
     return new Promise((resolve, reject) => {
       invariant(this._token, 'token is not configured');
