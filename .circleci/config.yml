@@ -26,10 +26,11 @@ jobs:
           command: npm run build
       - run:
           name: test
-          command: tap npm test
+          command: npm run test
       - run:
           name: lint
           command: npm run lint
+          when: always
       - run:
           name: doc
           command: npm run doc
