@@ -22,14 +22,14 @@ jobs:
           name: clean
           command: rm -f lib/opentmi-client.js lib/opentmi-client.min.js
       - run:
-          name: lint
-          command: npm run lint
-      - run:
           name: build
           command: npm run build
       - run:
           name: test
           command: tap npm test
+      - run:
+          name: lint
+          command: npm run lint
       - run:
           name: doc
           command: npm run doc
