@@ -12,7 +12,10 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: install-npm
-          command: npm install
+          command: |
+            npm i process-nextick-args util-deprecate
+            npm install
+
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
