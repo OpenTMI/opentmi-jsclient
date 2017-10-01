@@ -5,16 +5,14 @@ jobs:
       - image: circleci/node:6.11.3
     steps:
       - checkout
-      - run:
-          name: update-npm
-          command: 'sudo npm install -g npm@latest'
+      #- run:
+      #    name: update-npm
+      #    command: 'sudo npm install -g npm@latest'
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: install-npm
-          command: |
-            npm i process-nextick-args util-deprecate
-            npm install
+          command: npm install
 
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
