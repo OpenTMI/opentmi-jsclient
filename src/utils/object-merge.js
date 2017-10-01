@@ -1,3 +1,6 @@
+/* eslint-disable */
+
+// https://github.com/rsms/js-object-merge
 objectMerge = function (o, a, b, objOrShallow) {
   let r, k, v, ov, bv, inR,
     isArray = Array.isArray(a),

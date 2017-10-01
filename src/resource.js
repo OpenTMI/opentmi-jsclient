@@ -1,9 +1,10 @@
 const invariant = require('invariant');
 const _ = require('lodash');
 // application modules
-const {debug, retry, RestResource} = require('./utils');
+const {retry, RestResource} = require('./utils');
 
-class Resource extends RestResource  {
+
+class Resource extends RestResource {
   constructor(client, resourceJson) {
     super(client, `/api/v0/resources/${resourceJson._id}`);
     this._original = _.cloneDeep(resourceJson);
@@ -31,7 +32,7 @@ class Resource extends RestResource  {
    * @return {object}
    */
   getChanges() {
-    return  _.difference(this._original, this._resource)
+    return _.difference(this._original, this._resource);
   }
 
   /**
@@ -49,7 +50,7 @@ class Resource extends RestResource  {
    * @return {Promise}
    */
   save(retryCount = 2) {
-    if(this.isDirty()) {
+    if (this.isDirty()) {
       const changes = this.getChanges();
       changes.version = this.version;
       return retry(this._original, changes, this.update.bind(this), retryCount);
@@ -61,7 +62,7 @@ class Resource extends RestResource  {
    * Data version
    * @return {number}
    */
-  get version() { return this._original.__v; }
+  get version() { return _.get(this._original, '__v'); }
 
   /**
    * Get resource identity
@@ -85,8 +86,6 @@ class Resource extends RestResource  {
     _.merge(this._resource, {name});
     return this;
   }
-
-
 }
 
 module.exports = Resource;

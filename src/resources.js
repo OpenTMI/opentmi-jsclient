@@ -7,7 +7,7 @@ const {Query, RestResource} = require('./utils');
 class ResourcesQuery extends Query {
   /**
    * Find resources with type
-   * @param {string} type
+   * @param {string} type
    * @return {Query}
    */
   type(type) {
@@ -21,14 +21,14 @@ class ResourcesQuery extends Query {
    * @return {Query}
    */
   status(status) {
-    const STATUS =  [''];
-    invariant(_.contains(STATUS, status), `Status is not one of ${STATUS}`);
+    const STATUS = [];
+    invariant(_.contains(STATUS, status), `Status is not one of ${STATUS.join(', ')}`);
     return this.has({status});
   }
 
   /**
    * resource have tag
-   * @param {string} tag
+   * @param {string} tag
    * @param {bool} isTrue - optional - default: true
    * @return {Query}
    */

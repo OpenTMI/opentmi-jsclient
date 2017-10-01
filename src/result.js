@@ -1,6 +1,4 @@
 // 3rd party modules
-const invariant = require('invariant');
-const _ = require('lodash');
 // application modules
 const {Query, RestResource} = require('./utils');
 
