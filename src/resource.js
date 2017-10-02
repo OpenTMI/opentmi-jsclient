@@ -5,6 +5,11 @@ const {retry, RestResource} = require('./utils');
 
 
 class Resource extends RestResource {
+  /**
+   * Manage single resource
+   * @param {Transport} transport - transport layer
+   * @param {object} resourceJson - plain json object
+   */
   constructor(transport, resourceJson) {
     super(transport, `/api/v0/resources/${resourceJson._id}`);
     this._original = _.cloneDeep(resourceJson);
