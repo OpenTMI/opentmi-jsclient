@@ -35,7 +35,7 @@ ${BROWSER_TEST} : $(shell ${BROWSERIFY} --list ${TESTS})
 
 
 test-browser: bower-install ${BROWSER_TEST}
-	${MOCHA_PHANTOMJS} -R ${REPORTER} -g '${FILTER}' test/index.html
+	${MOCHA_PHANTOMJS} -p node_modules/phantomjs/bin/phantomjs -R ${REPORTER} -g '${FILTER}' test/index.html
 
 test-node:
 	NODE_ENV=test ${MOCHA} --reporter $(REPORTER) --recursive -g '${FILTER}'

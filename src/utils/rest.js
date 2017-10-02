@@ -4,26 +4,33 @@ const {notImplemented} = require('./utils');
 class RestResource {
   /**
    * General base constructor for Rest resources
-   * @param {Client} client - client object
+   * @param {Transport} transport - Transport object
    * @param {string} path - path for REST API
    */
-  constructor(client, path) {
-    this._client = client;
+  constructor(transport, path) {
+    invariant(transport, 'transport is mandatory');
+    this._transport = transport;
     this._path = path;
     this._notImplemented = notImplemented;
   }
 
   /**
-   * Find documents
+   * Find document(s)
    * @param {Query} query - optional Query object
    * @return {Promise}
    */
   find(query = undefined) {
-    invariant(this._client.isConnected, 'Client should be connected');
-    return this._client.get({path: this._path, query: query ? query.toString() : undefined});
+    invariant(this._transport.isConnected, 'Client should be connected');
+    return this._transport.get({path: this._path, query: query ? query.toString() : undefined});
   }
+
+  /**
+   * Update document(s)
+   * @param data
+   * @param query
+   */
   update(data, query = undefined) {
-    return this._client.get({
+    return this._transport.get({
       path: this._path,
       query: query ? query.toString() : undefined,
       data

@@ -54,8 +54,8 @@ class Resources extends RestResource {
    * Constructor for Resources model
    * @param {Client} client - client object
    */
-  constructor(client) {
-    super(client, '/api/v0/resources');
+  constructor(transport) {
+    super(transport, '/api/v0/resources');
   }
 }
 

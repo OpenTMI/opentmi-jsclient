@@ -1,12 +1,13 @@
 const invariant = require('invariant');
 const Promise = require('bluebird');
 
-const {Client, Admin, Cluster} = require('../src');
+const {Authentication, Admin, Cluster, Transport} = require('../src');
 
-const client = new Client('http://localhost:3000');
-client
+const transport = new Transport('http://localhost:3000');
+const auth = new Authentication(transport);
+auth
   .login("email", 'password')
-  .then(client.connect.bind(client))
+  .then(auth.connect.bind(auth))
   /*.then(() => {
     invariant(client.isConnected, "should be connected");
     console.log('create cluster object');
@@ -26,15 +27,15 @@ client
       .then(()=>console.log('continue..'));
   })
   .then(() => {
-    return client.emit('whoami')
+    return auth.whoami()
       .then( data => {
         console.log(data);
       })
   })
   /*.then(() => {
-    const a = new Admin(client);
+    const a = new Admin(transport);
     return a.version()
       .then(console.log);
   })*/
-  .then(client.logout.bind(client))
+  .then(transport.logout.bind(transport))
   .catch(error => console.error(error.message));

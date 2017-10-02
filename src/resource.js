@@ -5,8 +5,8 @@ const {retry, RestResource} = require('./utils');
 
 
 class Resource extends RestResource {
-  constructor(client, resourceJson) {
-    super(client, `/api/v0/resources/${resourceJson._id}`);
+  constructor(transport, resourceJson) {
+    super(transport, `/api/v0/resources/${resourceJson._id}`);
     this._original = _.cloneDeep(resourceJson);
     this._resource = resourceJson;
   }
@@ -75,6 +75,20 @@ class Resource extends RestResource {
    * @return {string}
    */
   get name() { return this._resource.name; }
+
+  get location() {
+    const loc = {
+      get site() { return _.get(this._resources, 'location.site'); },
+      get country() { return _.get(this._resources, 'location.country'); },
+      get city() { return _.get(this._resources, 'location.city'); },
+      get address() { return _.get(this._resources, 'location.address'); },
+      get postcode() { return _.get(this._resources, 'location.postcode'); },
+      get room() { return _.get(this._resources, 'location.room'); },
+      get subRoom() { return _.get(this._resources, 'location.subRoom'); },
+      get geo() { return _.get(this._resources, 'location.geo'); }
+    }.bind(this);
+    return loc;
+  }
 
   /**
    * set resource name
