@@ -6,7 +6,7 @@ MOCHA_PHANTOMJS ?= mocha-phantomjs
 #FILTER ?= .+
 BROWSERIFIED ?= dist/opentmi-client.js
 MINIFIED ?= dist/opentmi-client.min.js
-BROWSER_TEST ?= test/browser-test.js
+BROWSER_TEST ?= browser-test.js
 TESTS = $(addprefix test/,api.js)
 
 .PHONY: browserify minify test test-node test-browser bower-install coverage clean doc lint
