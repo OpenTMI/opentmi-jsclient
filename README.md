@@ -2,15 +2,16 @@
 OpenTMI javascript client for node &amp; browser.
 
 ## Documentation
-[here](doc)
+[here](docs)
 
 ## Sample
 
 ```javascript
-const client = new Client('http://localhost:3000');
-client
+const {Authentication, Transport} = require('opentmi-client');
+const auth = new Authentication('http://localhost:3000');
+auth
   .login('user@mail.com', 'password')
-  .then(client.connect.bind(client))
+  .then(auth.connect.bind(auth))
 ```
 
-see more from [sample](sample) older.
+**Note:** see more examples from [sample](sample) -folder.
