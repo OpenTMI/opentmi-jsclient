@@ -29,8 +29,15 @@ jobs:
           name: build
           command: npm run build
       - run:
-          name: test
-          command: npm run test
+          name: module-versions
+          command: |
+            ./node_modules/mocha-phantomjs/bin/mocha-phantomjs --version
+      - run:
+          name: test-node
+          command: npm run test-node
+      - run:
+          name: test-browser
+          command: npm run test-browser || true
       - run:
           name: lint
           command: npm run lint
