@@ -21,13 +21,11 @@
         "no-constant-condition": "error",
         "no-control-regex": "off",
         "dot-notation": "off",
-        "valid-jsdoc": "off",
+        "valid-jsdoc": "warn",
         "object-curly-spacing": ["error", "never"],
         "array-bracket-spacing": ["error", "never"],
         "computed-property-spacing": ["error", "never"],
-        //"func-names": ["error", "as-needed"],  /** @todo could be activated later */
         "prefer-arrow-callback": ["error", { "allowNamedFunctions": true }],
-        // "prefer-arrow-callback": ["off"], // when using --fix
         "space-before-function-paren": ["error", {"anonymous": "always", "named": "never", "asyncArrow": "always"}],
         "one-var": ["error", { "initialized": "never" }],
         "one-var-declaration-per-line": ["error", "initializations"],
