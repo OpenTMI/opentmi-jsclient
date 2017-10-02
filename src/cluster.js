@@ -15,6 +15,10 @@ class Cluster {
     this._clusters = undefined;
     this._transport = transport;
   }
+  get data() {
+    invariant(this._clusters, 'you should call refresh() before data');
+    return this._clusters;
+  }
   get workers() {
     invariant(this._clusters, 'you should call refresh() before workers');
     return _.get(this._clusters, 'workers', undefined);
@@ -28,7 +32,7 @@ class Cluster {
    * Restart workers. Require admin access.
    */
   restartWorkers() {
-    invariant(this._transport.isLoggedIn, 'Transport should be logged in');
+    invariant(this._transport.isLoggedIn, 'Transport should be logged in as admin');
     debug('attempt to restart all workers');
     return this._transport
       .post('/api/v0/restart')
@@ -41,7 +45,8 @@ class Cluster {
       });
   }
   refresh() {
-    invariant(this._transport.isLoggedIn, 'Transport should be logged in');
+    // @todo not required yet
+    //invariant(this._transport.isLoggedIn, 'Transport should be logged in');
     return this._transport
       .get('/api/v0/clusters')
       .then((response) => {

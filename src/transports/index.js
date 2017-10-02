@@ -54,6 +54,14 @@ class Transport {
     return _.isString(this.token);
   }
 
+  /**
+   * Check if IO is connected
+   * @return {boolean}
+   */
+  get isConnected() {
+    return !_.isUndefined(this._socket);
+  }
+
   get _headers() {
     return this.isLoggedIn ? {Authorization: `Bearer ${this.token}`} : {};
   }

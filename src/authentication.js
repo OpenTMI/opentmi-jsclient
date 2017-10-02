@@ -53,9 +53,10 @@ class Authentication {
    * @return {Promise}
    */
   logout() {
-    invariant(_.isString(this.token), 'you are not logged in, jwt token missing');
+    invariant(_.isString(this._transport.token), 'you are not logged in, jwt token missing');
     this._transport._token = undefined;
-    return this._transport.disconnect();
+    return this._transport.isConnected ?
+      this._transport.disconnect() : Promise.resolve();
   }
 }
 

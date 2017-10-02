@@ -19,7 +19,7 @@ class Admin {
   version() {
     invariant(this._transport.isLoggedIn, 'Transport should be connected');
     debug('request opentmi version');
-    return this._transport.transport
+    return this._transport
       .get('/api/v0/version')
       .then(response => response.data);
   }
@@ -31,7 +31,7 @@ class Admin {
   upgrade(version) {
     invariant(this._transport.isLoggedIn, 'Transport should be connected');
     debug('request opentmi version');
-    return this._transport.transport
+    return this._transport
       .post('/api/v0/version', {version})
       .then(response => response.data);
   }
