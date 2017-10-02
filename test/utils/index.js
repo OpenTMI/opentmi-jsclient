@@ -1,12 +1,14 @@
 const assert = require('assert');
 const sinon = require('sinon');
+const querystring = require('querystring');
 
 const {Query, retry, objectMerge, notImplemented} = require('../../src/utils');
+const toUrl = querystring.stringify;
 
 
 describe('Query', function() {
   let q;
-  before(function() {
+  beforeEach(function() {
     q = new Query();
   });
 
@@ -15,13 +17,41 @@ describe('Query', function() {
   });
 
   describe('works with query type', function() {
+    it('find', function() {
+      assert.equal(q.find().toString(), "t=find");
+    });
     it('count', function() {
       assert.equal(q.count().toString(), "t=count");
     });
     it('distinct', function() {
       assert.equal(q.distinct().toString(), "t=distinct");
     });
-  })
+  });
+  describe('works with has', function() {
+    it('something', function() {
+      assert.equal(q.has({some: 'thing'}).toString(), toUrl({q: JSON.stringify({"some":"thing"})}));
+    });
+  });
+  describe('works with options', function() {
+    it('select', function() {
+      assert.equal(q.select(['some', 'thing']).toString(), 'f=some%20thing');
+    });
+    it('populate', function() {
+      assert.equal(q.populate(['some', 'thing']).toString(), 'p=some%20thing');
+    });
+    it('asFlat', function() {
+      assert.equal(q.asFlat().toString(), 'fl=true');
+    });
+    it('asJson', function() {
+      assert.equal(q.asJson().toString(), 'fl=false');
+    });
+    it('limit', function() {
+      assert.equal(q.limit(10).toString(), 'l=10');
+    });
+    it('skip', function() {
+      assert.equal(q.skip(20).toString(), 'sk=20');
+    });
+  });
 });
 
 describe('mergeObject', function() {
@@ -127,40 +157,9 @@ describe('retryUpdate', function() {
       assert.deepEqual(error, rejectData);
     });
   });
-  /*
-  it('retries no left', function() {
-    const original = {a: 1};
-    const changes = {a: 2};
-    const resolveData = {
-      response: { status: 200, data: {} }
-    };
-    const rejectData = {
-      response: { status: 409, data: {a: 3} }
-    };
-
-    const spyUpdateResolves = sinon.spy();
-    const spyUpdateRejects = sinon.spy();
-    const spyUpdateCalls = sinon.spy();
-    const update = (data) => {
-      spyUpdateCalls(data);
-      if(spyUpdateCalls.callCount === 1) {
-        spyUpdateRejects(rejectData);
-        return Promise.reject(rejectData)
-      }
-      spyUpdateResolves(resolveData);
-      return Promise.resolve(resolveData);
-    };
-    return retry(original, changes, update, 2, 0).catch((error) => {
-      assert.equal(spyUpdateCalls.callCount, 1);
-      assert.equal(spyUpdateResolves.callCount, 0);
-      assert.equal(spyUpdateRejects.callCount, 1);
-      assert.deepEqual(error, rejectData);
-    });
-  });*/
 });
 
 describe('utils', function() {
-
   it('is empty by default', function() {
     return notImplemented()
       .then(() => {

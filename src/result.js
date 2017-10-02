@@ -9,10 +9,10 @@ class ResultsQuery extends Query {
 class Results extends RestResource {
   /**
    * Constructor for Resources model
-   * @param {Client} client - client object
+   * @param {Transport} transport - Transport object
    */
-  constructor(client) {
-    super(client, '/api/v0/results');
+  constructor(transport) {
+    super(transport, '/api/v0/results');
   }
 }
 

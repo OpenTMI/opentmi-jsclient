@@ -20,7 +20,7 @@ class RestResource {
    * @return {Promise}
    */
   find(query = undefined) {
-    invariant(this._transport.isConnected, 'Client should be connected');
+    invariant(this._transport.isLoggedIn, 'Transport should be logged in');
     return this._transport.get({path: this._path, query: query ? query.toString() : undefined});
   }
 

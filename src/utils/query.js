@@ -21,6 +21,9 @@ class Query {
   fromString(str) {
     invariant(_.isString(str), 'str should be string');
     this._query = querystring.parse(str);
+    if (_.has(this._query, 'q')) {
+      this._query.q = JSON.parse(_.get(this._query, 'q'));
+    }
   }
 
   /**
@@ -30,6 +33,7 @@ class Query {
   toString() {
     const query = _.cloneDeep(this._query);
     if (_.isEmpty(query.q)) delete query.q;
+    else query.q = JSON.stringify(query.q);
     return querystring.stringify(query);
   }
 
@@ -116,7 +120,7 @@ class Query {
    */
   populate(fields) {
     invariant(_.isArray(fields), 'fields should be array');
-    this._query.p = ' '.join(_.uniq(fields));
+    this._query.p = _.uniq(fields).join(' ');
     return this;
   }
 
@@ -127,7 +131,7 @@ class Query {
    */
   select(fields) {
     invariant(_.isArray(fields), 'fields should be array');
-    this._query.f = ' '.join(_.uniq(fields));
+    this._query.f = _.uniq(fields).join(' ');
     return this;
   }
 
@@ -180,7 +184,7 @@ class Query {
    */
   has(something) {
     _.isPlainObject(something, 'something should be plain object');
-    _.merge(this.q, something);
+    _.merge(this.query, something);
     return this;
   }
 }

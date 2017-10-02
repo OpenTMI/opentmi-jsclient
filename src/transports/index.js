@@ -50,12 +50,12 @@ class Transport {
    * Check if we have logged in - and have a token
    * @return {boolean}
    */
-  get isConnected() {
+  get isLoggedIn() {
     return _.isString(this.token);
   }
 
   get _headers() {
-    return this.isConnected ? {Authorization: `Bearer ${this.token}`} : {};
+    return this.isLoggedIn ? {Authorization: `Bearer ${this.token}`} : {};
   }
 
   _url(path = '') {
@@ -143,6 +143,7 @@ class Transport {
         this.Response = data;
       }
     } */
+    invariant(_.isObject(this._socket), 'Should be Connected');
     invariant(_.isString(this._token), 'you are not logged in, jwt token missing');
     invariant(_.isPlainObject(req), 'request should be object');
     _.defaults(req, {timeout: 600000, data: {}, time: new Date()});
@@ -264,7 +265,7 @@ class Transport {
    * @return {SocketIO-client}
    */
   get sio() {
-    invariant(this._socket, 'You should call § first');
+    invariant(this._socket, 'You should call Connect first');
     return this._socket;
   }
 }

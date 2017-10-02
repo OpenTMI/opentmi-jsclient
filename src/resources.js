@@ -52,7 +52,7 @@ class ResourcesQuery extends Query {
 class Resources extends RestResource {
   /**
    * Constructor for Resources model
-   * @param {Client} client - client object
+   * @param {Transport} transport - transport object
    */
   constructor(transport) {
     super(transport, '/api/v0/resources');

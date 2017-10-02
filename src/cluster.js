@@ -9,18 +9,18 @@ const {debug} = require('./utils');
 class Cluster {
   /**
    * Constructor
-   * @param {Client} client - client object
+   * @param {Transport} transport - transport object
    */
   constructor(transport) {
     this._clusters = undefined;
     this._transport = transport;
   }
   get workers() {
-    invariant(this._clusters, 'you should call refresh before workers');
+    invariant(this._clusters, 'you should call refresh() before workers');
     return _.get(this._clusters, 'workers', undefined);
   }
   get status() {
-    invariant(this._clusters, 'you should call refresh before status');
+    invariant(this._clusters, 'you should call refresh() before status');
     return _.omit(this._clusters, ['workers']);
   }
 
@@ -28,7 +28,7 @@ class Cluster {
    * Restart workers. Require admin access.
    */
   restartWorkers() {
-    invariant(this._transport.isConnected, 'Client should be connected');
+    invariant(this._transport.isLoggedIn, 'Transport should be logged in');
     debug('attempt to restart all workers');
     return this._transport
       .post('/api/v0/restart')
@@ -41,7 +41,7 @@ class Cluster {
       });
   }
   refresh() {
-    invariant(this._transport.isConnected, 'Client should be connected');
+    invariant(this._transport.isLoggedIn, 'Transport should be logged in');
     return this._transport
       .get('/api/v0/clusters')
       .then((response) => {

@@ -124,4 +124,7 @@ describe('Basics', function() {
       });
     });
   });
+  describe('Resources', function () {
+
+  });
 });

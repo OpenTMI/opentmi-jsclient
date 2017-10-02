@@ -9,9 +9,9 @@ auth
   .login("email", 'password')
   .then(auth.connect.bind(auth))
   /*.then(() => {
-    invariant(client.isConnected, "should be connected");
+    invariant(transport.isLoggedIn, "should be connected");
     console.log('create cluster object');
-    const c = new Cluster(client);
+    const c = new Cluster(transport);
     return c
       .refresh()
       .then(() => {

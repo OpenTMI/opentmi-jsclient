@@ -5,7 +5,7 @@ const {debug} = require('./utils');
 
 class Authentication {
   /**
-   * Constructor for Client connection.
+   * Constructor for Authentication controller.
    * Object manage all low level communication and authentication
    * @param transport - transport layer for communication
    */
