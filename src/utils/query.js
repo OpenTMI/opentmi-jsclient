@@ -91,6 +91,12 @@ class Query {
     this._query.t = 'aggregate';
     return this;
   }
+
+  /**
+   * mapReduce
+   * @param mapFunction
+   * @return {Query}
+   */
   mapReduce(mapFunction) {
     if (_.isFunction(mapFunction)) {
       this._query.reduce = mapFunction.toString();

@@ -13,7 +13,7 @@ class Transport {
    * @param Rest axios(default) -kind of object which provide REST API
    * @param IO   socket.io-client(default) -kind of object which provide event based communication
    */
-  constructor(host='', Rest=axios, IO=SocketIO) {
+  constructor(host = '', Rest = axios, IO = SocketIO) {
     this.Rest = Rest;
     this.IO = IO;
     this._token = undefined;
@@ -256,7 +256,7 @@ class Transport {
   update(url, data) {
     return this.request({url, method: 'update', data});
   }
-  delete(url) {
+  del(url) {
     return this.request({url, method: 'delete'});
   }
   /**

@@ -36,12 +36,27 @@ class RestResource {
       data
     });
   }
+
+  /**
+   * get document(s)
+   * @return {Promise}
+   */
   get() {
     return this._notImplemented();
   }
+
+  /**
+   * delete document(s)
+   * @return {Promise}
+   */
   delete() {
     return this._notImplemented();
   }
+
+  /**
+   * patch document(s)
+   * @return {Promise}
+   */
   patch() {
     return this._notImplemented();
   }

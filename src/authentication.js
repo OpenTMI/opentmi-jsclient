@@ -2,7 +2,6 @@ const invariant = require('invariant');
 const _ = require('lodash');
 // application modules
 const {debug} = require('./utils');
-const Transport = require('./transports');
 
 class Authentication {
   /**
