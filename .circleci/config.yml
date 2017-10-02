@@ -11,9 +11,13 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
+          name: versions
+          command: |
+            node --version
+            npm --version
+      - run:
           name: install-npm
           command: npm install
-
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
