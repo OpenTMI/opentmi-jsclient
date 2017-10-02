@@ -35,6 +35,9 @@ jobs:
       - run:
           name: test-node
           command: npm run test-node
+          environment:
+            REPORTER: mocha-junit-reporter
+            MOCHA_FILE: junit/test-results.xml
       - run:
           name: test-browser
           command: npm run test-browser || true
@@ -45,6 +48,10 @@ jobs:
       - run:
           name: doc
           command: npm run doc
+      - store_test_results:
+          path: junit
+      - store_artifacts:
+          path: junit
       - store_artifacts:
           path: doc
           prefix: documentations

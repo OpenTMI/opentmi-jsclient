@@ -256,7 +256,7 @@ class Transport {
   update(url, data) {
     return this.request({url, method: 'update', data});
   }
-  del(url) {
+  delete(url) {
     return this.request({url, method: 'delete'});
   }
   /**
