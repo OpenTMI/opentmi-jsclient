@@ -1,5 +1,7 @@
 const invariant = require('invariant');
 const _ = require('lodash');
+const Promise = require('bluebird');
+
 // application modules
 const {debug} = require('./utils');
 
@@ -43,10 +45,14 @@ class Authentication {
       });
   }
 
+  /**
+   * Find out who I'm.
+   * Returns plain object with some details about yourself.
+   * @return {Promise<object>}
+   */
   whoami() {
     return this._transport.emit('whoami');
   }
-
 
   /**
    * Logout

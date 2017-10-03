@@ -34,7 +34,7 @@ class Transport {
    * @param {string} token
    */
   set token(token) {
-    invariant(_.isUndefined(this._socket), 'You should call disconnect() first');
+    invariant(_.isUndefined(token) || _.isString(token), 'You should call login() first');
     this._token = token;
   }
 
@@ -77,16 +77,18 @@ class Transport {
    */
   connect(namespace = '') {
     return new Promise((resolve, reject) => {
-      invariant(this._token, 'token is not configured');
+      invariant(this.isLoggedIn, 'token is not configured');
       debug('Create socketIO connection');
       const options = {
-        query: `token=${this._token}`
+        query: `token=${this.token}`
       };
       const sioUrl = `${this._url()}${namespace}`;
-      debug(`socketIO url: ${sioUrl}`);
+      debug(`socketIO url: ${sioUrl}, options: ${JSON.stringify(options)}`);
       this._socket = this.IO(sioUrl, options);
       this._socket.once('connect', resolve);
-      this._socket.once('reconnect', resolve);
+      this._socket.once('reconnect', () => {
+        debug('reconnecting');
+      });
       this._socket.once('connect_error', reject);
     }).then(() => {
         debug('SocketIO connected');
@@ -211,6 +213,7 @@ class Transport {
     debug(`Requesting: ${JSON.stringify(config)}`);
     return this.Rest
       .request(config)
+      .then(data => data)
       .catch((error) => {
         if (error.response) {
           // The request was made and the server responded with a status code

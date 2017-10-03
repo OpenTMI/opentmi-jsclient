@@ -46,7 +46,7 @@ class Cluster {
   }
   refresh() {
     // @todo not required yet
-    //invariant(this._transport.isLoggedIn, 'Transport should be logged in');
+    // invariant(this._transport.isLoggedIn, 'Transport should be logged in');
     return this._transport
       .get('/api/v0/clusters')
       .then((response) => {
