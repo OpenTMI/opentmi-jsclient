@@ -1,8 +1,15 @@
 <h1 align="center">opentmi-jsclient</h1>
-OpenTMI javascript client for node &amp; browser.
+
+[![CircleCI](https://circleci.com/gh/OpenTMI/opentmi-jsclient/tree/master.svg?style=svg)](https://circleci.com/gh/OpenTMI/opentmi-jsclient/tree/master)
+
+Promise based OpenTMI javascript client for node.js and browser.
+
+## Requirements
+* [socket.io-client](https://github.com/socketio/socket.io-client) (for socketio connections)
+* [axios](https://github.com/axios/axios) (Promise based http client)
 
 ## Documentation
-[here](docs)
+[API documentation](https://opentmi.github.io/opentmi-jsclient/opentmi-jsclient/0.1.0/)
 
 
 ## Build
@@ -25,10 +32,11 @@ build api documentations
 ### Node.js
 ```javascript
 const {Authentication, Transport} = require('opentmi-client');
-const auth = new Authentication('http://localhost:3000');
+const transport = new Transport('http://localhost:3000')
+const auth = new Authentication(transport);
 auth
   .login('user@mail.com', 'password')
-  .then(auth.connect.bind(auth))
+  .then(transport.connect.bind(transport))
 ```
 
 ### Browser
@@ -36,11 +44,15 @@ auth
 <script src="dist/opentmi-client.js"></script>
 <script>
 const {Authentication, Transport} = opentmiClient;
-const auth = new Authentication('http://localhost:3000');
+const transport = new Transport('http://localhost:3000')
+const auth = new Authentication(transport);
 auth
   .login('user@mail.com', 'password')
-  .then(auth.connect.bind(auth))
+  .then(transport.connect.bind(transport))
 </script>
 ```
 
 **Note:** see more examples from [sample](sample) -folder.
+
+### License
+[MIT](LICENSE)
