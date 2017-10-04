@@ -1,0 +1,62 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:6.11.3
+    steps:
+      - checkout
+      #- run:
+      #    name: update-npm
+      #    command: 'sudo npm install -g npm@latest'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: versions
+          command: |
+            node --version
+            npm --version
+      - run:
+          name: install-npm
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: clean
+          command: rm -f lib/opentmi-client.js lib/opentmi-client.min.js
+      - run:
+          name: build
+          command: npm run build
+      - run:
+          name: module-versions
+          command: |
+            ./node_modules/mocha-phantomjs/bin/mocha-phantomjs --version
+      - run:
+          name: test-node
+          command: npm run test-node
+          environment:
+            REPORTER: mocha-junit-reporter
+            MOCHA_FILE: junit/test-results.xml
+      - run:
+          name: test-browser
+          command: npm run test-browser || true
+      - run:
+          name: lint
+          command: npm run lint
+          when: always
+      - run:
+          name: doc
+          command: npm run doc
+      - store_test_results:
+          path: junit
+      - store_artifacts:
+          path: junit
+      - store_artifacts:
+          path: doc
+          prefix: documentations
+      - store_artifacts:
+          path: coverage
+          prefix: coverage
+      - store_test_results:
+          path: coverage/coverage.json

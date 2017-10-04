@@ -1,0 +1,69 @@
+const invariant = require('invariant');
+const _ = require('lodash');
+const Promise = require('bluebird');
+
+// application modules
+const {debug} = require('./utils');
+
+class Authentication {
+  /**
+   * Constructor for Authentication controller.
+   * Object manage all low level communication and authentication
+   * @param {Transport} transport - transport layer for communication
+   */
+  constructor(transport) {
+    invariant(transport, 'transport is mandatory');
+    this._transport = transport;
+  }
+
+  /**
+   * Login to OpenTMI
+   * @param {string} email
+   * @param {string} password
+   * @param {string} token - optional token
+   * @return {Promise.<string>} - return a token
+   */
+  login(email, password, token = undefined) {
+    invariant(!_.isString(this._transport.token), 'is logged out alread!');
+    if (_.isString(token)) {
+      this._transport.token = token;
+    }
+    invariant(_.isString(email), 'email should be string');
+    invariant(_.isString(password), 'password should be string');
+    return this._transport
+      .post('/auth/login', {email, password}, {})
+      .then((response) => {
+        invariant(response.data.token, 'there should be token');
+        debug(`Login response: ${JSON.stringify(response.data)}`);
+        this._transport.token = response.data.token;
+        return this._transport.token;
+      })
+      .catch((error) => {
+        debug(`Login error: ${error.message}`);
+        this._transport.token = undefined;
+        throw error;
+      });
+  }
+
+  /**
+   * Find out who I'm.
+   * Returns plain object with some details about yourself.
+   * @return {Promise<object>}
+   */
+  whoami() {
+    return this._transport.emit('whoami');
+  }
+
+  /**
+   * Logout
+   * @return {Promise}
+   */
+  logout() {
+    invariant(_.isString(this._transport.token), 'you are not logged in, jwt token missing');
+    this._transport._token = undefined;
+    return this._transport.isConnected ?
+      this._transport.disconnect() : Promise.resolve();
+  }
+}
+
+module.exports = Authentication;

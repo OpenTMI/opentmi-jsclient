@@ -57,3 +57,5 @@ typings/
 # dotenv environment variables file
 .env
 
+browser-test.js
+docs
