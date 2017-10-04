@@ -162,7 +162,7 @@ class Query {
    */
   limit(limit) {
     invariant(_.isNumber(limit), 'limit should be number');
-    this._query['l'] = limit;
+    this._query.l = limit;
     return this;
   }
 
@@ -173,7 +173,7 @@ class Query {
    */
   skip(skip) {
     invariant(_.isNumber(skip), 'skip should be number');
-    this._query['sk'] = skip;
+    this._query.sk = skip;
     return this;
   }
 

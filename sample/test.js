@@ -23,7 +23,7 @@ const print = (message) => () => {
   //.then(print('get Result schema')).then(() => schema.schema('Result'))
   //.then(print('get Result schema')).then(() => schema.schema('Result'))
   .then(() => {
-    invariant(transport.iisLoggedIn, "should be logged in");
+    invariant(transport.isLoggedIn, "should be logged in");
     if (RESTART_WORKERS) {
       console.log('create cluster object');
       const c = new Cluster(transport);
