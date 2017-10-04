@@ -39,7 +39,7 @@ const print = (message) => () => {
   })
   .then(() => {
     const DELAY = 10;
-    return print(`delay ${DELAY}s`)().Promise.delay(DELAY * 1000)
+    return print(`delay ${DELAY}s`)().then( () => Promise.delay(DELAY * 1000))
       .then(print('continue..'));
   })
   .then(() => auth.whoami().then(data => console.log(data)))
