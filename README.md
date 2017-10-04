@@ -4,6 +4,22 @@ OpenTMI javascript client for node &amp; browser.
 ## Documentation
 [here](docs)
 
+
+## Build
+
+to build minified version to dist -folder run:
+```
+> npm run build
+```
+
+build api documentations
+```
+> npm run doc
+```
+
+**Note:** all available commands are visible when you run: `npm run`
+
+
 ## Sample
 
 ### Node.js
