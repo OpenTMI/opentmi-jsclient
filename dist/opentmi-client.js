@@ -31185,7 +31185,7 @@ const invariant = require('invariant');
 const Promise = require('bluebird');
 
 // application modules
-const {debug} = require('./utils');
+
 
 /**
  * Schemas object
@@ -31222,19 +31222,18 @@ class Schemas {
   }
 
   /**
-   *
+   * get all schemas
    * @return {Promise}
    */
-  updateSchemas() {
+  getAllSchemas() {
     return this.collections()
-      .then(colls => Promise.each(colls, this.schema.bind(this)))
-      .then(data => debug(data));
+      .then(colls => Promise.each(colls, this.schema.bind(this)));
   }
 }
 
 module.exports = Schemas;
 
-},{"./utils":90,"bluebird":31,"invariant":56}],82:[function(require,module,exports){
+},{"bluebird":31,"invariant":56}],82:[function(require,module,exports){
 const invariant = require('invariant');
 const {debug} = require('./utils');
 
@@ -31250,7 +31249,7 @@ class Admin {
 
   /**
    * Get OpenTMI server version details.
-   * @return {Promise} resolves json object:
+   * @return {Promise} resolves json object
    * e.g. { commitId: <id>, tag: <tag>, version: <pkg-version>, node_modules: {...}..}
    */
   version() {
@@ -31353,8 +31352,10 @@ const _ = require('lodash');
 // application modules
 const {debug} = require('./utils');
 
-/** Class manage OpenTMI clusters
+/** Class to manage OpenTMI clusters.
  * Most of these require admin access.
+ *
+ *
  */
 class Cluster {
   /**
@@ -31414,25 +31415,32 @@ module.exports = Cluster;
 
 },{"./utils":90,"invariant":56,"lodash":59}],85:[function(require,module,exports){
 // application modules
-const {RestResource} = require('./utils');
+const {Document} = require('./utils');
 
 
-class Resource extends RestResource {
+class Resource extends Document {
   /**
    * Manage single resource
    * @param {Transport} transport - transport layer
    * @param {object} resourceJson - plain json object
    */
   constructor(transport, resourceJson) {
-    super(transport, `/api/v0/resources/${resourceJson._id}`, resourceJson);
+    super(transport, `/api/v0/resources/${resourceJson.id}`, resourceJson);
   }
 
   /**
-   * Get resource name
+   * Get resource name or set it
    * @return {string}
    */
   name(value) { return this.getOrSet('name', value); }
 
+  /**
+   * Manage location
+   * @return {{site: (function(this:Resource)), country: (function(this:Resource)),
+   * city: (function(this:Resource)), address: (function(this:Resource)), postcode:
+   * (function(this:Resource)), room: (function(this:Resource)), subRoom:
+   * (function(this:Resource)), geo: (function(this:Resource))}}
+   */
   get location() {
     const loc = {
       site: function site(value) { return this.getOrSet('location.site', value); }.bind(this),
@@ -31454,12 +31462,57 @@ module.exports = Resource;
 // 3rd party modules
 const invariant = require('invariant');
 const _ = require('lodash');
-// application modules
-const {Query, RestResource} = require('./utils');
 
-class ResourcesQuery extends Query {
+
+// application modules
+const Resource = require('./resource');
+const {QueryBase, Collection} = require('./utils');
+
+class Query extends QueryBase {
+  exec() {
+    return this._exec()
+      .then(data => _.map(data, json => new Resource(this._collection._transport, json)));
+  }
+  /* Find resources by id
+   * @param {string} type
+   * @return {Query}
+   */
+  id(id) {
+    invariant(_.isString(id), 'id should be a string');
+    return this.has({_id: id});
+  }
+
+  /**
+   * Resource has parent
+   * @param {String} id - optional parent resource id
+   * @return {MongooseQueryClient}
+   */
+  hasParent(id = undefined) {
+    if (_.isUndefined(id)) {
+      return this.has({parent: {$exists: true}});
+    }
+    return this.has({parent: id});
+  }
+
+  /**
+   * Resource doesn't have parent
+   * @return {MongooseQueryClient}
+   */
+  hasNoParent() {
+    return this.has({parent: {$exists: false}});
+  }
+
   /**
    * Find resources with type
+   * @param {string} type
+   * @return {Query}
+   */
+  name(name) {
+    invariant(_.isString(name), 'type should be a string');
+    return this.has({name});
+  }
+  /**
+   * Find resources by type
    * @param {string} type
    * @return {Query}
    */
@@ -31469,29 +31522,34 @@ class ResourcesQuery extends Query {
   }
 
   /**
-   * Resource status should be
+   * Find resources by status
    * @param {string} status
    * @return {Query}
    */
   status(status) {
-    const STATUS = [];
+    const STATUS = ['active', 'maintenance', 'broken'];
     invariant(_.contains(STATUS, status), `Status is not one of ${STATUS.join(', ')}`);
-    return this.has({status});
+    return this.has({status: {value: status}});
+  }
+
+  usageType(usageType) {
+    invariant(_.isString(usageType), 'usageType should be a string');
+    return this.has({usage: {type: usageType}});
   }
 
   /**
-   * resource have tag
+   * Find resources by a tag
    * @param {string} tag
    * @param {bool} isTrue - optional - default: true
    * @return {Query}
    */
   haveTag(tag, isTrue = true) {
     invariant(_.isBoolean(isTrue), 'isTrue should be a boolean');
-    return this.this.has({tags: {tag: isTrue}});
+    return this.has({tags: {tag: isTrue}});
   }
 
   /**
-   * Resource has multiple tags
+   * Find resources by multiple tags
    * @param {array<String>} tags
    * @return {Query}
    */
@@ -31502,7 +31560,7 @@ class ResourcesQuery extends Query {
 }
 
 
-class Resources extends RestResource {
+class Resources extends Collection {
   /**
    * Constructor for Resources model
    * @param {Transport} transport - transport object
@@ -31510,22 +31568,31 @@ class Resources extends RestResource {
   constructor(transport) {
     super(transport, '/api/v0/resources');
   }
-}
 
-Resources.Query = ResourcesQuery;
+  /**
+   * Find document(s)
+   * @param {Query} query - optional Query object
+   * @return {FindQuery}
+   */
+  find() {
+    return new Query(this);
+  }
+}
 
 module.exports = Resources;
 
-},{"./utils":90,"invariant":56,"lodash":59}],87:[function(require,module,exports){
+},{"./resource":85,"./utils":90,"invariant":56,"lodash":59}],87:[function(require,module,exports){
 // 3rd party modules
 // application modules
-const {Query, RestResource} = require('./utils');
+const {QueryBase, Collection} = require('./utils');
 
-class ResultsQuery extends Query {
+class Query extends QueryBase {
+  isHW() {
+    this.has({'exec.dut.type': 'hw'});
+  }
 }
 
-
-class Results extends RestResource {
+class Results extends Collection {
   /**
    * Constructor for Resources model
    * @param {Transport} transport - Transport object
@@ -31533,9 +31600,11 @@ class Results extends RestResource {
   constructor(transport) {
     super(transport, '/api/v0/results');
   }
-}
 
-Results.Query = ResultsQuery;
+  find() {
+    return new Query(this);
+  }
+}
 
 module.exports = Results;
 
@@ -31543,10 +31612,12 @@ module.exports = Results;
 // 3rd party modules
 const SocketIO = require('socket.io-client');
 const axios = require('axios');
+const Promise = require('bluebird');
 const invariant = require('invariant');
 const _ = require('lodash');
+
 // application modules
-const {debug} = require('../utils');
+const {debug, timeSince} = require('../utils');
 
 
 class Transport {
@@ -31753,9 +31824,14 @@ class Transport {
         cancelToken: source.token
       });
     debug(`Requesting: ${JSON.stringify(config)}`);
+    const startTime = new Date();
     return this.Rest
       .request(config)
-      .then(data => data)
+      .then((data) => {
+        const duration = timeSince(startTime);
+        debug(`Request finished in ${duration.milliseconds}ms`);
+        return data;
+      })
       .catch((error) => {
         if (error.response) {
           // The request was made and the server responded with a status code
@@ -31807,8 +31883,8 @@ class Transport {
   post(url, data, headers = undefined) {
     return this.request({url, method: 'post', data, headers});
   }
-  update(url, data) {
-    return this.request({url, method: 'update', data});
+  put(url, data) {
+    return this.request({url, method: 'put', data});
   }
   delete(url) {
     return this.request({url, method: 'delete'});
@@ -31825,30 +31901,32 @@ class Transport {
 
 module.exports = Transport;
 
-},{"../utils":90,"axios":3,"invariant":56,"lodash":59,"socket.io-client":67}],89:[function(require,module,exports){
+},{"../utils":90,"axios":3,"bluebird":31,"invariant":56,"lodash":59,"socket.io-client":67}],89:[function(require,module,exports){
 const debug = require('debug')('opentmi-client');
 
 module.exports = debug;
 
 },{"debug":36}],90:[function(require,module,exports){
 const debug = require('./debug');
-const Query = require('./query');
-const {RestResourceList, RestResource} = require('./rest');
-const retry = require('./retry');
-const {notImplemented} = require('./utils');
+const QueryBase = require('./rest/queryBase');
+const Collection = require('./rest/collection');
+const Document = require('./rest/document');
+const retryUpdate = require('./retry');
+const {notImplemented, timeSince} = require('./utils');
 const objectMerge = require('./object-merge');
 
 module.exports = {
   debug,
-  Query,
-  RestResourceList,
-  RestResource,
-  retry,
+  QueryBase,
+  Collection,
+  Document,
+  retryUpdate,
+  timeSince,
   notImplemented,
   objectMerge
 };
 
-},{"./debug":89,"./object-merge":91,"./query":92,"./rest":93,"./retry":94,"./utils":95}],91:[function(require,module,exports){
+},{"./debug":89,"./object-merge":91,"./rest/collection":93,"./rest/document":94,"./rest/queryBase":96,"./retry":97,"./utils":98}],91:[function(require,module,exports){
 /* eslint-disable */
 
 // https://github.com/rsms/js-object-merge
@@ -31937,205 +32015,9 @@ module.exports = objectMerge;
 
 },{}],92:[function(require,module,exports){
 const invariant = require('invariant');
-const _ = require('lodash');
-const querystring = require('querystring');
+const {notImplemented} = require('../utils');
 
-/** Query class
- * Is pair for [mongoose-query](https://github.com/jupe/mongoose-query) -library which allows to
- * manage DB queries based on rest query parameters
- */
-class Query {
-  /**
-   * Query Constructor
-   */
-  constructor() {
-    this._query = {q: {}};
-  }
-
-  /**
-   * parse query from string
-   * @param str
-   */
-  fromString(str) {
-    invariant(_.isString(str), 'str should be string');
-    this._query = querystring.parse(str);
-    if (_.has(this._query, 'q')) {
-      this._query.q = JSON.parse(_.get(this._query, 'q'));
-    }
-  }
-
-  /**
-   * Returns query as a url string
-   * @return {string}
-   */
-  toString() {
-    const query = _.cloneDeep(this._query);
-    if (_.isEmpty(query.q)) delete query.q;
-    else query.q = JSON.stringify(query.q);
-    return querystring.stringify(query);
-  }
-
-  /**
-   * Return find -part object from query
-   * @return {Query._query.q|{}}
-   */
-  get query() {
-    return this._query.q;
-  }
-
-  /**
-   * Get query type
-   * 'find', 'distinct', ...
-   */
-  get type() {
-    return this._query.t;
-  }
-  /**
-   * do default find query
-   * @return {Query}
-   */
-  find() {
-    this._query.t = 'find';
-    return this;
-  }
-  /**
-   * do distinct query
-   * @return {Query}
-   */
-  distinct() {
-    this._query.t = 'distinct';
-    return this;
-  }
-
-  /**
-   * fetch only first match document
-   * @return {Query}
-   */
-  findOne() {
-    this._query.t = 'findOne';
-    return this;
-  }
-
-  /**
-   * get just count of match document
-   * @return {Query}
-   */
-  count() {
-    this._query.t = 'count';
-    return this;
-  }
-
-  /**
-   * aggregate query
-   * @return {Query}
-   */
-  aggregate() {
-    this._query.t = 'aggregate';
-    return this;
-  }
-
-  /**
-   * mapReduce
-   * @param mapFunction
-   * @return {Query}
-   */
-  mapReduce(mapFunction) {
-    if (_.isFunction(mapFunction)) {
-      this._query.reduce = mapFunction.toString();
-    } else if (_.isString(mapFunction)) {
-      this._query.reduce = mapFunction;
-    } else {
-      invariant(false, 'mapFunction should be string or function');
-    }
-    this._query.t = 'mapReduce';
-    return this;
-  }
-
-  /**
-   * Populate selected fields
-   * @param {array<string>} fields
-   * @return {Query}
-   */
-  populate(fields) {
-    invariant(_.isArray(fields), 'fields should be array');
-    this._query.p = _.uniq(fields).join(' ');
-    return this;
-  }
-
-  /**
-   * Select fields
-   * @param {array<String>} fields to be fetch, e.g. ['name']
-   * @return {Query}
-   */
-  select(fields) {
-    invariant(_.isArray(fields), 'fields should be array');
-    this._query.f = _.uniq(fields).join(' ');
-    return this;
-  }
-
-  /**
-   * Result as a flat.
-   * e.g. {"a.b": "b"}
-   * @return {Query}
-   */
-  asFlat() {
-    this._query.fl = true;
-    return this;
-  }
-
-  /**
-   * Result as a json
-   * e.g. {"a": {"b": "b"}}
-   * @return {Query}
-   */
-  asJson() {
-    this._query.fl = false;
-    return this;
-  }
-
-  /**
-   * limit results
-   * @param {number} limit - maximum number of results to be fetched
-   * @return {Query}
-   */
-  limit(limit) {
-    invariant(_.isNumber(limit), 'limit should be number');
-    this._query.l = limit;
-    return this;
-  }
-
-  /**
-   * Skip number of results
-   * @param {number} skip - number of document to be skip
-   * @return {Query}
-   */
-  skip(skip) {
-    invariant(_.isNumber(skip), 'skip should be number');
-    this._query.sk = skip;
-    return this;
-  }
-
-  /**
-   * Document has "something", e.g. {name: "jussi"}
-   * @param {object} something object to be included in query
-   * @return {Query}
-   */
-  has(something) {
-    _.isPlainObject(something, 'something should be plain object');
-    _.merge(this.query, something);
-    return this;
-  }
-}
-
-module.exports = Query;
-
-},{"invariant":56,"lodash":59,"querystring":66}],93:[function(require,module,exports){
-const invariant = require('invariant');
-const _ = require('lodash');
-
-const {notImplemented, retry} = require('./utils');
-
-class RestResourceBase {
+class Base {
   /**
    * General base constructor for Rest resources
    * @param {Transport} transport - Transport object<
@@ -32149,24 +32031,26 @@ class RestResourceBase {
   }
 }
 
+module.exports = Base;
 
-class RestResourceList extends RestResourceBase {
-  /**
-   * Find document(s)
-   * @param {Query} query - optional Query object
-   * @return {Promise}
-   */
-  find(query = undefined) {
+},{"../utils":98,"invariant":56}],93:[function(require,module,exports){
+// 3rd party modules
+const invariant = require('invariant');
+const _ = require('lodash');
+
+// application modules
+const Base = require('./base');
+
+
+class Collection extends Base {
+  _find(query) {
+    invariant(_.isString(query), 'query hould be a string');
     invariant(this._transport.isLoggedIn, 'Transport should be logged in');
-    return this._transport.get({path: this._path, query: query ? query.toString() : undefined});
+    return this._transport.get(`${this._path}?${query}`)
+      .then(resp => resp.data);
   }
 
-  /**
-   * Update document(s)
-   * @param data
-   * @param query
-   */
-  update(data, query = undefined) {
+  _update(data, query = undefined) {
     return this._transport.put({
       path: this._path,
       query: query ? query.toString() : undefined,
@@ -32174,36 +32058,35 @@ class RestResourceList extends RestResourceBase {
     });
   }
 
-  /**
-   * get document(s)
-   * @return {Promise}
-   */
-  get() {
+  _get() {
     return this._notImplemented();
   }
 
-  /**
-   * delete document(s)
-   * @return {Promise}
-   */
-  delete() {
+  _delete() {
     return this._notImplemented();
   }
 
-  /**
-   * patch document(s)
-   * @return {Promise}
-   */
-  patch() {
+  _patch() {
     return this._notImplemented();
   }
 }
 
-class RestResource extends RestResourceBase {
+module.exports = Collection;
+
+},{"./base":92,"invariant":56,"lodash":59}],94:[function(require,module,exports){
+const invariant = require('invariant');
+const _ = require('lodash');
+
+const Base = require('./base');
+const retryUpdate = require('./../retry');
+
+
+class Document extends Base {
   constructor(transport, path, originalJson) {
-    invariant(_.isPlainObject(originalJson), 'resourceJson should be plain object');
-    invariant(_.isString(originalJson._id), 'resourceJson should have _id');
     super(transport, path);
+    this._idProperty = originalJson.id ? 'id' : '_id';
+    invariant(_.isPlainObject(originalJson), 'resourceJson should be plain object');
+    invariant(_.isString(originalJson[this._idProperty]), 'resourceJson should have _id');
     this._original = _.cloneDeep(originalJson);
     this._resource = _.cloneDeep(originalJson);
     this._changes = {};
@@ -32250,9 +32133,10 @@ class RestResource extends RestResourceBase {
   save(retryCount = 2) {
     if (this.isDirty()) {
       const changes = this.getChanges();
-      invariant(changes._id !== this._original._id, 'id is not the same!!');
+      invariant(changes[this._idProperty] !==
+        this._original[this._idProperty], `${this._idProperty} is not the same!!`);
       changes.version = this.version;
-      return retry(this._original, changes, this._update.bind(this), retryCount);
+      return retryUpdate(this._original, changes, this._update.bind(this), retryCount);
     }
     return Promise.reject(new Error('no changes'));
   }
@@ -32294,13 +32178,10 @@ class RestResource extends RestResourceBase {
    * Get resource identity
    * @return {string}
    */
-  get id() { return this.get('_id'); }
+  get id() { return this.get(this._idProperty); }
 
   _update(data) {
-    return this._transport.put({
-      path: this._path,
-      data: data
-    });
+    return this._transport.put(this._path, data);
   }
 
   /**
@@ -32322,9 +32203,222 @@ class RestResource extends RestResourceBase {
   }
 }
 
-module.exports = {RestResourceList, RestResource};
+module.exports = Document;
 
-},{"./utils":95,"invariant":56,"lodash":59}],94:[function(require,module,exports){
+},{"./../retry":97,"./base":92,"invariant":56,"lodash":59}],95:[function(require,module,exports){
+const invariant = require('invariant');
+const _ = require('lodash');
+const querystring = require('querystring');
+
+/** Query class
+ * Is pair for [mongoose-query](https://github.com/jupe/mongoose-query) -library which allows to
+ * manage DB queries based on rest query parameters
+ */
+class MongooseQueryClient {
+  /**
+   * Query Constructor
+   */
+  constructor() {
+    this._query = {q: {}};
+  }
+
+  /**
+   * parse query from string
+   * @param str
+   */
+  fromString(str) {
+    invariant(_.isString(str), 'str should be string');
+    this._query = querystring.parse(str);
+    if (_.has(this._query, 'q')) {
+      this._query.q = JSON.parse(_.get(this._query, 'q'));
+    }
+  }
+
+  /**
+   * Returns query as a url string
+   * @return {string}
+   */
+  toString() {
+    const query = _.cloneDeep(this._query);
+    if (_.isEmpty(query.q)) delete query.q;
+    else query.q = JSON.stringify(query.q);
+    return querystring.stringify(query);
+  }
+
+  /**
+   * Return find -part object from query
+   * @return {MongooseQueryClient._query.q|{}}
+   */
+  get query() {
+    return this._query.q;
+  }
+
+  /**
+   * Get query type
+   * 'find', 'distinct', ...
+   */
+  get type() {
+    return this._query.t;
+  }
+  /**
+   * do default find query
+   * @return {MongooseQueryClient}
+   */
+  find() {
+    this._query.t = 'find';
+    return this;
+  }
+  /**
+   * do distinct query
+   * @return {MongooseQueryClient}
+   */
+  distinct() {
+    this._query.t = 'distinct';
+    return this;
+  }
+
+  /**
+   * fetch only first match document
+   * @return {MongooseQueryClient}
+   */
+  findOne() {
+    this._query.t = 'findOne';
+    return this;
+  }
+
+  /**
+   * get just count of match document
+   * @return {MongooseQueryClient}
+   */
+  count() {
+    this._query.t = 'count';
+    return this;
+  }
+
+  /**
+   * aggregate query
+   * @return {MongooseQueryClient}
+   */
+  aggregate() {
+    this._query.t = 'aggregate';
+    return this;
+  }
+
+  /**
+   * mapReduce
+   * @param mapFunction
+   * @return {MongooseQueryClient}
+   */
+  mapReduce(mapFunction) {
+    if (_.isFunction(mapFunction)) {
+      this._query.reduce = mapFunction.toString();
+    } else if (_.isString(mapFunction)) {
+      this._query.reduce = mapFunction;
+    } else {
+      invariant(false, 'mapFunction should be string or function');
+    }
+    this._query.t = 'mapReduce';
+    return this;
+  }
+
+  /**
+   * Populate selected fields
+   * @param {array<string>} fields
+   * @return {MongooseQueryClient}
+   */
+  populate(fields) {
+    invariant(_.isArray(fields), 'fields should be array');
+    this._query.p = _.uniq(fields).join(' ');
+    return this;
+  }
+
+  /**
+   * Select fields
+   * @param {array<String>} fields to be fetch, e.g. ['name']
+   * @return {MongooseQueryClient}
+   */
+  select(fields) {
+    invariant(_.isArray(fields), 'fields should be array');
+    this._query.f = _.uniq(fields).join(' ');
+    return this;
+  }
+
+  /**
+   * Result as a flat.
+   * e.g. {"a.b": "b"}
+   * @return {MongooseQueryClient}
+   */
+  asFlat() {
+    this._query.fl = true;
+    return this;
+  }
+
+  /**
+   * Result as a json
+   * e.g. {"a": {"b": "b"}}
+   * @return {MongooseQueryClient}
+   */
+  asJson() {
+    this._query.fl = false;
+    return this;
+  }
+
+  /**
+   * limit results
+   * @param {number} limit - maximum number of results to be fetched
+   * @return {MongooseQueryClient}
+   */
+  limit(limit) {
+    invariant(_.isNumber(limit), 'limit should be number');
+    this._query.l = limit;
+    return this;
+  }
+
+  /**
+   * Skip number of results
+   * @param {number} skip - number of document to be skip
+   * @return {MongooseQueryClient}
+   */
+  skip(skip) {
+    invariant(_.isNumber(skip), 'skip should be number');
+    this._query.sk = skip;
+    return this;
+  }
+
+  /**
+   * Document has "something", e.g. {name: "jussi"}
+   * @param {object} something object to be included in query
+   * @return {MongooseQueryClient}
+   */
+  has(something) {
+    _.isPlainObject(something, 'something should be plain object');
+    _.merge(this._query.q, something);
+    return this;
+  }
+}
+
+module.exports = MongooseQueryClient;
+
+},{"invariant":56,"lodash":59,"querystring":66}],96:[function(require,module,exports){
+const MongooseQueryClient = require('./mongooseQueryClient');
+
+
+class QueryBase extends MongooseQueryClient {
+  constructor(collection) {
+    super();
+    this._collection = collection;
+  }
+  /**
+   * Execute query
+   */
+  _exec() {
+    return this._collection._find(this.toString());
+  }
+}
+
+module.exports = QueryBase;
+
+},{"./mongooseQueryClient":95}],97:[function(require,module,exports){
 // 3rd party modules
 const _ = require('lodash');
 const Promise = require('bluebird');
@@ -32356,7 +32450,23 @@ const retryUpdate = function (original, changes, update, retryCount = 2, retryIn
 
 module.exports = retryUpdate;
 
-},{"./debug":89,"./object-merge":91,"bluebird":31,"lodash":59}],95:[function(require,module,exports){
+},{"./debug":89,"./object-merge":91,"bluebird":31,"lodash":59}],98:[function(require,module,exports){
+module.exports.timeSince = (when) => {
+  const obj = {};
+  obj._milliseconds = (new Date()).valueOf() - when.valueOf();
+  obj.milliseconds = obj._milliseconds % 1000;
+  obj._seconds = (obj._milliseconds - obj.milliseconds) / 1000;
+  obj.seconds = obj._seconds % 60;
+  obj._minutes = (obj._seconds - obj.seconds) / 60;
+  obj.minutes = obj._minutes % 60;
+  obj._hours = (obj._minutes - obj.minutes) / 60;
+  obj.hours = obj._hours % 24;
+  obj._days = (obj._hours - obj.hours) / 24;
+  obj.days = obj._days % 365;
+  // finally
+  obj.years = (obj._days - obj.days) / 365;
+  return obj;
+};
 
 module.exports.notImplemented = () => Promise.reject(new Error('not implemented'));
 
@@ -32383,5 +32493,5 @@ module.exports = {
   Transport
 };
 
-},{"./Schemas":81,"./admin":82,"./authentication":83,"./cluster":84,"./resource":85,"./resources":86,"./result":87,"./transports":88,"./utils":90}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,"opentmiClient",85,86,87,88,89,90,91,92,93,94,95])("opentmiClient")
+},{"./Schemas":81,"./admin":82,"./authentication":83,"./cluster":84,"./resource":85,"./resources":86,"./result":87,"./transports":88,"./utils":90}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,"opentmiClient",85,86,87,88,89,90,91,92,93,94,95,96,97,98])("opentmiClient")
 });

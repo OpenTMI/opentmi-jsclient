@@ -2,8 +2,9 @@ const invariant = require('invariant');
 const Promise = require('bluebird');
 
 const {
-  Authentication, Admin, Cluster, Transport, Schemas
+  Authentication, Admin, Cluster, Transport, Schemas, Resources
 } = require('../src');
+const {Query} = Resources;
 
 const RESTART_WORKERS = false;
 const GET_VERSION = false;
@@ -17,11 +18,24 @@ const print = (message) => () => {
   return Promise.resolve();
 };
         print('login')().then(() => auth.login('username', 'password'))
-  //.then(print('connect IO')).then(transport.connect.bind(transport))
+  .then(print('connect IO')).then(transport.connect.bind(transport))
   //.then(print('updateSchemas')).then(schema.updateSchemas.bind(schema))
   //.then(print('get collections')).then(schema.collections.bind(schema))
   //.then(print('get Result schema')).then(() => schema.schema('Result'))
   //.then(print('get Result schema')).then(() => schema.schema('Result'))
+  .then(() => {
+      const resources = new Resources(transport);
+      return resources.find()
+        //.id('test')
+        .exec()
+        .then(resources => resources[0])
+        .then(resource => {
+          console.log(resource.toString());
+          resource.name(resource.name()+'abc');
+          console.log(resource.save());
+
+        })
+  })
   .then(() => {
     invariant(transport.isLoggedIn, "should be logged in");
     if (RESTART_WORKERS) {

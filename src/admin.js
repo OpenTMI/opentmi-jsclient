@@ -13,7 +13,7 @@ class Admin {
 
   /**
    * Get OpenTMI server version details.
-   * @return {Promise} resolves json object:
+   * @return {Promise} resolves json object
    * e.g. { commitId: <id>, tag: <tag>, version: <pkg-version>, node_modules: {...}..}
    */
   version() {

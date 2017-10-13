@@ -1,23 +1,30 @@
 // application modules
-const {RestResource} = require('./utils');
+const {Document} = require('./utils');
 
 
-class Resource extends RestResource {
+class Resource extends Document {
   /**
    * Manage single resource
    * @param {Transport} transport - transport layer
    * @param {object} resourceJson - plain json object
    */
   constructor(transport, resourceJson) {
-    super(transport, `/api/v0/resources/${resourceJson._id}`, resourceJson);
+    super(transport, `/api/v0/resources/${resourceJson.id}`, resourceJson);
   }
 
   /**
-   * Get resource name
+   * Get resource name or set it
    * @return {string}
    */
   name(value) { return this.getOrSet('name', value); }
 
+  /**
+   * Manage location
+   * @return {{site: (function(this:Resource)), country: (function(this:Resource)),
+   * city: (function(this:Resource)), address: (function(this:Resource)), postcode:
+   * (function(this:Resource)), room: (function(this:Resource)), subRoom:
+   * (function(this:Resource)), geo: (function(this:Resource))}}
+   */
   get location() {
     const loc = {
       site: function site(value) { return this.getOrSet('location.site', value); }.bind(this),

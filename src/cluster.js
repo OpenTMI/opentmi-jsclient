@@ -3,8 +3,10 @@ const _ = require('lodash');
 // application modules
 const {debug} = require('./utils');
 
-/** Class manage OpenTMI clusters
+/** Class to manage OpenTMI clusters.
  * Most of these require admin access.
+ *
+ *
  */
 class Cluster {
   /**

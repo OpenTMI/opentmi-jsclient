@@ -1,10 +1,12 @@
 // 3rd party modules
 const SocketIO = require('socket.io-client');
 const axios = require('axios');
+const Promise = require('bluebird');
 const invariant = require('invariant');
 const _ = require('lodash');
+
 // application modules
-const {debug} = require('../utils');
+const {debug, timeSince} = require('../utils');
 
 
 class Transport {
@@ -211,9 +213,14 @@ class Transport {
         cancelToken: source.token
       });
     debug(`Requesting: ${JSON.stringify(config)}`);
+    const startTime = new Date();
     return this.Rest
       .request(config)
-      .then(data => data)
+      .then((data) => {
+        const duration = timeSince(startTime);
+        debug(`Request finished in ${duration.milliseconds}ms`);
+        return data;
+      })
       .catch((error) => {
         if (error.response) {
           // The request was made and the server responded with a status code
@@ -265,8 +272,8 @@ class Transport {
   post(url, data, headers = undefined) {
     return this.request({url, method: 'post', data, headers});
   }
-  update(url, data) {
-    return this.request({url, method: 'update', data});
+  put(url, data) {
+    return this.request({url, method: 'put', data});
   }
   delete(url) {
     return this.request({url, method: 'delete'});

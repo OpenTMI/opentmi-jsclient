@@ -1,12 +1,14 @@
 // 3rd party modules
 // application modules
-const {Query, RestResource} = require('./utils');
+const {QueryBase, Collection} = require('./utils');
 
-class ResultsQuery extends Query {
+class Query extends QueryBase {
+  isHW() {
+    this.has({'exec.dut.type': 'hw'});
+  }
 }
 
-
-class Results extends RestResource {
+class Results extends Collection {
   /**
    * Constructor for Resources model
    * @param {Transport} transport - Transport object
@@ -14,8 +16,10 @@ class Results extends RestResource {
   constructor(transport) {
     super(transport, '/api/v0/results');
   }
-}
 
-Results.Query = ResultsQuery;
+  find() {
+    return new Query(this);
+  }
+}
 
 module.exports = Results;

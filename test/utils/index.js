@@ -2,7 +2,8 @@ const assert = require('assert');
 const sinon = require('sinon');
 const querystring = require('querystring');
 
-const {Query, retry, objectMerge, notImplemented} = require('../../src/utils');
+const Query = require('../../src/utils/rest/mongooseQueryClient');
+const {retryUpdate, objectMerge, notImplemented} = require('../../src/utils');
 const toUrl = querystring.stringify;
 
 
@@ -92,7 +93,7 @@ describe('retryUpdate', function() {
           throw error;
         })
     };
-    return retry(original, changes, update).then(() => {
+    return retryUpdate(original, changes, update).then(() => {
       assert.equal(spyUpdateCalls.callCount, 1);
       assert.equal(spyUpdateResolves.callCount, 1);
       assert.equal(spyUpdateRejects.callCount, 0);
@@ -122,7 +123,7 @@ describe('retryUpdate', function() {
       spyUpdateResolves(resolveData);
       return Promise.resolve(resolveData);
     };
-    return retry(original, changes, update, 2, 0).then(() => {
+    return retryUpdate(original, changes, update, 2, 0).then(() => {
       assert.equal(spyUpdateCalls.callCount, 2);
       assert.equal(spyUpdateResolves.callCount, 1);
       assert.equal(spyUpdateRejects.callCount, 1);
@@ -150,7 +151,7 @@ describe('retryUpdate', function() {
       spyUpdateResolves(resolveData);
       return Promise.resolve(resolveData);
     };
-    return retry(original, changes, update, 2, 0).catch((error) => {
+    return retryUpdate(original, changes, update, 2, 0).catch((error) => {
       assert.equal(spyUpdateCalls.callCount, 1);
       assert.equal(spyUpdateResolves.callCount, 0);
       assert.equal(spyUpdateRejects.callCount, 1);

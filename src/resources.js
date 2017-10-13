@@ -1,12 +1,57 @@
 // 3rd party modules
 const invariant = require('invariant');
 const _ = require('lodash');
-// application modules
-const {Query, RestResource} = require('./utils');
 
-class ResourcesQuery extends Query {
+
+// application modules
+const Resource = require('./resource');
+const {QueryBase, Collection} = require('./utils');
+
+class Query extends QueryBase {
+  exec() {
+    return this._exec()
+      .then(data => _.map(data, json => new Resource(this._collection._transport, json)));
+  }
+  /* Find resources by id
+   * @param {string} type
+   * @return {Query}
+   */
+  id(id) {
+    invariant(_.isString(id), 'id should be a string');
+    return this.has({_id: id});
+  }
+
+  /**
+   * Resource has parent
+   * @param {String} id - optional parent resource id
+   * @return {MongooseQueryClient}
+   */
+  hasParent(id = undefined) {
+    if (_.isUndefined(id)) {
+      return this.has({parent: {$exists: true}});
+    }
+    return this.has({parent: id});
+  }
+
+  /**
+   * Resource doesn't have parent
+   * @return {MongooseQueryClient}
+   */
+  hasNoParent() {
+    return this.has({parent: {$exists: false}});
+  }
+
   /**
    * Find resources with type
+   * @param {string} type
+   * @return {Query}
+   */
+  name(name) {
+    invariant(_.isString(name), 'type should be a string');
+    return this.has({name});
+  }
+  /**
+   * Find resources by type
    * @param {string} type
    * @return {Query}
    */
@@ -16,29 +61,34 @@ class ResourcesQuery extends Query {
   }
 
   /**
-   * Resource status should be
+   * Find resources by status
    * @param {string} status
    * @return {Query}
    */
   status(status) {
-    const STATUS = [];
+    const STATUS = ['active', 'maintenance', 'broken'];
     invariant(_.contains(STATUS, status), `Status is not one of ${STATUS.join(', ')}`);
-    return this.has({status});
+    return this.has({status: {value: status}});
+  }
+
+  usageType(usageType) {
+    invariant(_.isString(usageType), 'usageType should be a string');
+    return this.has({usage: {type: usageType}});
   }
 
   /**
-   * resource have tag
+   * Find resources by a tag
    * @param {string} tag
    * @param {bool} isTrue - optional - default: true
    * @return {Query}
    */
   haveTag(tag, isTrue = true) {
     invariant(_.isBoolean(isTrue), 'isTrue should be a boolean');
-    return this.this.has({tags: {tag: isTrue}});
+    return this.has({tags: {tag: isTrue}});
   }
 
   /**
-   * Resource has multiple tags
+   * Find resources by multiple tags
    * @param {array<String>} tags
    * @return {Query}
    */
@@ -49,7 +99,7 @@ class ResourcesQuery extends Query {
 }
 
 
-class Resources extends RestResource {
+class Resources extends Collection {
   /**
    * Constructor for Resources model
    * @param {Transport} transport - transport object
@@ -57,8 +107,15 @@ class Resources extends RestResource {
   constructor(transport) {
     super(transport, '/api/v0/resources');
   }
-}
 
-Resources.Query = ResourcesQuery;
+  /**
+   * Find document(s)
+   * @param {Query} query - optional Query object
+   * @return {FindQuery}
+   */
+  find() {
+    return new Query(this);
+  }
+}
 
 module.exports = Resources;

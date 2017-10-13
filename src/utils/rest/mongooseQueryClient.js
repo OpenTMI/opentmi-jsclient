@@ -6,7 +6,7 @@ const querystring = require('querystring');
  * Is pair for [mongoose-query](https://github.com/jupe/mongoose-query) -library which allows to
  * manage DB queries based on rest query parameters
  */
-class Query {
+class MongooseQueryClient {
   /**
    * Query Constructor
    */
@@ -39,7 +39,7 @@ class Query {
 
   /**
    * Return find -part object from query
-   * @return {Query._query.q|{}}
+   * @return {MongooseQueryClient._query.q|{}}
    */
   get query() {
     return this._query.q;
@@ -54,7 +54,7 @@ class Query {
   }
   /**
    * do default find query
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   find() {
     this._query.t = 'find';
@@ -62,7 +62,7 @@ class Query {
   }
   /**
    * do distinct query
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   distinct() {
     this._query.t = 'distinct';
@@ -71,7 +71,7 @@ class Query {
 
   /**
    * fetch only first match document
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   findOne() {
     this._query.t = 'findOne';
@@ -80,7 +80,7 @@ class Query {
 
   /**
    * get just count of match document
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   count() {
     this._query.t = 'count';
@@ -89,7 +89,7 @@ class Query {
 
   /**
    * aggregate query
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   aggregate() {
     this._query.t = 'aggregate';
@@ -99,7 +99,7 @@ class Query {
   /**
    * mapReduce
    * @param mapFunction
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   mapReduce(mapFunction) {
     if (_.isFunction(mapFunction)) {
@@ -116,7 +116,7 @@ class Query {
   /**
    * Populate selected fields
    * @param {array<string>} fields
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   populate(fields) {
     invariant(_.isArray(fields), 'fields should be array');
@@ -127,7 +127,7 @@ class Query {
   /**
    * Select fields
    * @param {array<String>} fields to be fetch, e.g. ['name']
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   select(fields) {
     invariant(_.isArray(fields), 'fields should be array');
@@ -138,7 +138,7 @@ class Query {
   /**
    * Result as a flat.
    * e.g. {"a.b": "b"}
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   asFlat() {
     this._query.fl = true;
@@ -148,7 +148,7 @@ class Query {
   /**
    * Result as a json
    * e.g. {"a": {"b": "b"}}
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   asJson() {
     this._query.fl = false;
@@ -158,7 +158,7 @@ class Query {
   /**
    * limit results
    * @param {number} limit - maximum number of results to be fetched
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   limit(limit) {
     invariant(_.isNumber(limit), 'limit should be number');
@@ -169,7 +169,7 @@ class Query {
   /**
    * Skip number of results
    * @param {number} skip - number of document to be skip
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   skip(skip) {
     invariant(_.isNumber(skip), 'skip should be number');
@@ -180,13 +180,13 @@ class Query {
   /**
    * Document has "something", e.g. {name: "jussi"}
    * @param {object} something object to be included in query
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   has(something) {
     _.isPlainObject(something, 'something should be plain object');
-    _.merge(this.query, something);
+    _.merge(this._query.q, something);
     return this;
   }
 }
 
-module.exports = Query;
+module.exports = MongooseQueryClient;

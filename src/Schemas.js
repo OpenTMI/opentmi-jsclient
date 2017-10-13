@@ -2,7 +2,7 @@ const invariant = require('invariant');
 const Promise = require('bluebird');
 
 // application modules
-const {debug} = require('./utils');
+
 
 /**
  * Schemas object
@@ -39,13 +39,12 @@ class Schemas {
   }
 
   /**
-   *
+   * get all schemas
    * @return {Promise}
    */
-  updateSchemas() {
+  getAllSchemas() {
     return this.collections()
-      .then(colls => Promise.each(colls, this.schema.bind(this)))
-      .then(data => debug(data));
+      .then(colls => Promise.each(colls, this.schema.bind(this)));
   }
 }
 

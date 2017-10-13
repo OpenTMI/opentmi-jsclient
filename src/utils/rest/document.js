@@ -1,77 +1,16 @@
 const invariant = require('invariant');
 const _ = require('lodash');
 
-const {notImplemented, retry} = require('./utils');
-
-class RestResourceBase {
-  /**
-   * General base constructor for Rest resources
-   * @param {Transport} transport - Transport object<
-   * @param {string} path - path for REST API
-   */
-  constructor(transport, path) {
-    invariant(transport, 'transport is mandatory');
-    this._transport = transport;
-    this._path = path;
-    this._notImplemented = notImplemented;
-  }
-}
+const Base = require('./base');
+const retryUpdate = require('./../retry');
 
 
-class RestResourceList extends RestResourceBase {
-  /**
-   * Find document(s)
-   * @param {Query} query - optional Query object
-   * @return {Promise}
-   */
-  find(query = undefined) {
-    invariant(this._transport.isLoggedIn, 'Transport should be logged in');
-    return this._transport.get({path: this._path, query: query ? query.toString() : undefined});
-  }
-
-  /**
-   * Update document(s)
-   * @param data
-   * @param query
-   */
-  update(data, query = undefined) {
-    return this._transport.put({
-      path: this._path,
-      query: query ? query.toString() : undefined,
-      data
-    });
-  }
-
-  /**
-   * get document(s)
-   * @return {Promise}
-   */
-  get() {
-    return this._notImplemented();
-  }
-
-  /**
-   * delete document(s)
-   * @return {Promise}
-   */
-  delete() {
-    return this._notImplemented();
-  }
-
-  /**
-   * patch document(s)
-   * @return {Promise}
-   */
-  patch() {
-    return this._notImplemented();
-  }
-}
-
-class RestResource extends RestResourceBase {
+class Document extends Base {
   constructor(transport, path, originalJson) {
-    invariant(_.isPlainObject(originalJson), 'resourceJson should be plain object');
-    invariant(_.isString(originalJson._id), 'resourceJson should have _id');
     super(transport, path);
+    this._idProperty = originalJson.id ? 'id' : '_id';
+    invariant(_.isPlainObject(originalJson), 'resourceJson should be plain object');
+    invariant(_.isString(originalJson[this._idProperty]), 'resourceJson should have _id');
     this._original = _.cloneDeep(originalJson);
     this._resource = _.cloneDeep(originalJson);
     this._changes = {};
@@ -118,9 +57,10 @@ class RestResource extends RestResourceBase {
   save(retryCount = 2) {
     if (this.isDirty()) {
       const changes = this.getChanges();
-      invariant(changes._id !== this._original._id, 'id is not the same!!');
+      invariant(changes[this._idProperty] !==
+        this._original[this._idProperty], `${this._idProperty} is not the same!!`);
       changes.version = this.version;
-      return retry(this._original, changes, this._update.bind(this), retryCount);
+      return retryUpdate(this._original, changes, this._update.bind(this), retryCount);
     }
     return Promise.reject(new Error('no changes'));
   }
@@ -162,13 +102,10 @@ class RestResource extends RestResourceBase {
    * Get resource identity
    * @return {string}
    */
-  get id() { return this.get('_id'); }
+  get id() { return this.get(this._idProperty); }
 
   _update(data) {
-    return this._transport.put({
-      path: this._path,
-      data: data
-    });
+    return this._transport.put(this._path, data);
   }
 
   /**
@@ -190,4 +127,4 @@ class RestResource extends RestResourceBase {
   }
 }
 
-module.exports = {RestResourceList, RestResource};
+module.exports = Document;
