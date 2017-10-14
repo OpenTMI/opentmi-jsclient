@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/OpenTMI/opentmi-jsclient/tree/master.svg?style=svg)](https://circleci.com/gh/OpenTMI/opentmi-jsclient/tree/master)
 
-Promise based OpenTMI javascript client for node.js and browser.
+Promise based [OpenTMI](github.com/opentmi/opentmi) javascript client for node.js and browser.
 
 ## Requirements
 
