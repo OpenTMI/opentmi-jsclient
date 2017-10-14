@@ -31185,7 +31185,7 @@ const invariant = require('invariant');
 const Promise = require('bluebird');
 
 // application modules
-const {debug} = require('./utils');
+
 
 /**
  * Schemas object
@@ -31222,19 +31222,18 @@ class Schemas {
   }
 
   /**
-   *
+   * get all schemas
    * @return {Promise}
    */
-  updateSchemas() {
+  getAllSchemas() {
     return this.collections()
-      .then(colls => Promise.each(colls, this.schema.bind(this)))
-      .then(data => debug(data));
+      .then(colls => Promise.each(colls, this.schema.bind(this)));
   }
 }
 
 module.exports = Schemas;
 
-},{"./utils":90,"bluebird":31,"invariant":56}],82:[function(require,module,exports){
+},{"bluebird":31,"invariant":56}],82:[function(require,module,exports){
 const invariant = require('invariant');
 const {debug} = require('./utils');
 
@@ -31250,7 +31249,7 @@ class Admin {
 
   /**
    * Get OpenTMI server version details.
-   * @return {Promise} resolves json object:
+   * @return {Promise} resolves json object
    * e.g. { commitId: <id>, tag: <tag>, version: <pkg-version>, node_modules: {...}..}
    */
   version() {
@@ -31264,6 +31263,7 @@ class Admin {
   /**
    * Update opentmi server which are connected through Transport
    * @param {string} version - tag/commitId to be deployed
+   * @return {Promise}
    */
   upgrade(version) {
     invariant(this._transport.isLoggedIn, 'Transport should be connected');
@@ -31276,7 +31276,7 @@ class Admin {
 
 module.exports = Admin;
 
-},{"./utils":90,"invariant":56}],83:[function(require,module,exports){
+},{"./utils":91,"invariant":56}],83:[function(require,module,exports){
 const invariant = require('invariant');
 const _ = require('lodash');
 const Promise = require('bluebird');
@@ -31297,9 +31297,9 @@ class Authentication {
 
   /**
    * Login to OpenTMI
-   * @param {string} email
-   * @param {string} password
-   * @param {string} token - optional token
+   * @param {string}email
+   * @param {string}password
+   * @param {string}token - optional token
    * @return {Promise.<string>} - return a token
    */
   login(email, password, token = undefined) {
@@ -31347,14 +31347,16 @@ class Authentication {
 
 module.exports = Authentication;
 
-},{"./utils":90,"bluebird":31,"invariant":56,"lodash":59}],84:[function(require,module,exports){
+},{"./utils":91,"bluebird":31,"invariant":56,"lodash":59}],84:[function(require,module,exports){
 const invariant = require('invariant');
 const _ = require('lodash');
 // application modules
 const {debug} = require('./utils');
 
-/** Class manage OpenTMI clusters
+/** Class to manage OpenTMI clusters.
  * Most of these require admin access.
+ *
+ *
  */
 class Cluster {
   /**
@@ -31412,27 +31414,47 @@ class Cluster {
 
 module.exports = Cluster;
 
-},{"./utils":90,"invariant":56,"lodash":59}],85:[function(require,module,exports){
+},{"./utils":91,"invariant":56,"lodash":59}],85:[function(require,module,exports){
 // application modules
-const {RestResource} = require('./utils');
+const {Document} = require('./utils');
 
 
-class Resource extends RestResource {
+class Resource extends Document {
   /**
    * Manage single resource
    * @param {Transport} transport - transport layer
    * @param {object} resourceJson - plain json object
    */
   constructor(transport, resourceJson) {
-    super(transport, `/api/v0/resources/${resourceJson._id}`, resourceJson);
+    super(transport, `/api/v0/resources/${resourceJson.id}`, resourceJson);
   }
 
   /**
-   * Get resource name
+   * Get resource info as short string
+   * @return {string}
+   */
+  toString() {
+    return `${this.id}: ${this.name()}`;
+  }
+
+  /**
+   * Get resource name or set it
    * @return {string}
    */
   name(value) { return this.getOrSet('name', value); }
 
+  /**
+   * Manage location information
+   * @example
+   * // set site and country
+   * doc
+   *  .location.site('oulu')
+   *  .location.country('finland')
+   * @return {{site: (function(this:Resource)), country: (function(this:Resource)),
+   * city: (function(this:Resource)), address: (function(this:Resource)), postcode:
+   * (function(this:Resource)), room: (function(this:Resource)), subRoom:
+   * (function(this:Resource)), geo: (function(this:Resource))}}
+   */
   get location() {
     const loc = {
       site: function site(value) { return this.getOrSet('location.site', value); }.bind(this),
@@ -31450,16 +31472,57 @@ class Resource extends RestResource {
 
 module.exports = Resource;
 
-},{"./utils":90}],86:[function(require,module,exports){
+},{"./utils":91}],86:[function(require,module,exports){
 // 3rd party modules
 const invariant = require('invariant');
 const _ = require('lodash');
-// application modules
-const {Query, RestResource} = require('./utils');
 
-class ResourcesQuery extends Query {
+
+// application modules
+const Resource = require('./resource');
+const {QueryBase, Collection, notImplemented} = require('./utils');
+
+class ResourcesQuery extends QueryBase {
+  /* Find resources by id
+   * @param {string} type
+   * @return {Query}
+   */
+  id(id) {
+    invariant(_.isString(id), 'id should be a string');
+    return this.has({_id: id});
+  }
+
+  /**
+   * Resource has parent
+   * @param {String} id - optional parent resource id
+   * @return {MongooseQueryClient}
+   */
+  hasParent(id = undefined) {
+    if (_.isUndefined(id)) {
+      return this.has({parent: {$exists: true}});
+    }
+    return this.has({parent: id});
+  }
+
+  /**
+   * Resource doesn't have parent
+   * @return {MongooseQueryClient}
+   */
+  hasNoParent() {
+    return this.has({parent: {$exists: false}});
+  }
+
   /**
    * Find resources with type
+   * @param {string} type
+   * @return {Query}
+   */
+  name(name) {
+    invariant(_.isString(name), 'type should be a string');
+    return this.has({name});
+  }
+  /**
+   * Find resources by type
    * @param {string} type
    * @return {Query}
    */
@@ -31469,29 +31532,39 @@ class ResourcesQuery extends Query {
   }
 
   /**
-   * Resource status should be
+   * Find resources by status
    * @param {string} status
    * @return {Query}
    */
   status(status) {
-    const STATUS = [];
+    const STATUS = ['active', 'maintenance', 'broken'];
     invariant(_.contains(STATUS, status), `Status is not one of ${STATUS.join(', ')}`);
-    return this.has({status});
+    return this.has({status: {value: status}});
   }
 
   /**
-   * resource have tag
+   * Find resources by usage type
+   * @param {String} usageType
+   * @return {MongooseQueryClient}
+   */
+  usageType(usageType) {
+    invariant(_.isString(usageType), 'usageType should be a string');
+    return this.has({usage: {type: usageType}});
+  }
+
+  /**
+   * Find resources by a tag
    * @param {string} tag
    * @param {bool} isTrue - optional - default: true
    * @return {Query}
    */
   haveTag(tag, isTrue = true) {
     invariant(_.isBoolean(isTrue), 'isTrue should be a boolean');
-    return this.this.has({tags: {tag: isTrue}});
+    return this.has({tags: {tag: isTrue}});
   }
 
   /**
-   * Resource has multiple tags
+   * Find resources by multiple tags
    * @param {array<String>} tags
    * @return {Query}
    */
@@ -31502,51 +31575,217 @@ class ResourcesQuery extends Query {
 }
 
 
-class Resources extends RestResource {
+class Resources extends Collection {
   /**
    * Constructor for Resources model
    * @param {Transport} transport - transport object
    */
   constructor(transport) {
     super(transport, '/api/v0/resources');
+    this._notImplemented = notImplemented();
+  }
+
+  /**
+   * Find Resources
+   * @return {ResourcesQuery}
+   */
+  find() {
+    return new ResourcesQuery(this, Resource);
+  }
+
+  /**
+   * Update documents
+   * @return {*}
+   */
+  update() {
+    return this._notImplemented();
   }
 }
 
-Resources.Query = ResourcesQuery;
-
 module.exports = Resources;
 
-},{"./utils":90,"invariant":56,"lodash":59}],87:[function(require,module,exports){
+},{"./resource":85,"./utils":91,"invariant":56,"lodash":59}],87:[function(require,module,exports){
 // 3rd party modules
 // application modules
-const {Query, RestResource} = require('./utils');
+const {Document} = require('./utils');
 
-class ResultsQuery extends Query {
+
+class Result extends Document {
+  /**
+   * Constructor for Resources model
+   * @param {Transport} transport - Transport object
+   */
+  constructor(transport, resultJson) {
+    super(transport, `/api/v0/results/${resultJson._id}`, resultJson);
+  }
+
+  /**
+   * Get resource info as short string
+   * @return {string}
+   */
+  toString() {
+    return `${this.time()}: ${this.name} - ${this.verdict()}`;
+  }
+
+  /**
+   * Get resource name or set it
+   * @return {string}
+   */
+  tcid() {
+    return this.get('tcid');
+  }
+  get name() { return this.tcid(); }
+  get testcaseId() { return this.tcid(); }
+
+  /**
+   * Get result verdict
+   * @return {String}
+   */
+  verdict() {
+    return this.get('exec.verdict');
+  }
+
+  /**
+   * Get result creation time
+   */
+  time() {
+    return this.get('cre.time');
+  }
+
+  /**
+   * Get execution duration
+   * @return {*}
+   */
+  duration() {
+    return this.get('exec.duration');
+  }
 }
 
+module.exports = Result;
 
-class Results extends RestResource {
+},{"./utils":91}],88:[function(require,module,exports){
+// 3rd party modules
+const _ = require('lodash');
+const invariant = require('invariant');
+
+// application modules
+const Result = require('./result');
+const {QueryBase, Collection, notImplemented} = require('./utils');
+
+
+class ResultsQuery extends QueryBase {
+  /**
+   * Find results which are using hw dut(s)
+   * @return {ResultsQuery}
+   */
+  isHW() {
+    return this.has({'exec.dut.type': 'hw'});
+  }
+
+  /**
+   * Find results by verdict
+   * @param {String}verdict
+   * @return {ResultsQuery}
+   */
+  verdict(verdict) {
+    invariant(_.isString(verdict), 'verdictr should be a string');
+    return this.has({'exec.verdict': verdict});
+  }
+
+  /**
+   * Find failed test results
+   * @return {ResultsQuery}
+   */
+  isFailed() {
+    return this.verdict('fail');
+  }
+
+  /**
+   * Find pass test results
+   * @return {ResultsQuery}
+   */
+  isPass() {
+    return this.verdict('pass');
+  }
+
+  /**
+   * Find inconclusive results
+   * @return {ResultsQuery}
+   */
+  isInconclusive() {
+    return this.verdict(('inconclusive'));
+  }
+
+  /**
+   * Find results which belong to campaign
+   * @param {String}campaign
+   * @return {ResultsQuery}
+   */
+  belongToCampaign(campaign) {
+    invariant(_.isString(campaign), 'campaign should be a string');
+    return this.has({'campaign.id': campaign});
+  }
+
+  /**
+   * Find results which belong to job
+   * @param {String}job
+   * @return {ResultsQuery}
+   */
+  belongToJob(job) {
+    invariant(_.isString(job), 'job should be a string');
+    return this.has({'job.id': job});
+  }
+
+  /**
+   * Find results which note contains text
+   * @param {String}str
+   * @return {ResultsQuery}
+   */
+  containsNote(str) {
+    invariant(_.isString(str), 'str should be a string');
+    return this.has({'exec.note': str});
+  }
+}
+
+class Results extends Collection {
   /**
    * Constructor for Resources model
    * @param {Transport} transport - Transport object
    */
   constructor(transport) {
     super(transport, '/api/v0/results');
+    this._notImplemented = notImplemented();
+  }
+
+  /**
+   * Find Results
+   * @return {ResultsQuery}
+   */
+  find() {
+    return new ResultsQuery(this, Result);
+  }
+
+  /**
+   * Update documents
+   * @return {Promise}
+   */
+  update() {
+    return this._notImplemented();
   }
 }
 
-Results.Query = ResultsQuery;
-
 module.exports = Results;
 
-},{"./utils":90}],88:[function(require,module,exports){
+},{"./result":87,"./utils":91,"invariant":56,"lodash":59}],89:[function(require,module,exports){
 // 3rd party modules
 const SocketIO = require('socket.io-client');
 const axios = require('axios');
+const Promise = require('bluebird');
 const invariant = require('invariant');
 const _ = require('lodash');
+
 // application modules
-const {debug} = require('../utils');
+const {debug, timeSince} = require('../utils');
 
 
 class Transport {
@@ -31633,38 +31872,38 @@ class Transport {
       });
       this._socket.once('connect_error', reject);
     }).then(() => {
-        debug('SocketIO connected');
-        this._socket.on('error', (error) => {
-          debug(error);
-        });
-        this._socket.on('reconnect', () => {
-          debug('socketIO reconnect');
-        });
-        this._socket.on('reconnect_attempt', () => {
-          debug('socketIO reconnect_attempt');
-        });
-        this._socket.on('reconnecting', (attempt) => {
-          debug(`socketIO reconnecting, attempt: ${attempt}`);
-        });
-        this._socket.on('reconnect_error', (error) => {
-          debug(error);
-        });
-        this._socket.on('reconnect_failed', (error) => {
-          debug(error);
-        });
-        this._socket.on('exit', () => {
-          debug('Server is attemt to exit...');
-        });
-        this._socket.on('pong', (latency) => {
-          this._latency = latency;
-          debug(`pong latency: ${latency}ms`);
-        });
-        return this._socket;
-      })
-      .catch((error) => {
-        debug(`socketIO connection fails: ${error.message}`);
-        throw error;
+      debug('SocketIO connected');
+      this._socket.on('error', (error) => {
+        debug(error);
       });
+      this._socket.on('reconnect', () => {
+        debug('socketIO reconnect');
+      });
+      this._socket.on('reconnect_attempt', () => {
+        debug('socketIO reconnect_attempt');
+      });
+      this._socket.on('reconnecting', (attempt) => {
+        debug(`socketIO reconnecting, attempt: ${attempt}`);
+      });
+      this._socket.on('reconnect_error', (error) => {
+        debug(error);
+      });
+      this._socket.on('reconnect_failed', (error) => {
+        debug(error);
+      });
+      this._socket.on('exit', () => {
+        debug('Server is attemt to exit...');
+      });
+      this._socket.on('pong', (latency) => {
+        this._latency = latency;
+        debug(`pong latency: ${latency}ms`);
+      });
+      return this._socket;
+    })
+    .catch((error) => {
+      debug(`socketIO connection fails: ${error.message}`);
+      throw error;
+    });
   }
   /**
    * Disconnect SIO
@@ -31672,10 +31911,10 @@ class Transport {
    */
   disconnect() {
     return new Promise((resolve) => {
-      invariant(this._socket, 'token is not configured');
-      this._socket.once('disconnect', resolve);
-      this._socket.disconnect();
-    })
+        invariant(this._socket, 'token is not configured');
+        this._socket.once('disconnect', resolve);
+        this._socket.disconnect();
+      })
       .then(() => {
         debug('SocketIO disconnected');
       });
@@ -31753,9 +31992,14 @@ class Transport {
         cancelToken: source.token
       });
     debug(`Requesting: ${JSON.stringify(config)}`);
+    const startTime = new Date();
     return this.Rest
       .request(config)
-      .then(data => data)
+      .then((data) => {
+        const duration = timeSince(startTime);
+        debug(`Request finished in ${duration.milliseconds}ms`);
+        return data;
+      })
       .catch((error) => {
         if (error.response) {
           // The request was made and the server responded with a status code
@@ -31807,8 +32051,8 @@ class Transport {
   post(url, data, headers = undefined) {
     return this.request({url, method: 'post', data, headers});
   }
-  update(url, data) {
-    return this.request({url, method: 'update', data});
+  put(url, data) {
+    return this.request({url, method: 'put', data});
   }
   delete(url) {
     return this.request({url, method: 'delete'});
@@ -31825,30 +32069,32 @@ class Transport {
 
 module.exports = Transport;
 
-},{"../utils":90,"axios":3,"invariant":56,"lodash":59,"socket.io-client":67}],89:[function(require,module,exports){
+},{"../utils":91,"axios":3,"bluebird":31,"invariant":56,"lodash":59,"socket.io-client":67}],90:[function(require,module,exports){
 const debug = require('debug')('opentmi-client');
 
 module.exports = debug;
 
-},{"debug":36}],90:[function(require,module,exports){
+},{"debug":36}],91:[function(require,module,exports){
 const debug = require('./debug');
-const Query = require('./query');
-const {RestResourceList, RestResource} = require('./rest');
-const retry = require('./retry');
-const {notImplemented} = require('./utils');
+const QueryBase = require('./rest/queryBase');
+const Collection = require('./rest/collection');
+const Document = require('./rest/document');
+const retryUpdate = require('./retry');
+const {notImplemented, timeSince} = require('./utils');
 const objectMerge = require('./object-merge');
 
 module.exports = {
   debug,
-  Query,
-  RestResourceList,
-  RestResource,
-  retry,
+  QueryBase,
+  Collection,
+  Document,
+  retryUpdate,
+  timeSince,
   notImplemented,
   objectMerge
 };
 
-},{"./debug":89,"./object-merge":91,"./query":92,"./rest":93,"./retry":94,"./utils":95}],91:[function(require,module,exports){
+},{"./debug":90,"./object-merge":92,"./rest/collection":94,"./rest/document":95,"./rest/queryBase":97,"./retry":98,"./utils":99}],92:[function(require,module,exports){
 /* eslint-disable */
 
 // https://github.com/rsms/js-object-merge
@@ -31935,7 +32181,214 @@ objectMerge = function (o, a, b, objOrShallow) {
 
 module.exports = objectMerge;
 
-},{}],92:[function(require,module,exports){
+},{}],93:[function(require,module,exports){
+const invariant = require('invariant');
+const {notImplemented} = require('../utils');
+
+class Base {
+  /**
+   * General base constructor for Rest resources
+   * @param {Transport} transport - Transport object<
+   * @param {string} path - path for REST API
+   */
+  constructor(transport, path) {
+    invariant(transport, 'transport is mandatory');
+    this._transport = transport;
+    this._path = path;
+    this._notImplemented = notImplemented;
+  }
+}
+
+module.exports = Base;
+
+},{"../utils":99,"invariant":56}],94:[function(require,module,exports){
+// 3rd party modules
+const invariant = require('invariant');
+const _ = require('lodash');
+
+// application modules
+const Base = require('./base');
+
+
+class Collection extends Base {
+  _find(query) {
+    invariant(_.isString(query), 'query hould be a string');
+    invariant(this._transport.isLoggedIn, 'Transport should be logged in');
+    return this._transport.get(`${this._path}?${query}`)
+      .then(resp => resp.data);
+  }
+
+  _update(data, query = undefined) {
+    return this._transport.put({
+      path: this._path,
+      query: query ? query.toString() : undefined,
+      data
+    });
+  }
+
+  _get() {
+    return this._notImplemented();
+  }
+
+  _delete() {
+    return this._notImplemented();
+  }
+
+  _patch() {
+    return this._notImplemented();
+  }
+}
+
+module.exports = Collection;
+
+},{"./base":93,"invariant":56,"lodash":59}],95:[function(require,module,exports){
+const invariant = require('invariant');
+const _ = require('lodash');
+
+const Base = require('./base');
+const retryUpdate = require('./../retry');
+
+
+class Document extends Base {
+  /**
+   * Low level Document object, which handle modifications and storing
+   * @param transport
+   * @param path
+   * @param originalJson
+   */
+  constructor(transport, path, originalJson) {
+    super(transport, path);
+    this._idProperty = originalJson.id ? 'id' : '_id';
+    invariant(_.isPlainObject(originalJson), 'originalJson should be plain object');
+    invariant(_.isString(originalJson[this._idProperty]), 'originalJson should have id');
+    this._original = _.cloneDeep(originalJson);
+    this._resource = _.cloneDeep(originalJson);
+    this._changes = {};
+  }
+
+  /**
+   * Get resource data as plain json object
+   * @return {object}
+   */
+  toJson() {
+    return _.cloneDeep(this._resource);
+  }
+
+  /**
+   * get changes as json object
+   * @return {object}
+   */
+  getChanges() {
+    return _.cloneDeep(this._changes);
+  }
+
+  /**
+   * returns true when there is changes made by client
+   * @return {boolean}
+   */
+  isDirty() {
+    return !_.isEqual(this._original, this._resource);
+  }
+
+  /**
+   * Save document. If conflicts happen try merge and save again.
+   * if there is no retries left or some server side changes causes conflict
+   * promise is rejected and reason property tells was it no retries left or merge conflicts.
+   * @return {Promise}
+   */
+  save(retryCount = 2) {
+    if (this.isDirty()) {
+      const changes = this.getChanges();
+      invariant(changes[this._idProperty] !==
+        this._original[this._idProperty], `${this._idProperty} is not the same!!`);
+      changes.version = this.version;
+      return retryUpdate(this._original, changes, this._update.bind(this), retryCount)
+        .then(() => this);
+    }
+    return Promise.reject(new Error('no changes'));
+  }
+
+  /**
+   * Get resource value by Key.
+   * @param {String} key - key can be nested as well like "a.b.c"
+   * @return {String|Object} value for the key or undefined if not found
+   */
+  get(key) {
+    return _.get(this._resource, key);
+  }
+
+  /**
+   * Set value for a key
+   * @param {String} key
+   * @param {*}value
+   * @return {Document} returns this
+   */
+  set(key, value) {
+    this._dirty = true;
+    if (_.isNull(value)) {
+      _.unset(this._resource, key);
+      this._changes[key] = null;
+    } else {
+      _.set(this._resource, key, value);
+      _.set(this._changes, key, value);
+    }
+    return this;
+  }
+
+  /**
+   * get or set value to resource.
+   * @example
+   * // returns Document
+   * doc.set('key1', 'myvalue')
+   *    .set('key2', 'val')
+   * @param {string} key - key to be get/set
+   * @param {*} value - undefined (default) to get value by key, null to remove key, others to set value
+   * @return {Resource|value} value or whole object when set
+   */
+  getOrSet(key, value = undefined) {
+    if (_.isUndefined(value)) {
+      return this.get(key);
+    }
+    return this.set(key, value);
+  }
+  /**
+   * getter for Document version
+   * @return {number}
+   */
+  get version() { return this.get('__v'); }
+
+  /**
+   * Get resource identity
+   * @return {string}
+   */
+  get id() { return this.get(this._idProperty); }
+
+  /**
+   * reload document information from backend
+   * @return {Promise}
+   */
+  refresh() {
+    return this._transport
+      .get({path: this._path})
+      .then((data) => { this._original = data; });
+  }
+
+  /**
+   * delete this document
+   * @return {Promise}
+   */
+  delete() {
+    return this._transport.delete({path: this._path});
+  }
+
+  _update(data) {
+    return this._transport.put(this._path, data);
+  }
+}
+
+module.exports = Document;
+
+},{"./../retry":98,"./base":93,"invariant":56,"lodash":59}],96:[function(require,module,exports){
 const invariant = require('invariant');
 const _ = require('lodash');
 const querystring = require('querystring');
@@ -31944,7 +32397,7 @@ const querystring = require('querystring');
  * Is pair for [mongoose-query](https://github.com/jupe/mongoose-query) -library which allows to
  * manage DB queries based on rest query parameters
  */
-class Query {
+class MongooseQueryClient {
   /**
    * Query Constructor
    */
@@ -31977,7 +32430,7 @@ class Query {
 
   /**
    * Return find -part object from query
-   * @return {Query._query.q|{}}
+   * @return {MongooseQueryClient._query.q|{}}
    */
   get query() {
     return this._query.q;
@@ -31992,15 +32445,23 @@ class Query {
   }
   /**
    * do default find query
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   find() {
     this._query.t = 'find';
     return this;
   }
+
+  /**
+   * Getter for query type. default: find
+   * @return {String} - query type
+   */
+  get queryType() {
+    return _.get(this._query, 't', 'find');
+  }
   /**
    * do distinct query
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   distinct() {
     this._query.t = 'distinct';
@@ -32009,7 +32470,7 @@ class Query {
 
   /**
    * fetch only first match document
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   findOne() {
     this._query.t = 'findOne';
@@ -32018,7 +32479,7 @@ class Query {
 
   /**
    * get just count of match document
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   count() {
     this._query.t = 'count';
@@ -32027,7 +32488,7 @@ class Query {
 
   /**
    * aggregate query
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   aggregate() {
     this._query.t = 'aggregate';
@@ -32037,7 +32498,7 @@ class Query {
   /**
    * mapReduce
    * @param mapFunction
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   mapReduce(mapFunction) {
     if (_.isFunction(mapFunction)) {
@@ -32054,7 +32515,7 @@ class Query {
   /**
    * Populate selected fields
    * @param {array<string>} fields
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   populate(fields) {
     invariant(_.isArray(fields), 'fields should be array');
@@ -32065,7 +32526,7 @@ class Query {
   /**
    * Select fields
    * @param {array<String>} fields to be fetch, e.g. ['name']
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   select(fields) {
     invariant(_.isArray(fields), 'fields should be array');
@@ -32076,7 +32537,7 @@ class Query {
   /**
    * Result as a flat.
    * e.g. {"a.b": "b"}
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   asFlat() {
     this._query.fl = true;
@@ -32086,7 +32547,7 @@ class Query {
   /**
    * Result as a json
    * e.g. {"a": {"b": "b"}}
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   asJson() {
     this._query.fl = false;
@@ -32096,7 +32557,7 @@ class Query {
   /**
    * limit results
    * @param {number} limit - maximum number of results to be fetched
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   limit(limit) {
     invariant(_.isNumber(limit), 'limit should be number');
@@ -32107,7 +32568,7 @@ class Query {
   /**
    * Skip number of results
    * @param {number} skip - number of document to be skip
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   skip(skip) {
     invariant(_.isNumber(skip), 'skip should be number');
@@ -32118,213 +32579,57 @@ class Query {
   /**
    * Document has "something", e.g. {name: "jussi"}
    * @param {object} something object to be included in query
-   * @return {Query}
+   * @return {MongooseQueryClient}
    */
   has(something) {
     _.isPlainObject(something, 'something should be plain object');
-    _.merge(this.query, something);
+    _.merge(this._query.q, something);
     return this;
   }
 }
 
-module.exports = Query;
+module.exports = MongooseQueryClient;
 
-},{"invariant":56,"lodash":59,"querystring":66}],93:[function(require,module,exports){
-const invariant = require('invariant');
+},{"invariant":56,"lodash":59,"querystring":66}],97:[function(require,module,exports){
+// 3rd party modules
+const Promise = require('bluebird');
 const _ = require('lodash');
+const invariant = require('invariant');
 
-const {notImplemented, retry} = require('./utils');
+// application modules
+const MongooseQueryClient = require('./mongooseQueryClient');
 
-class RestResourceBase {
+
+class QueryBase extends MongooseQueryClient {
+  constructor(collection, baseClass) {
+    super();
+    this._collection = collection;
+    this._baseClass = baseClass;
+  }
   /**
-   * General base constructor for Rest resources
-   * @param {Transport} transport - Transport object<
-   * @param {string} path - path for REST API
+   * Execute query based on previous selected options
+   * @param {Boolean} plain - do not convert to classes
+   * @return {Promise} - list of objects when 'find' (default) or plain json.
    */
-  constructor(transport, path) {
-    invariant(transport, 'transport is mandatory');
-    this._transport = transport;
-    this._path = path;
-    this._notImplemented = notImplemented;
+  exec(plain = false) {
+    invariant(_.isBoolean(plain), 'plain should be boolean');
+    return this._exec()
+      .then((data) => {
+        if (!plain && this.queryType === 'find') {
+          return Promise.map(data, json => new this._baseClass(this._collection._transport, json));
+        }
+        return data;
+      });
+  }
+
+  _exec() {
+    return this._collection._find(this.toString());
   }
 }
 
+module.exports = QueryBase;
 
-class RestResourceList extends RestResourceBase {
-  /**
-   * Find document(s)
-   * @param {Query} query - optional Query object
-   * @return {Promise}
-   */
-  find(query = undefined) {
-    invariant(this._transport.isLoggedIn, 'Transport should be logged in');
-    return this._transport.get({path: this._path, query: query ? query.toString() : undefined});
-  }
-
-  /**
-   * Update document(s)
-   * @param data
-   * @param query
-   */
-  update(data, query = undefined) {
-    return this._transport.put({
-      path: this._path,
-      query: query ? query.toString() : undefined,
-      data
-    });
-  }
-
-  /**
-   * get document(s)
-   * @return {Promise}
-   */
-  get() {
-    return this._notImplemented();
-  }
-
-  /**
-   * delete document(s)
-   * @return {Promise}
-   */
-  delete() {
-    return this._notImplemented();
-  }
-
-  /**
-   * patch document(s)
-   * @return {Promise}
-   */
-  patch() {
-    return this._notImplemented();
-  }
-}
-
-class RestResource extends RestResourceBase {
-  constructor(transport, path, originalJson) {
-    invariant(_.isPlainObject(originalJson), 'resourceJson should be plain object');
-    invariant(_.isString(originalJson._id), 'resourceJson should have _id');
-    super(transport, path);
-    this._original = _.cloneDeep(originalJson);
-    this._resource = _.cloneDeep(originalJson);
-    this._changes = {};
-  }
-
-  /**
-   * Get resource data as plain json object
-   * @return {object}
-   */
-  toJson() {
-    return _.cloneDeep(this._resource);
-  }
-
-  /**
-   * Get resource info as short string
-   * @return {string}
-   */
-  toString() {
-    return `${this.id}: ${this.name()}`;
-  }
-
-  /**
-   * get changes as json object
-   * @return {object}
-   */
-  getChanges() {
-    return this._changes;
-  }
-
-  /**
-   * true when there is changes
-   * @return {boolean}
-   */
-  isDirty() {
-    return !_.isEqual(this._original, this._resource);
-  }
-
-  /**
-   * Save document. If conflicts happen try merge and save again.
-   * if there is no retries left or some server side changes causes conflict
-   * promise is rejected and reason property tells was it no retries left or merge conflicts.
-   * @return {Promise}
-   */
-  save(retryCount = 2) {
-    if (this.isDirty()) {
-      const changes = this.getChanges();
-      invariant(changes._id !== this._original._id, 'id is not the same!!');
-      changes.version = this.version;
-      return retry(this._original, changes, this._update.bind(this), retryCount);
-    }
-    return Promise.reject(new Error('no changes'));
-  }
-
-
-  get(key) {
-    return _.get(this._resource, key);
-  }
-  set(key, value) {
-    this._dirty = true;
-    if (_.isNull(value)) {
-      _.unset(this._resource, key);
-      this._changes[key] = null;
-    } else {
-      _.set(this._resource, key, value);
-      _.set(this._changes, key, value);
-    }
-    return this;
-  }
-  /**
-   * get or set value to resource
-   * @param {string} key - key to be get/set
-   * @param {*} value - undefined (default) to get value by key, null to remove key, others to set value
-   * @return {Resource|value} value or whole object when set
-   */
-  getOrSet(key, value = undefined) {
-    if (_.isUndefined(value)) {
-      return this.get(key);
-    }
-    return this.set(key, value);
-  }
-  /**
-   * Data version
-   * @return {number}
-   */
-  get version() { return this.get('__v'); }
-
-  /**
-   * Get resource identity
-   * @return {string}
-   */
-  get id() { return this.get('_id'); }
-
-  _update(data) {
-    return this._transport.put({
-      path: this._path,
-      data: data
-    });
-  }
-
-  /**
-   * get document(s)
-   * @return {Promise}
-   */
-  refresh() {
-    return this._transport
-      .get({path: this._path})
-      .then((data) => { this._original = data; });
-  }
-
-  /**
-   * delete document(s)
-   * @return {Promise}
-   */
-  delete() {
-    return this._transport.delete({path: this._path});
-  }
-}
-
-module.exports = {RestResourceList, RestResource};
-
-},{"./utils":95,"invariant":56,"lodash":59}],94:[function(require,module,exports){
+},{"./mongooseQueryClient":96,"bluebird":31,"invariant":56,"lodash":59}],98:[function(require,module,exports){
 // 3rd party modules
 const _ = require('lodash');
 const Promise = require('bluebird');
@@ -32356,7 +32661,23 @@ const retryUpdate = function (original, changes, update, retryCount = 2, retryIn
 
 module.exports = retryUpdate;
 
-},{"./debug":89,"./object-merge":91,"bluebird":31,"lodash":59}],95:[function(require,module,exports){
+},{"./debug":90,"./object-merge":92,"bluebird":31,"lodash":59}],99:[function(require,module,exports){
+module.exports.timeSince = (when) => {
+  const obj = {};
+  obj._milliseconds = (new Date()).valueOf() - when.valueOf();
+  obj.milliseconds = obj._milliseconds % 1000;
+  obj._seconds = (obj._milliseconds - obj.milliseconds) / 1000;
+  obj.seconds = obj._seconds % 60;
+  obj._minutes = (obj._seconds - obj.seconds) / 60;
+  obj.minutes = obj._minutes % 60;
+  obj._hours = (obj._minutes - obj.minutes) / 60;
+  obj.hours = obj._hours % 24;
+  obj._days = (obj._hours - obj.hours) / 24;
+  obj.days = obj._days % 365;
+  // finally
+  obj.years = (obj._days - obj.days) / 365;
+  return obj;
+};
 
 module.exports.notImplemented = () => Promise.reject(new Error('not implemented'));
 
@@ -32367,6 +32688,7 @@ const Admin = require('./admin');
 const Cluster = require('./cluster');
 const Resources = require('./resources');
 const Resource = require('./resource');
+const Results = require('./results');
 const Result = require('./result');
 const utils = require('./utils');
 const Transport = require('./transports');
@@ -32378,10 +32700,11 @@ module.exports = {
   Cluster,
   Resources,
   Resource,
+  Results,
   Result,
   utils,
   Transport
 };
 
-},{"./Schemas":81,"./admin":82,"./authentication":83,"./cluster":84,"./resource":85,"./resources":86,"./result":87,"./transports":88,"./utils":90}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,"opentmiClient",85,86,87,88,89,90,91,92,93,94,95])("opentmiClient")
+},{"./Schemas":81,"./admin":82,"./authentication":83,"./cluster":84,"./resource":85,"./resources":86,"./result":87,"./results":88,"./transports":89,"./utils":91}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,"opentmiClient",85,86,87,88,89,90,91,92,93,94,95,96,97,98,99])("opentmiClient")
 });

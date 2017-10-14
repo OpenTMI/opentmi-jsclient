@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: admin.js</title>
+    <title>JSDoc: Source: utils/rest/queryBase.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: admin.js</h1>
+    <h1 class="page-title">Source: utils/rest/queryBase.js</h1>
 
     
 
@@ -26,47 +26,43 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const invariant = require('invariant');
-const {debug} = require('./utils');
+            <pre class="prettyprint source linenums"><code>// 3rd party modules
+const Promise = require('bluebird');
+const _ = require('lodash');
+const invariant = require('invariant');
 
-class Admin {
+// application modules
+const MongooseQueryClient = require('./mongooseQueryClient');
+
+
+class QueryBase extends MongooseQueryClient {
+  constructor(collection, baseClass) {
+    super();
+    this._collection = collection;
+    this._baseClass = baseClass;
+  }
   /**
-   * Admin operations
-   * @param {Transport} transport - transport layer
+   * Execute query based on previous selected options
+   * @param {Boolean} plain - do not convert to classes
+   * @return {Promise} - list of objects when 'find' (default) or plain json.
    */
-  constructor(transport) {
-    invariant(transport, 'transport is mandatory');
-    this._transport = transport;
+  exec(plain = false) {
+    invariant(_.isBoolean(plain), 'plain should be boolean');
+    return this._exec()
+      .then((data) => {
+        if (!plain &amp;&amp; this.queryType === 'find') {
+          return Promise.map(data, json => new this._baseClass(this._collection._transport, json));
+        }
+        return data;
+      });
   }
 
-  /**
-   * Get OpenTMI server version details.
-   * @return {Promise} resolves json object
-   * e.g. { commitId: &lt;id>, tag: &lt;tag>, version: &lt;pkg-version>, node_modules: {...}..}
-   */
-  version() {
-    invariant(this._transport.isLoggedIn, 'Transport should be connected');
-    debug('request opentmi version');
-    return this._transport
-      .get('/api/v0/version')
-      .then(response => response.data);
-  }
-
-  /**
-   * Update opentmi server which are connected through Transport
-   * @param {string} version - tag/commitId to be deployed
-   * @return {Promise}
-   */
-  upgrade(version) {
-    invariant(this._transport.isLoggedIn, 'Transport should be connected');
-    debug('request opentmi version');
-    return this._transport
-      .post('/api/v0/version', {version})
-      .then(response => response.data);
+  _exec() {
+    return this._collection._find(this.toString());
   }
 }
 
-module.exports = Admin;
+module.exports = QueryBase;
 </code></pre>
         </article>
     </section>

@@ -31,12 +31,24 @@ build api documentations
 
 ### Node.js
 ```javascript
-const {Authentication, Transport} = require('opentmi-client');
+const {Authentication, Transport, Resources} = require('opentmi-client');
 const transport = new Transport('http://localhost:3000')
 const auth = new Authentication(transport);
 auth
   .login('user@mail.com', 'password')
   .then(transport.connect.bind(transport))
+  .then(() => {
+      const collection = new Resources(transport);
+      return collection.find()
+        .haveTag('fantastic')
+        .exec()
+        .then(resources => resources[0])
+        .then(resource => {
+          return resource
+            .name('new name')
+            .save();
+        });
+  })
 ```
 
 ### Browser

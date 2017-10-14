@@ -60,7 +60,7 @@ describe('Transport', function () {
         done()
       });
     });
-    it('update', function (done) {
+    it('put', function (done) {
       // Match against an exact URL value
       moxios.stubRequest('/route', {
         status: 200,
@@ -68,10 +68,10 @@ describe('Transport', function () {
       });
       let onFulfilled = sinon.spy();
       const transport = new Transport();
-      transport.update('/route').then(onFulfilled);
+      transport.put('/route').then(onFulfilled);
       moxios.wait(function () {
         assert.deepEqual(onFulfilled.getCall(0).args[0].data, {});
-        assert.equal(onFulfilled.getCall(0).args[0].request.config.method, 'update');
+        assert.equal(onFulfilled.getCall(0).args[0].request.config.method, 'put');
         done()
       });
     });
