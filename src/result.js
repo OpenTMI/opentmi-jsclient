@@ -1,21 +1,57 @@
 // 3rd party modules
 // application modules
-const {Query, RestResource} = require('./utils');
-
-class ResultsQuery extends Query {
-}
+const {Document} = require('./utils');
 
 
-class Results extends RestResource {
+class Result extends Document {
   /**
    * Constructor for Resources model
    * @param {Transport} transport - Transport object
    */
-  constructor(transport) {
-    super(transport, '/api/v0/results');
+  constructor(transport, resultJson) {
+    super(transport, `/api/v0/results/${resultJson._id}`, resultJson);
+  }
+
+  /**
+   * Get resource info as short string
+   * @return {string}
+   */
+  toString() {
+    return `${this.time()}: ${this.name} - ${this.verdict()}`;
+  }
+
+  /**
+   * Get resource name or set it
+   * @return {string}
+   */
+  tcid() {
+    return this.get('tcid');
+  }
+  get name() { return this.tcid(); }
+  get testcaseId() { return this.tcid(); }
+
+  /**
+   * Get result verdict
+   * @return {String}
+   */
+  verdict() {
+    return this.get('exec.verdict');
+  }
+
+  /**
+   * Get result creation time
+   */
+  time() {
+    return this.get('cre.time');
+  }
+
+  /**
+   * Get execution duration
+   * @return {*}
+   */
+  duration() {
+    return this.get('exec.duration');
   }
 }
 
-Results.Query = ResultsQuery;
-
-module.exports = Results;
+module.exports = Result;

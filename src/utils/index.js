@@ -1,16 +1,18 @@
 const debug = require('./debug');
-const Query = require('./query');
-const {RestResourceList, RestResource} = require('./rest');
-const retry = require('./retry');
-const {notImplemented} = require('./utils');
+const QueryBase = require('./rest/queryBase');
+const Collection = require('./rest/collection');
+const Document = require('./rest/document');
+const retryUpdate = require('./retry');
+const {notImplemented, timeSince} = require('./utils');
 const objectMerge = require('./object-merge');
 
 module.exports = {
   debug,
-  Query,
-  RestResourceList,
-  RestResource,
-  retry,
+  QueryBase,
+  Collection,
+  Document,
+  retryUpdate,
+  timeSince,
   notImplemented,
   objectMerge
 };

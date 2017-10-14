@@ -18,9 +18,9 @@ class Authentication {
 
   /**
    * Login to OpenTMI
-   * @param {string} email
-   * @param {string} password
-   * @param {string} token - optional token
+   * @param {string}email
+   * @param {string}password
+   * @param {string}token - optional token
    * @return {Promise.<string>} - return a token
    */
   login(email, password, token = undefined) {
