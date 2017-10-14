@@ -6,11 +6,17 @@ const retryUpdate = require('./../retry');
 
 
 class Document extends Base {
+  /**
+   * Low level Document object, which handle modifications and storing
+   * @param transport
+   * @param path
+   * @param originalJson
+   */
   constructor(transport, path, originalJson) {
     super(transport, path);
     this._idProperty = originalJson.id ? 'id' : '_id';
-    invariant(_.isPlainObject(originalJson), 'resourceJson should be plain object');
-    invariant(_.isString(originalJson[this._idProperty]), 'resourceJson should have _id');
+    invariant(_.isPlainObject(originalJson), 'originalJson should be plain object');
+    invariant(_.isString(originalJson[this._idProperty]), 'originalJson should have id');
     this._original = _.cloneDeep(originalJson);
     this._resource = _.cloneDeep(originalJson);
     this._changes = {};
@@ -25,23 +31,15 @@ class Document extends Base {
   }
 
   /**
-   * Get resource info as short string
-   * @return {string}
-   */
-  toString() {
-    return `${this.id}: ${this.name()}`;
-  }
-
-  /**
    * get changes as json object
    * @return {object}
    */
   getChanges() {
-    return this._changes;
+    return _.cloneDeep(this._changes);
   }
 
   /**
-   * true when there is changes
+   * returns true when there is changes made by client
    * @return {boolean}
    */
   isDirty() {
@@ -60,15 +58,27 @@ class Document extends Base {
       invariant(changes[this._idProperty] !==
         this._original[this._idProperty], `${this._idProperty} is not the same!!`);
       changes.version = this.version;
-      return retryUpdate(this._original, changes, this._update.bind(this), retryCount);
+      return retryUpdate(this._original, changes, this._update.bind(this), retryCount)
+        .then(() => this);
     }
     return Promise.reject(new Error('no changes'));
   }
 
-
+  /**
+   * Get resource value by Key.
+   * @param {String} key - key can be nested as well like "a.b.c"
+   * @return {String|Object} value for the key or undefined if not found
+   */
   get(key) {
     return _.get(this._resource, key);
   }
+
+  /**
+   * Set value for a key
+   * @param {String} key
+   * @param {*}value
+   * @return {Document} returns this
+   */
   set(key, value) {
     this._dirty = true;
     if (_.isNull(value)) {
@@ -80,8 +90,13 @@ class Document extends Base {
     }
     return this;
   }
+
   /**
-   * get or set value to resource
+   * get or set value to resource.
+   * @example
+   * // returns Document
+   * doc.set('key1', 'myvalue')
+   *    .set('key2', 'val')
    * @param {string} key - key to be get/set
    * @param {*} value - undefined (default) to get value by key, null to remove key, others to set value
    * @return {Resource|value} value or whole object when set
@@ -93,7 +108,7 @@ class Document extends Base {
     return this.set(key, value);
   }
   /**
-   * Data version
+   * getter for Document version
    * @return {number}
    */
   get version() { return this.get('__v'); }
@@ -104,12 +119,8 @@ class Document extends Base {
    */
   get id() { return this.get(this._idProperty); }
 
-  _update(data) {
-    return this._transport.put(this._path, data);
-  }
-
   /**
-   * get document(s)
+   * reload document information from backend
    * @return {Promise}
    */
   refresh() {
@@ -119,11 +130,15 @@ class Document extends Base {
   }
 
   /**
-   * delete document(s)
+   * delete this document
    * @return {Promise}
    */
   delete() {
     return this._transport.delete({path: this._path});
+  }
+
+  _update(data) {
+    return this._transport.put(this._path, data);
   }
 }
 

@@ -93,38 +93,38 @@ class Transport {
       });
       this._socket.once('connect_error', reject);
     }).then(() => {
-        debug('SocketIO connected');
-        this._socket.on('error', (error) => {
-          debug(error);
-        });
-        this._socket.on('reconnect', () => {
-          debug('socketIO reconnect');
-        });
-        this._socket.on('reconnect_attempt', () => {
-          debug('socketIO reconnect_attempt');
-        });
-        this._socket.on('reconnecting', (attempt) => {
-          debug(`socketIO reconnecting, attempt: ${attempt}`);
-        });
-        this._socket.on('reconnect_error', (error) => {
-          debug(error);
-        });
-        this._socket.on('reconnect_failed', (error) => {
-          debug(error);
-        });
-        this._socket.on('exit', () => {
-          debug('Server is attemt to exit...');
-        });
-        this._socket.on('pong', (latency) => {
-          this._latency = latency;
-          debug(`pong latency: ${latency}ms`);
-        });
-        return this._socket;
-      })
-      .catch((error) => {
-        debug(`socketIO connection fails: ${error.message}`);
-        throw error;
+      debug('SocketIO connected');
+      this._socket.on('error', (error) => {
+        debug(error);
       });
+      this._socket.on('reconnect', () => {
+        debug('socketIO reconnect');
+      });
+      this._socket.on('reconnect_attempt', () => {
+        debug('socketIO reconnect_attempt');
+      });
+      this._socket.on('reconnecting', (attempt) => {
+        debug(`socketIO reconnecting, attempt: ${attempt}`);
+      });
+      this._socket.on('reconnect_error', (error) => {
+        debug(error);
+      });
+      this._socket.on('reconnect_failed', (error) => {
+        debug(error);
+      });
+      this._socket.on('exit', () => {
+        debug('Server is attemt to exit...');
+      });
+      this._socket.on('pong', (latency) => {
+        this._latency = latency;
+        debug(`pong latency: ${latency}ms`);
+      });
+      return this._socket;
+    })
+    .catch((error) => {
+      debug(`socketIO connection fails: ${error.message}`);
+      throw error;
+    });
   }
   /**
    * Disconnect SIO
@@ -132,10 +132,10 @@ class Transport {
    */
   disconnect() {
     return new Promise((resolve) => {
-      invariant(this._socket, 'token is not configured');
-      this._socket.once('disconnect', resolve);
-      this._socket.disconnect();
-    })
+        invariant(this._socket, 'token is not configured');
+        this._socket.once('disconnect', resolve);
+        this._socket.disconnect();
+      })
       .then(() => {
         debug('SocketIO disconnected');
       });

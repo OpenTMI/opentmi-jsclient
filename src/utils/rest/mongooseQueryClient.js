@@ -60,6 +60,14 @@ class MongooseQueryClient {
     this._query.t = 'find';
     return this;
   }
+
+  /**
+   * Getter for query type. default: find
+   * @return {String} - query type
+   */
+  get queryType() {
+    return _.get(this._query, 't', 'find');
+  }
   /**
    * do distinct query
    * @return {MongooseQueryClient}

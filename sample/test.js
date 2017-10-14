@@ -1,8 +1,10 @@
 const invariant = require('invariant');
 const Promise = require('bluebird');
+const _ = require('lodash');
 
 const {
-  Authentication, Admin, Cluster, Transport, Schemas, Resources
+  Authentication, Admin, Cluster,
+  Transport, Schemas, Resources, Results
 } = require('../src');
 const {Query} = Resources;
 
@@ -31,9 +33,25 @@ const print = (message) => () => {
         .then(resources => resources[0])
         .then(resource => {
           console.log(resource.toString());
-          resource.name(resource.name()+'abc');
-          console.log(resource.save());
-
+          return resource
+            .name(resource.name()+'abc')
+            .location.site('oulu')
+            .location.country('finland')
+            .save()
+            .then( data => console.log(data.toString()));
+        })
+  })
+  .then(() => {
+      const results = new Results(transport);
+      return results.find()
+        .isHW()
+        .limit(5)
+        .skip(4)
+        .isPass()
+        .exec()
+        .then(results => {
+          _.each(results, r => console.log(r.toString()));
+          //console.log(results[0].toJson());
         })
   })
   .then(() => {
@@ -51,7 +69,7 @@ const print = (message) => () => {
     }
     return Promise.resolve();
   })
-  .then(() => {
+  /*.then(() => {
     const DELAY = 10;
     return print(`delay ${DELAY}s`)().then( () => Promise.delay(DELAY * 1000))
       .then(print('continue..'));
@@ -64,6 +82,6 @@ const print = (message) => () => {
     const a = new Admin(transport);
     return a.version()
       .then(console.log);
-  })
+  })*/
   .then(auth.logout.bind(auth))
   .catch(error => console.error(error.message));

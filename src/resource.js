@@ -13,13 +13,26 @@ class Resource extends Document {
   }
 
   /**
+   * Get resource info as short string
+   * @return {string}
+   */
+  toString() {
+    return `${this.id}: ${this.name()}`;
+  }
+
+  /**
    * Get resource name or set it
    * @return {string}
    */
   name(value) { return this.getOrSet('name', value); }
 
   /**
-   * Manage location
+   * Manage location information
+   * @example
+   * // set site and country
+   * doc
+   *  .location.site('oulu')
+   *  .location.country('finland')
    * @return {{site: (function(this:Resource)), country: (function(this:Resource)),
    * city: (function(this:Resource)), address: (function(this:Resource)), postcode:
    * (function(this:Resource)), room: (function(this:Resource)), subRoom:

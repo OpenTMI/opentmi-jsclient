@@ -5,13 +5,9 @@ const _ = require('lodash');
 
 // application modules
 const Resource = require('./resource');
-const {QueryBase, Collection} = require('./utils');
+const {QueryBase, Collection, notImplemented} = require('./utils');
 
-class Query extends QueryBase {
-  exec() {
-    return this._exec()
-      .then(data => _.map(data, json => new Resource(this._collection._transport, json)));
-  }
+class ResourcesQuery extends QueryBase {
   /* Find resources by id
    * @param {string} type
    * @return {Query}
@@ -71,6 +67,11 @@ class Query extends QueryBase {
     return this.has({status: {value: status}});
   }
 
+  /**
+   * Find resources by usage type
+   * @param {String} usageType
+   * @return {MongooseQueryClient}
+   */
   usageType(usageType) {
     invariant(_.isString(usageType), 'usageType should be a string');
     return this.has({usage: {type: usageType}});
@@ -106,15 +107,23 @@ class Resources extends Collection {
    */
   constructor(transport) {
     super(transport, '/api/v0/resources');
+    this._notImplemented = notImplemented();
   }
 
   /**
-   * Find document(s)
-   * @param {Query} query - optional Query object
-   * @return {FindQuery}
+   * Find Resources
+   * @return {ResourcesQuery}
    */
   find() {
-    return new Query(this);
+    return new ResourcesQuery(this, Resource);
+  }
+
+  /**
+   * Update documents
+   * @return {*}
+   */
+  update() {
+    return this._notImplemented();
   }
 }
 

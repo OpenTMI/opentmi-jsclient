@@ -31263,6 +31263,7 @@ class Admin {
   /**
    * Update opentmi server which are connected through Transport
    * @param {string} version - tag/commitId to be deployed
+   * @return {Promise}
    */
   upgrade(version) {
     invariant(this._transport.isLoggedIn, 'Transport should be connected');
@@ -31275,7 +31276,7 @@ class Admin {
 
 module.exports = Admin;
 
-},{"./utils":90,"invariant":56}],83:[function(require,module,exports){
+},{"./utils":91,"invariant":56}],83:[function(require,module,exports){
 const invariant = require('invariant');
 const _ = require('lodash');
 const Promise = require('bluebird');
@@ -31296,9 +31297,9 @@ class Authentication {
 
   /**
    * Login to OpenTMI
-   * @param {string} email
-   * @param {string} password
-   * @param {string} token - optional token
+   * @param {string}email
+   * @param {string}password
+   * @param {string}token - optional token
    * @return {Promise.<string>} - return a token
    */
   login(email, password, token = undefined) {
@@ -31346,7 +31347,7 @@ class Authentication {
 
 module.exports = Authentication;
 
-},{"./utils":90,"bluebird":31,"invariant":56,"lodash":59}],84:[function(require,module,exports){
+},{"./utils":91,"bluebird":31,"invariant":56,"lodash":59}],84:[function(require,module,exports){
 const invariant = require('invariant');
 const _ = require('lodash');
 // application modules
@@ -31413,7 +31414,7 @@ class Cluster {
 
 module.exports = Cluster;
 
-},{"./utils":90,"invariant":56,"lodash":59}],85:[function(require,module,exports){
+},{"./utils":91,"invariant":56,"lodash":59}],85:[function(require,module,exports){
 // application modules
 const {Document} = require('./utils');
 
@@ -31429,13 +31430,26 @@ class Resource extends Document {
   }
 
   /**
+   * Get resource info as short string
+   * @return {string}
+   */
+  toString() {
+    return `${this.id}: ${this.name()}`;
+  }
+
+  /**
    * Get resource name or set it
    * @return {string}
    */
   name(value) { return this.getOrSet('name', value); }
 
   /**
-   * Manage location
+   * Manage location information
+   * @example
+   * // set site and country
+   * doc
+   *  .location.site('oulu')
+   *  .location.country('finland')
    * @return {{site: (function(this:Resource)), country: (function(this:Resource)),
    * city: (function(this:Resource)), address: (function(this:Resource)), postcode:
    * (function(this:Resource)), room: (function(this:Resource)), subRoom:
@@ -31458,7 +31472,7 @@ class Resource extends Document {
 
 module.exports = Resource;
 
-},{"./utils":90}],86:[function(require,module,exports){
+},{"./utils":91}],86:[function(require,module,exports){
 // 3rd party modules
 const invariant = require('invariant');
 const _ = require('lodash');
@@ -31466,13 +31480,9 @@ const _ = require('lodash');
 
 // application modules
 const Resource = require('./resource');
-const {QueryBase, Collection} = require('./utils');
+const {QueryBase, Collection, notImplemented} = require('./utils');
 
-class Query extends QueryBase {
-  exec() {
-    return this._exec()
-      .then(data => _.map(data, json => new Resource(this._collection._transport, json)));
-  }
+class ResourcesQuery extends QueryBase {
   /* Find resources by id
    * @param {string} type
    * @return {Query}
@@ -31532,6 +31542,11 @@ class Query extends QueryBase {
     return this.has({status: {value: status}});
   }
 
+  /**
+   * Find resources by usage type
+   * @param {String} usageType
+   * @return {MongooseQueryClient}
+   */
   usageType(usageType) {
     invariant(_.isString(usageType), 'usageType should be a string');
     return this.has({usage: {type: usageType}});
@@ -31567,28 +31582,168 @@ class Resources extends Collection {
    */
   constructor(transport) {
     super(transport, '/api/v0/resources');
+    this._notImplemented = notImplemented();
   }
 
   /**
-   * Find document(s)
-   * @param {Query} query - optional Query object
-   * @return {FindQuery}
+   * Find Resources
+   * @return {ResourcesQuery}
    */
   find() {
-    return new Query(this);
+    return new ResourcesQuery(this, Resource);
+  }
+
+  /**
+   * Update documents
+   * @return {*}
+   */
+  update() {
+    return this._notImplemented();
   }
 }
 
 module.exports = Resources;
 
-},{"./resource":85,"./utils":90,"invariant":56,"lodash":59}],87:[function(require,module,exports){
+},{"./resource":85,"./utils":91,"invariant":56,"lodash":59}],87:[function(require,module,exports){
 // 3rd party modules
 // application modules
-const {QueryBase, Collection} = require('./utils');
+const {Document} = require('./utils');
 
-class Query extends QueryBase {
+
+class Result extends Document {
+  /**
+   * Constructor for Resources model
+   * @param {Transport} transport - Transport object
+   */
+  constructor(transport, resultJson) {
+    super(transport, `/api/v0/results/${resultJson._id}`, resultJson);
+  }
+
+  /**
+   * Get resource info as short string
+   * @return {string}
+   */
+  toString() {
+    return `${this.time()}: ${this.name} - ${this.verdict()}`;
+  }
+
+  /**
+   * Get resource name or set it
+   * @return {string}
+   */
+  tcid() {
+    return this.get('tcid');
+  }
+  get name() { return this.tcid(); }
+  get testcaseId() { return this.tcid(); }
+
+  /**
+   * Get result verdict
+   * @return {String}
+   */
+  verdict() {
+    return this.get('exec.verdict');
+  }
+
+  /**
+   * Get result creation time
+   */
+  time() {
+    return this.get('cre.time');
+  }
+
+  /**
+   * Get execution duration
+   * @return {*}
+   */
+  duration() {
+    return this.get('exec.duration');
+  }
+}
+
+module.exports = Result;
+
+},{"./utils":91}],88:[function(require,module,exports){
+// 3rd party modules
+const _ = require('lodash');
+const invariant = require('invariant');
+
+// application modules
+const Result = require('./result');
+const {QueryBase, Collection, notImplemented} = require('./utils');
+
+
+class ResultsQuery extends QueryBase {
+  /**
+   * Find results which are using hw dut(s)
+   * @return {ResultsQuery}
+   */
   isHW() {
-    this.has({'exec.dut.type': 'hw'});
+    return this.has({'exec.dut.type': 'hw'});
+  }
+
+  /**
+   * Find results by verdict
+   * @param {String}verdict
+   * @return {ResultsQuery}
+   */
+  verdict(verdict) {
+    invariant(_.isString(verdict), 'verdictr should be a string');
+    return this.has({'exec.verdict': verdict});
+  }
+
+  /**
+   * Find failed test results
+   * @return {ResultsQuery}
+   */
+  isFailed() {
+    return this.verdict('fail');
+  }
+
+  /**
+   * Find pass test results
+   * @return {ResultsQuery}
+   */
+  isPass() {
+    return this.verdict('pass');
+  }
+
+  /**
+   * Find inconclusive results
+   * @return {ResultsQuery}
+   */
+  isInconclusive() {
+    return this.verdict(('inconclusive'));
+  }
+
+  /**
+   * Find results which belong to campaign
+   * @param {String}campaign
+   * @return {ResultsQuery}
+   */
+  belongToCampaign(campaign) {
+    invariant(_.isString(campaign), 'campaign should be a string');
+    return this.has({'campaign.id': campaign});
+  }
+
+  /**
+   * Find results which belong to job
+   * @param {String}job
+   * @return {ResultsQuery}
+   */
+  belongToJob(job) {
+    invariant(_.isString(job), 'job should be a string');
+    return this.has({'job.id': job});
+  }
+
+  /**
+   * Find results which note contains text
+   * @param {String}str
+   * @return {ResultsQuery}
+   */
+  containsNote(str) {
+    invariant(_.isString(str), 'str should be a string');
+    return this.has({'exec.note': str});
   }
 }
 
@@ -31599,16 +31754,29 @@ class Results extends Collection {
    */
   constructor(transport) {
     super(transport, '/api/v0/results');
+    this._notImplemented = notImplemented();
   }
 
+  /**
+   * Find Results
+   * @return {ResultsQuery}
+   */
   find() {
-    return new Query(this);
+    return new ResultsQuery(this, Result);
+  }
+
+  /**
+   * Update documents
+   * @return {Promise}
+   */
+  update() {
+    return this._notImplemented();
   }
 }
 
 module.exports = Results;
 
-},{"./utils":90}],88:[function(require,module,exports){
+},{"./result":87,"./utils":91,"invariant":56,"lodash":59}],89:[function(require,module,exports){
 // 3rd party modules
 const SocketIO = require('socket.io-client');
 const axios = require('axios');
@@ -31704,38 +31872,38 @@ class Transport {
       });
       this._socket.once('connect_error', reject);
     }).then(() => {
-        debug('SocketIO connected');
-        this._socket.on('error', (error) => {
-          debug(error);
-        });
-        this._socket.on('reconnect', () => {
-          debug('socketIO reconnect');
-        });
-        this._socket.on('reconnect_attempt', () => {
-          debug('socketIO reconnect_attempt');
-        });
-        this._socket.on('reconnecting', (attempt) => {
-          debug(`socketIO reconnecting, attempt: ${attempt}`);
-        });
-        this._socket.on('reconnect_error', (error) => {
-          debug(error);
-        });
-        this._socket.on('reconnect_failed', (error) => {
-          debug(error);
-        });
-        this._socket.on('exit', () => {
-          debug('Server is attemt to exit...');
-        });
-        this._socket.on('pong', (latency) => {
-          this._latency = latency;
-          debug(`pong latency: ${latency}ms`);
-        });
-        return this._socket;
-      })
-      .catch((error) => {
-        debug(`socketIO connection fails: ${error.message}`);
-        throw error;
+      debug('SocketIO connected');
+      this._socket.on('error', (error) => {
+        debug(error);
       });
+      this._socket.on('reconnect', () => {
+        debug('socketIO reconnect');
+      });
+      this._socket.on('reconnect_attempt', () => {
+        debug('socketIO reconnect_attempt');
+      });
+      this._socket.on('reconnecting', (attempt) => {
+        debug(`socketIO reconnecting, attempt: ${attempt}`);
+      });
+      this._socket.on('reconnect_error', (error) => {
+        debug(error);
+      });
+      this._socket.on('reconnect_failed', (error) => {
+        debug(error);
+      });
+      this._socket.on('exit', () => {
+        debug('Server is attemt to exit...');
+      });
+      this._socket.on('pong', (latency) => {
+        this._latency = latency;
+        debug(`pong latency: ${latency}ms`);
+      });
+      return this._socket;
+    })
+    .catch((error) => {
+      debug(`socketIO connection fails: ${error.message}`);
+      throw error;
+    });
   }
   /**
    * Disconnect SIO
@@ -31743,10 +31911,10 @@ class Transport {
    */
   disconnect() {
     return new Promise((resolve) => {
-      invariant(this._socket, 'token is not configured');
-      this._socket.once('disconnect', resolve);
-      this._socket.disconnect();
-    })
+        invariant(this._socket, 'token is not configured');
+        this._socket.once('disconnect', resolve);
+        this._socket.disconnect();
+      })
       .then(() => {
         debug('SocketIO disconnected');
       });
@@ -31901,12 +32069,12 @@ class Transport {
 
 module.exports = Transport;
 
-},{"../utils":90,"axios":3,"bluebird":31,"invariant":56,"lodash":59,"socket.io-client":67}],89:[function(require,module,exports){
+},{"../utils":91,"axios":3,"bluebird":31,"invariant":56,"lodash":59,"socket.io-client":67}],90:[function(require,module,exports){
 const debug = require('debug')('opentmi-client');
 
 module.exports = debug;
 
-},{"debug":36}],90:[function(require,module,exports){
+},{"debug":36}],91:[function(require,module,exports){
 const debug = require('./debug');
 const QueryBase = require('./rest/queryBase');
 const Collection = require('./rest/collection');
@@ -31926,7 +32094,7 @@ module.exports = {
   objectMerge
 };
 
-},{"./debug":89,"./object-merge":91,"./rest/collection":93,"./rest/document":94,"./rest/queryBase":96,"./retry":97,"./utils":98}],91:[function(require,module,exports){
+},{"./debug":90,"./object-merge":92,"./rest/collection":94,"./rest/document":95,"./rest/queryBase":97,"./retry":98,"./utils":99}],92:[function(require,module,exports){
 /* eslint-disable */
 
 // https://github.com/rsms/js-object-merge
@@ -32013,7 +32181,7 @@ objectMerge = function (o, a, b, objOrShallow) {
 
 module.exports = objectMerge;
 
-},{}],92:[function(require,module,exports){
+},{}],93:[function(require,module,exports){
 const invariant = require('invariant');
 const {notImplemented} = require('../utils');
 
@@ -32033,7 +32201,7 @@ class Base {
 
 module.exports = Base;
 
-},{"../utils":98,"invariant":56}],93:[function(require,module,exports){
+},{"../utils":99,"invariant":56}],94:[function(require,module,exports){
 // 3rd party modules
 const invariant = require('invariant');
 const _ = require('lodash');
@@ -32073,7 +32241,7 @@ class Collection extends Base {
 
 module.exports = Collection;
 
-},{"./base":92,"invariant":56,"lodash":59}],94:[function(require,module,exports){
+},{"./base":93,"invariant":56,"lodash":59}],95:[function(require,module,exports){
 const invariant = require('invariant');
 const _ = require('lodash');
 
@@ -32082,11 +32250,17 @@ const retryUpdate = require('./../retry');
 
 
 class Document extends Base {
+  /**
+   * Low level Document object, which handle modifications and storing
+   * @param transport
+   * @param path
+   * @param originalJson
+   */
   constructor(transport, path, originalJson) {
     super(transport, path);
     this._idProperty = originalJson.id ? 'id' : '_id';
-    invariant(_.isPlainObject(originalJson), 'resourceJson should be plain object');
-    invariant(_.isString(originalJson[this._idProperty]), 'resourceJson should have _id');
+    invariant(_.isPlainObject(originalJson), 'originalJson should be plain object');
+    invariant(_.isString(originalJson[this._idProperty]), 'originalJson should have id');
     this._original = _.cloneDeep(originalJson);
     this._resource = _.cloneDeep(originalJson);
     this._changes = {};
@@ -32101,23 +32275,15 @@ class Document extends Base {
   }
 
   /**
-   * Get resource info as short string
-   * @return {string}
-   */
-  toString() {
-    return `${this.id}: ${this.name()}`;
-  }
-
-  /**
    * get changes as json object
    * @return {object}
    */
   getChanges() {
-    return this._changes;
+    return _.cloneDeep(this._changes);
   }
 
   /**
-   * true when there is changes
+   * returns true when there is changes made by client
    * @return {boolean}
    */
   isDirty() {
@@ -32136,15 +32302,27 @@ class Document extends Base {
       invariant(changes[this._idProperty] !==
         this._original[this._idProperty], `${this._idProperty} is not the same!!`);
       changes.version = this.version;
-      return retryUpdate(this._original, changes, this._update.bind(this), retryCount);
+      return retryUpdate(this._original, changes, this._update.bind(this), retryCount)
+        .then(() => this);
     }
     return Promise.reject(new Error('no changes'));
   }
 
-
+  /**
+   * Get resource value by Key.
+   * @param {String} key - key can be nested as well like "a.b.c"
+   * @return {String|Object} value for the key or undefined if not found
+   */
   get(key) {
     return _.get(this._resource, key);
   }
+
+  /**
+   * Set value for a key
+   * @param {String} key
+   * @param {*}value
+   * @return {Document} returns this
+   */
   set(key, value) {
     this._dirty = true;
     if (_.isNull(value)) {
@@ -32156,8 +32334,13 @@ class Document extends Base {
     }
     return this;
   }
+
   /**
-   * get or set value to resource
+   * get or set value to resource.
+   * @example
+   * // returns Document
+   * doc.set('key1', 'myvalue')
+   *    .set('key2', 'val')
    * @param {string} key - key to be get/set
    * @param {*} value - undefined (default) to get value by key, null to remove key, others to set value
    * @return {Resource|value} value or whole object when set
@@ -32169,7 +32352,7 @@ class Document extends Base {
     return this.set(key, value);
   }
   /**
-   * Data version
+   * getter for Document version
    * @return {number}
    */
   get version() { return this.get('__v'); }
@@ -32180,12 +32363,8 @@ class Document extends Base {
    */
   get id() { return this.get(this._idProperty); }
 
-  _update(data) {
-    return this._transport.put(this._path, data);
-  }
-
   /**
-   * get document(s)
+   * reload document information from backend
    * @return {Promise}
    */
   refresh() {
@@ -32195,17 +32374,21 @@ class Document extends Base {
   }
 
   /**
-   * delete document(s)
+   * delete this document
    * @return {Promise}
    */
   delete() {
     return this._transport.delete({path: this._path});
   }
+
+  _update(data) {
+    return this._transport.put(this._path, data);
+  }
 }
 
 module.exports = Document;
 
-},{"./../retry":97,"./base":92,"invariant":56,"lodash":59}],95:[function(require,module,exports){
+},{"./../retry":98,"./base":93,"invariant":56,"lodash":59}],96:[function(require,module,exports){
 const invariant = require('invariant');
 const _ = require('lodash');
 const querystring = require('querystring');
@@ -32267,6 +32450,14 @@ class MongooseQueryClient {
   find() {
     this._query.t = 'find';
     return this;
+  }
+
+  /**
+   * Getter for query type. default: find
+   * @return {String} - query type
+   */
+  get queryType() {
+    return _.get(this._query, 't', 'find');
   }
   /**
    * do distinct query
@@ -32399,18 +32590,38 @@ class MongooseQueryClient {
 
 module.exports = MongooseQueryClient;
 
-},{"invariant":56,"lodash":59,"querystring":66}],96:[function(require,module,exports){
+},{"invariant":56,"lodash":59,"querystring":66}],97:[function(require,module,exports){
+// 3rd party modules
+const Promise = require('bluebird');
+const _ = require('lodash');
+const invariant = require('invariant');
+
+// application modules
 const MongooseQueryClient = require('./mongooseQueryClient');
 
 
 class QueryBase extends MongooseQueryClient {
-  constructor(collection) {
+  constructor(collection, baseClass) {
     super();
     this._collection = collection;
+    this._baseClass = baseClass;
   }
   /**
-   * Execute query
+   * Execute query based on previous selected options
+   * @param {Boolean} plain - do not convert to classes
+   * @return {Promise} - list of objects when 'find' (default) or plain json.
    */
+  exec(plain = false) {
+    invariant(_.isBoolean(plain), 'plain should be boolean');
+    return this._exec()
+      .then((data) => {
+        if (!plain && this.queryType === 'find') {
+          return Promise.map(data, json => new this._baseClass(this._collection._transport, json));
+        }
+        return data;
+      });
+  }
+
   _exec() {
     return this._collection._find(this.toString());
   }
@@ -32418,7 +32629,7 @@ class QueryBase extends MongooseQueryClient {
 
 module.exports = QueryBase;
 
-},{"./mongooseQueryClient":95}],97:[function(require,module,exports){
+},{"./mongooseQueryClient":96,"bluebird":31,"invariant":56,"lodash":59}],98:[function(require,module,exports){
 // 3rd party modules
 const _ = require('lodash');
 const Promise = require('bluebird');
@@ -32450,7 +32661,7 @@ const retryUpdate = function (original, changes, update, retryCount = 2, retryIn
 
 module.exports = retryUpdate;
 
-},{"./debug":89,"./object-merge":91,"bluebird":31,"lodash":59}],98:[function(require,module,exports){
+},{"./debug":90,"./object-merge":92,"bluebird":31,"lodash":59}],99:[function(require,module,exports){
 module.exports.timeSince = (when) => {
   const obj = {};
   obj._milliseconds = (new Date()).valueOf() - when.valueOf();
@@ -32477,6 +32688,7 @@ const Admin = require('./admin');
 const Cluster = require('./cluster');
 const Resources = require('./resources');
 const Resource = require('./resource');
+const Results = require('./results');
 const Result = require('./result');
 const utils = require('./utils');
 const Transport = require('./transports');
@@ -32488,10 +32700,11 @@ module.exports = {
   Cluster,
   Resources,
   Resource,
+  Results,
   Result,
   utils,
   Transport
 };
 
-},{"./Schemas":81,"./admin":82,"./authentication":83,"./cluster":84,"./resource":85,"./resources":86,"./result":87,"./transports":88,"./utils":90}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,"opentmiClient",85,86,87,88,89,90,91,92,93,94,95,96,97,98])("opentmiClient")
+},{"./Schemas":81,"./admin":82,"./authentication":83,"./cluster":84,"./resource":85,"./resources":86,"./result":87,"./results":88,"./transports":89,"./utils":91}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,"opentmiClient",85,86,87,88,89,90,91,92,93,94,95,96,97,98,99])("opentmiClient")
 });
