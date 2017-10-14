@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: admin.js</title>
+    <title>JSDoc: Source: utils/rest/base.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: admin.js</h1>
+    <h1 class="page-title">Source: utils/rest/base.js</h1>
 
     
 
@@ -27,46 +27,23 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>const invariant = require('invariant');
-const {debug} = require('./utils');
+const {notImplemented} = require('../utils');
 
-class Admin {
+class Base {
   /**
-   * Admin operations
-   * @param {Transport} transport - transport layer
+   * General base constructor for Rest resources
+   * @param {Transport} transport - Transport object&lt;
+   * @param {string} path - path for REST API
    */
-  constructor(transport) {
+  constructor(transport, path) {
     invariant(transport, 'transport is mandatory');
     this._transport = transport;
-  }
-
-  /**
-   * Get OpenTMI server version details.
-   * @return {Promise} resolves json object
-   * e.g. { commitId: &lt;id>, tag: &lt;tag>, version: &lt;pkg-version>, node_modules: {...}..}
-   */
-  version() {
-    invariant(this._transport.isLoggedIn, 'Transport should be connected');
-    debug('request opentmi version');
-    return this._transport
-      .get('/api/v0/version')
-      .then(response => response.data);
-  }
-
-  /**
-   * Update opentmi server which are connected through Transport
-   * @param {string} version - tag/commitId to be deployed
-   * @return {Promise}
-   */
-  upgrade(version) {
-    invariant(this._transport.isLoggedIn, 'Transport should be connected');
-    debug('request opentmi version');
-    return this._transport
-      .post('/api/v0/version', {version})
-      .then(response => response.data);
+    this._path = path;
+    this._notImplemented = notImplemented;
   }
 }
 
-module.exports = Admin;
+module.exports = Base;
 </code></pre>
         </article>
     </section>

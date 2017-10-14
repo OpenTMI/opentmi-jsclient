@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Schemas</title>
+    <title>JSDoc: Class: Result</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Schemas</h1>
+    <h1 class="page-title">Class: Result</h1>
 
     
 
@@ -28,9 +28,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>Schemas<span class="signature">(transport)</span><span class="type-signature"></span></h2>
-        
-            <div class="class-description">Schemas object</div>
+        <h2><span class="attribs"><span class="type-signature"></span></span>Result<span class="signature">(transport)</span><span class="type-signature"></span></h2>
         
     
 </header>
@@ -41,11 +39,9 @@
         
 
     
-    <h2>Constructor</h2>
-    
 
     
-    <h4 class="name" id="Schemas"><span class="type-signature"></span>new Schemas<span class="signature">(transport)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Result"><span class="type-signature"></span>new Result<span class="signature">(transport)</span><span class="type-signature"></span></h4>
     
 
     
@@ -53,8 +49,7 @@
 
 
 <div class="description">
-    Constructor for Schemas controller.
-Object manage all low level communication and authentication
+    Constructor for Resources model
 </div>
 
 
@@ -106,7 +101,7 @@ Object manage all low level communication and authentication
 
             
 
-            <td class="description last">transport layer for communication</td>
+            <td class="description last">Transport object</td>
         </tr>
 
     
@@ -147,7 +142,7 @@ Object manage all low level communication and authentication
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Schemas.js.html">Schemas.js</a>, <a href="Schemas.js.html#line10">line 10</a>
+        <a href="result.js.html">result.js</a>, <a href="result.js.html#line11">line 11</a>
     </li></ul></dd>
     
 
@@ -201,7 +196,7 @@ Object manage all low level communication and authentication
     
 
     
-    <h4 class="name" id="collections"><span class="type-signature"></span>collections<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;array.&lt;string>>}</span></h4>
+    <h4 class="name" id="duration"><span class="type-signature"></span>duration<span class="signature">()</span><span class="type-signature"> &rarr; {*}</span></h4>
     
 
     
@@ -209,7 +204,7 @@ Object manage all low level communication and authentication
 
 
 <div class="description">
-    Get list of available collection names
+    Get execution duration
 </div>
 
 
@@ -253,7 +248,7 @@ Object manage all low level communication and authentication
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Schemas.js.html">Schemas.js</a>, <a href="Schemas.js.html#line25">line 25</a>
+        <a href="result.js.html">result.js</a>, <a href="result.js.html#line52">line 52</a>
     </li></ul></dd>
     
 
@@ -279,10 +274,6 @@ Object manage all low level communication and authentication
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    list of collections
-</div>
-
 
 
 <dl>
@@ -291,7 +282,7 @@ Object manage all low level communication and authentication
     </dt>
     <dd>
         
-<span class="param-type">Promise.&lt;array.&lt;string>></span>
+<span class="param-type">*</span>
 
 
     </dd>
@@ -309,7 +300,7 @@ Object manage all low level communication and authentication
     
 
     
-    <h4 class="name" id="getAllSchemas"><span class="type-signature"></span>getAllSchemas<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id="tcid"><span class="type-signature"></span>tcid<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
     
 
     
@@ -317,7 +308,7 @@ Object manage all low level communication and authentication
 
 
 <div class="description">
-    get all schemas
+    Get resource name or set it
 </div>
 
 
@@ -361,7 +352,7 @@ Object manage all low level communication and authentication
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Schemas.js.html">Schemas.js</a>, <a href="Schemas.js.html#line45">line 45</a>
+        <a href="result.js.html">result.js</a>, <a href="result.js.html#line27">line 27</a>
     </li></ul></dd>
     
 
@@ -395,7 +386,7 @@ Object manage all low level communication and authentication
     </dt>
     <dd>
         
-<span class="param-type">Promise</span>
+<span class="param-type">string</span>
 
 
     </dd>
@@ -413,7 +404,7 @@ Object manage all low level communication and authentication
     
 
     
-    <h4 class="name" id="schema"><span class="type-signature"></span>schema<span class="signature">(collection)</span><span class="type-signature"> &rarr; {Promise.&lt;object>}</span></h4>
+    <h4 class="name" id="time"><span class="type-signature"></span>time<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -421,8 +412,7 @@ Object manage all low level communication and authentication
 
 
 <div class="description">
-    Get collection json schema.
-This can be used for example generate html forms.
+    Get result creation time
 </div>
 
 
@@ -431,50 +421,6 @@ This can be used for example generate html forms.
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>collection</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -510,7 +456,93 @@ This can be used for example generate html forms.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Schemas.js.html">Schemas.js</a>, <a href="Schemas.js.html#line36">line 36</a>
+        <a href="result.js.html">result.js</a>, <a href="result.js.html#line44">line 44</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="toString"><span class="type-signature"></span>toString<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Get resource info as short string
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="result.js.html">result.js</a>, <a href="result.js.html#line19">line 19</a>
     </li></ul></dd>
     
 
@@ -544,7 +576,111 @@ This can be used for example generate html forms.
     </dt>
     <dd>
         
-<span class="param-type">Promise.&lt;object></span>
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="verdict"><span class="type-signature"></span>verdict<span class="signature">()</span><span class="type-signature"> &rarr; {String}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Get result verdict
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="result.js.html">result.js</a>, <a href="result.js.html#line37">line 37</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
 
 
     </dd>

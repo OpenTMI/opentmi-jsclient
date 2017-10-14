@@ -29,10 +29,12 @@
             <pre class="prettyprint source linenums"><code>// 3rd party modules
 const SocketIO = require('socket.io-client');
 const axios = require('axios');
+const Promise = require('bluebird');
 const invariant = require('invariant');
 const _ = require('lodash');
+
 // application modules
-const {debug} = require('../utils');
+const {debug, timeSince} = require('../utils');
 
 
 class Transport {
@@ -119,38 +121,38 @@ class Transport {
       });
       this._socket.once('connect_error', reject);
     }).then(() => {
-        debug('SocketIO connected');
-        this._socket.on('error', (error) => {
-          debug(error);
-        });
-        this._socket.on('reconnect', () => {
-          debug('socketIO reconnect');
-        });
-        this._socket.on('reconnect_attempt', () => {
-          debug('socketIO reconnect_attempt');
-        });
-        this._socket.on('reconnecting', (attempt) => {
-          debug(`socketIO reconnecting, attempt: ${attempt}`);
-        });
-        this._socket.on('reconnect_error', (error) => {
-          debug(error);
-        });
-        this._socket.on('reconnect_failed', (error) => {
-          debug(error);
-        });
-        this._socket.on('exit', () => {
-          debug('Server is attemt to exit...');
-        });
-        this._socket.on('pong', (latency) => {
-          this._latency = latency;
-          debug(`pong latency: ${latency}ms`);
-        });
-        return this._socket;
-      })
-      .catch((error) => {
-        debug(`socketIO connection fails: ${error.message}`);
-        throw error;
+      debug('SocketIO connected');
+      this._socket.on('error', (error) => {
+        debug(error);
       });
+      this._socket.on('reconnect', () => {
+        debug('socketIO reconnect');
+      });
+      this._socket.on('reconnect_attempt', () => {
+        debug('socketIO reconnect_attempt');
+      });
+      this._socket.on('reconnecting', (attempt) => {
+        debug(`socketIO reconnecting, attempt: ${attempt}`);
+      });
+      this._socket.on('reconnect_error', (error) => {
+        debug(error);
+      });
+      this._socket.on('reconnect_failed', (error) => {
+        debug(error);
+      });
+      this._socket.on('exit', () => {
+        debug('Server is attemt to exit...');
+      });
+      this._socket.on('pong', (latency) => {
+        this._latency = latency;
+        debug(`pong latency: ${latency}ms`);
+      });
+      return this._socket;
+    })
+    .catch((error) => {
+      debug(`socketIO connection fails: ${error.message}`);
+      throw error;
+    });
   }
   /**
    * Disconnect SIO
@@ -158,10 +160,10 @@ class Transport {
    */
   disconnect() {
     return new Promise((resolve) => {
-      invariant(this._socket, 'token is not configured');
-      this._socket.once('disconnect', resolve);
-      this._socket.disconnect();
-    })
+        invariant(this._socket, 'token is not configured');
+        this._socket.once('disconnect', resolve);
+        this._socket.disconnect();
+      })
       .then(() => {
         debug('SocketIO disconnected');
       });
@@ -239,9 +241,14 @@ class Transport {
         cancelToken: source.token
       });
     debug(`Requesting: ${JSON.stringify(config)}`);
+    const startTime = new Date();
     return this.Rest
       .request(config)
-      .then(data => data)
+      .then((data) => {
+        const duration = timeSince(startTime);
+        debug(`Request finished in ${duration.milliseconds}ms`);
+        return data;
+      })
       .catch((error) => {
         if (error.response) {
           // The request was made and the server responded with a status code
@@ -293,8 +300,8 @@ class Transport {
   post(url, data, headers = undefined) {
     return this.request({url, method: 'post', data, headers});
   }
-  update(url, data) {
-    return this.request({url, method: 'update', data});
+  put(url, data) {
+    return this.request({url, method: 'put', data});
   }
   delete(url) {
     return this.request({url, method: 'delete'});
@@ -320,13 +327,13 @@ module.exports = Transport;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Admin.html">Admin</a></li><li><a href="Authentication.html">Authentication</a></li><li><a href="Cluster.html">Cluster</a></li><li><a href="Query.html">Query</a></li><li><a href="Resource.html">Resource</a></li><li><a href="Resources.html">Resources</a></li><li><a href="RestResourceBase.html">RestResourceBase</a></li><li><a href="Results.html">Results</a></li><li><a href="Schemas.html">Schemas</a></li><li><a href="Transport.html">Transport</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Admin.html">Admin</a></li><li><a href="Authentication.html">Authentication</a></li><li><a href="Base.html">Base</a></li><li><a href="Cluster.html">Cluster</a></li><li><a href="Document.html">Document</a></li><li><a href="MongooseQueryClient.html">MongooseQueryClient</a></li><li><a href="Resource.html">Resource</a></li><li><a href="Resources.html">Resources</a></li><li><a href="Result.html">Result</a></li><li><a href="Results.html">Results</a></li><li><a href="Schemas.html">Schemas</a></li><li><a href="Transport.html">Transport</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Oct 04 2017 23:04:45 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Oct 14 2017 13:48:04 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>
