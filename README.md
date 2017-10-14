@@ -5,6 +5,8 @@
 Promise based OpenTMI javascript client for node.js and browser.
 
 ## Requirements
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/OpenTMI/opentmi-jsclient.svg)](https://greenkeeper.io/)
 * [socket.io-client](https://github.com/socketio/socket.io-client) (for socketio connections)
 * [axios](https://github.com/axios/axios) (Promise based http client)
 
