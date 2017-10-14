@@ -121,10 +121,10 @@ class Transport {
       });
       return this._socket;
     })
-    .catch((error) => {
-      debug(`socketIO connection fails: ${error.message}`);
-      throw error;
-    });
+      .catch((error) => {
+        debug(`socketIO connection fails: ${error.message}`);
+        throw error;
+      });
   }
   /**
    * Disconnect SIO
@@ -132,10 +132,10 @@ class Transport {
    */
   disconnect() {
     return new Promise((resolve) => {
-        invariant(this._socket, 'token is not configured');
-        this._socket.once('disconnect', resolve);
-        this._socket.disconnect();
-      })
+      invariant(this._socket, 'token is not configured');
+      this._socket.once('disconnect', resolve);
+      this._socket.disconnect();
+    })
       .then(() => {
         debug('SocketIO disconnected');
       });
@@ -202,16 +202,15 @@ class Transport {
    * method: 'get'
    */
   request(req) {
-    const CancelToken = this.Rest.CancelToken;
+    const {CancelToken} = this.Rest;
     const source = CancelToken.source();
-    const config = _.defaults(
-      req, {
-        url: '/',
-        method: 'get',
-        baseURL: this._host,
-        headers: this._headers,
-        cancelToken: source.token
-      });
+    const config = _.defaults(req, {
+      url: '/',
+      method: 'get',
+      baseURL: this._host,
+      headers: this._headers,
+      cancelToken: source.token
+    });
     debug(`Requesting: ${JSON.stringify(config)}`);
     const startTime = new Date();
     return this.Rest
@@ -257,27 +256,44 @@ class Transport {
    * HTTP Get request to server
    * @param {string} url - path to the server
    * @param {object} data - json data
-   * @return {Promise}
+   * @return {Promise} - resolves response object
    */
   get(url, data = undefined) {
     return this.request({url, data});
   }
+
   /**
    * HTTP post request to server
    * @param {string} url - path to the server
    * @param {object} data - optional json data
    * @param {object} headers - optional headers as json object
-   * @return {Promise}
+   * @return {Promise} - resolves response object
    */
   post(url, data, headers = undefined) {
-    return this.request({url, method: 'post', data, headers});
+    return this.request({
+      url, method: 'post', data, headers
+    });
   }
+
+  /**
+   * Put request
+   * @param {String}url
+   * @param {object}data
+   * @return {Promise} - resolves response object
+   */
   put(url, data) {
     return this.request({url, method: 'put', data});
   }
+
+  /**
+   * delete request
+   * @param {String}url
+   * @return {Promise} - resolves response object
+   */
   delete(url) {
     return this.request({url, method: 'delete'});
   }
+
   /**
    * get socketIO instance
    * @return {SocketIO-client}

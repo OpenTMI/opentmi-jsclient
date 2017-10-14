@@ -30,7 +30,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.16.2",
-    "bluebird": "^3.5.0",
+    "bluebird": "^3.5.1",
     "debug": "^3.1.0",
     "invariant": "^2.2.2",
     "lodash": "^4.17.4",
@@ -48,14 +48,14 @@
     "eslint-plugin-chai-expect": "^1.1.1",
     "eslint-plugin-import": "^2.3.0",
     "eslint-plugin-mocha": "^4.10.1",
-    "eslint-plugin-node": "^5.0.0",
+    "eslint-plugin-node": "^5.2.0",
     "eslint-plugin-promise": "^3.5.0",
     "istanbul": "^0.4.3",
     "jsdoc": "^3.5.5",
     "mocha": "^4.0.1",
     "mocha-phantomjs": "^4.1.0",
     "moxios": "^0.4.0",
-    "sinon": "^4.0.0",
+    "sinon": "^4.0.1",
     "socket.io": "^2.0.3",
     "socket.io-client": "^2.0.3"
   }
