@@ -2,7 +2,9 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:6.11.3
+      - image: circleci/node:6-browser
+      - environment:
+          CHROME_BIN: "/usr/bin/google-chrome"
     steps:
       - checkout
       #- run:
@@ -15,14 +17,6 @@ jobs:
           command: |
             node --version
             npm --version
-      - run:
-          name: install-libxcomposite-dev
-          command:  |
-            sudo apt-get install libxcomposite-dev
-            curl -L -o google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-            sudo dpkg -i google-chrome.deb
-            sudo sed -i 's|HERE/chrome\"|HERE/chrome\" --disable-setuid-sandbox|g' /opt/google/chrome/google-chrome
-            rm google-chrome.deb
       - run:
           name: install-npm
           command: npm install
