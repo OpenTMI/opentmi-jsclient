@@ -16,6 +16,9 @@ jobs:
             node --version
             npm --version
       - run:
+          name: install-libxcomposite-dev
+          command: sudo apt-get install libxcomposite-dev
+      - run:
           name: install-npm
           command: npm install
       - save_cache:
