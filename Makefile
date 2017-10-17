@@ -2,7 +2,7 @@ BROWSERIFY ?= browserify
 MINIFY ?= minify
 REPORTER ?= spec
 MOCHA ?= mocha
-MOCHA_PHANTOMJS ?= mocha-phantomjs
+MOCHA_HEADLESS_CHROME ?= node_modules/mocha-headless-chrome/bin/start
 #FILTER ?= .+
 BROWSERIFIED ?= dist/opentmi-client.js
 MINIFIED ?= dist/opentmi-client.min.js
@@ -35,7 +35,7 @@ ${BROWSER_TEST} : $(shell ${BROWSERIFY} --list ${TESTS})
 
 
 test-browser: bower-install ${BROWSER_TEST}
-	${MOCHA_PHANTOMJS} -p node_modules/phantomjs/bin/phantomjs -R ${REPORTER} -g '${FILTER}' test/index.html
+	${MOCHA_HEADLESS_CHROME} -f test/index.html
 
 test-node:
 	NODE_ENV=test ${MOCHA} --reporter $(REPORTER) --recursive -g '${FILTER}'

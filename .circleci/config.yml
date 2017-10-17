@@ -40,7 +40,7 @@ jobs:
             MOCHA_FILE: junit/test-results.xml
       - run:
           name: test-browser
-          command: npm run test-browser || true
+          command: npm run test-browser
       - run:
           name: lint
           command: npm run lint
