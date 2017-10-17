@@ -29,10 +29,6 @@ jobs:
           name: build
           command: npm run build
       - run:
-          name: module-versions
-          command: |
-            ./node_modules/mocha-phantomjs/bin/mocha-phantomjs --version
-      - run:
           name: test-node
           command: npm run test-node
           environment:
