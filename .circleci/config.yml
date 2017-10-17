@@ -2,12 +2,11 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:6.11.3
+      - image: circleci/node:6.11.4-browsers
+        environment:
+          CHROME_BIN: "/usr/bin/google-chrome"
     steps:
       - checkout
-      #- run:
-      #    name: update-npm
-      #    command: 'sudo npm install -g npm@latest'
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
@@ -29,10 +28,6 @@ jobs:
           name: build
           command: npm run build
       - run:
-          name: module-versions
-          command: |
-            ./node_modules/mocha-phantomjs/bin/mocha-phantomjs --version
-      - run:
           name: test-node
           command: npm run test-node
           environment:
@@ -40,7 +35,7 @@ jobs:
             MOCHA_FILE: junit/test-results.xml
       - run:
           name: test-browser
-          command: npm run test-browser || true
+          command: npm run test-browser
       - run:
           name: lint
           command: npm run lint
