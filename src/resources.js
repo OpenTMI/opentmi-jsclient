@@ -1,3 +1,6 @@
+/**
+ * @module Resources
+ */
 // 3rd party modules
 const invariant = require('invariant');
 const _ = require('lodash');

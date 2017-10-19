@@ -3,7 +3,7 @@ const _ = require('lodash');
 const querystring = require('querystring');
 
 /** Query class
- * Is pair for [mongoose-query](https://github.com/jupe/mongoose-query) -library which allows to
+ * Is pair for {@link https://github.com/jupe/mongoose-query|mongoose-query} -library which allows to
  * manage DB queries based on rest query parameters
  */
 class MongooseQueryClient {
@@ -11,12 +11,17 @@ class MongooseQueryClient {
    * Query Constructor
    */
   constructor() {
+    /**
+     * Raw query object which can be converted as url parameter
+     * @type {{q: {}}}
+     * @private
+     */
     this._query = {q: {}};
   }
 
   /**
    * parse query from string
-   * @param str
+   * @param {String}str
    */
   fromString(str) {
     invariant(_.isString(str), 'str should be string');
@@ -52,6 +57,7 @@ class MongooseQueryClient {
   get type() {
     return this._query.t;
   }
+
   /**
    * do default find query
    * @return {MongooseQueryClient}
@@ -68,6 +74,7 @@ class MongooseQueryClient {
   get queryType() {
     return _.get(this._query, 't', 'find');
   }
+
   /**
    * do distinct query
    * @return {MongooseQueryClient}

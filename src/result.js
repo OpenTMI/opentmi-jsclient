@@ -1,3 +1,4 @@
+/** @module Results */
 // 3rd party modules
 // application modules
 const {Document} = require('./utils');

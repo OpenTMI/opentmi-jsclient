@@ -1,3 +1,4 @@
+/** @module Results */
 // 3rd party modules
 const _ = require('lodash');
 const invariant = require('invariant');

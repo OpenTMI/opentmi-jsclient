@@ -6,8 +6,15 @@ const invariant = require('invariant');
 // application modules
 const MongooseQueryClient = require('./mongooseQueryClient');
 
-
+/**
+ * @extends MongooseQueryClient
+ */
 class QueryBase extends MongooseQueryClient {
+  /**
+   *
+   * @param {Collection}collection
+   * @param {Document}baseClass
+   */
   constructor(collection, baseClass) {
     super();
     this._collection = collection;

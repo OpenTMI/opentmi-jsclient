@@ -1,3 +1,5 @@
+/** @module Admins */
+
 const invariant = require('invariant');
 const _ = require('lodash');
 // application modules

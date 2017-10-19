@@ -1,3 +1,7 @@
+/**
+ * @module Users
+ */
+
 // 3rd party modules
 const invariant = require('invariant');
 const _ = require('lodash');
@@ -9,6 +13,7 @@ const {QueryBase, Collection, notImplemented} = require('./utils');
 
 /**
  * @class UsersQuery
+ * @extends QueryBase
  */
 class UsersQuery extends QueryBase {
   /* Find users by id
@@ -21,7 +26,9 @@ class UsersQuery extends QueryBase {
   }
 }
 
-
+/**
+ * @extends Collection
+ */
 class Users extends Collection {
   /**
    * Constructor for Resources model
