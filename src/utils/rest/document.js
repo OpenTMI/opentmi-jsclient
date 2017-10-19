@@ -120,13 +120,18 @@ class Document extends Base {
   get id() { return this.get(this._idProperty); }
 
   /**
-   * reload document information from backend
-   * @return {Promise}
+   * reload document information from backend.
+   * This also revert all client modified data back that is not saved!
+   * @return {Promise<Document>}
    */
   refresh() {
     return this._transport
-      .get({path: this._path})
-      .then((data) => { this._original = data; });
+      .get(this._path)
+      .then((response) => {
+        this._original = _.cloneDeep(response.data);
+        this._resource = _.cloneDeep(response.data);
+      })
+      .then(() => this);
   }
 
   /**

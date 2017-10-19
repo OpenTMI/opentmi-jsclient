@@ -6,7 +6,9 @@ const invariant = require('invariant');
 const Result = require('./result');
 const {QueryBase, Collection, notImplemented} = require('./utils');
 
-
+/**
+ * @class ResultsQuery
+ */
 class ResultsQuery extends QueryBase {
   /**
    * Find results which are using hw dut(s)

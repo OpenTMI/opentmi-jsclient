@@ -4,7 +4,7 @@ const _ = require('lodash');
 
 const {
   Authentication, Admin, Cluster,
-  Transport, Schemas, Resources, Results
+  Transport, Schemas, Resources, Results, Users
 } = require('../src');
 const {Query} = Resources;
 
@@ -19,12 +19,30 @@ const print = (message) => () => {
   console.log(message);
   return Promise.resolve();
 };
-        print('login')().then(() => auth.login('username', 'password'))
+        print('login')().then(() => auth.login('kissa@arm.com', 'kissa'))
   .then(print('connect IO')).then(transport.connect.bind(transport))
   //.then(print('updateSchemas')).then(schema.updateSchemas.bind(schema))
   //.then(print('get collections')).then(schema.collections.bind(schema))
   //.then(print('get Result schema')).then(() => schema.schema('Result'))
   //.then(print('get Result schema')).then(() => schema.schema('Result'))
+  .then(() => {
+      return Users
+        .WHOAMI(transport)
+        .then( (me) => {
+          console.log('me:', me.toJson());
+
+          return me
+            .groups()
+            .then(groups => {
+              console.log(groups.toString());
+            })
+
+        })
+        .then(auth.logout.bind(auth))
+        .then(() => {
+          throw new Error()
+        });
+  })
   .then(() => {
       const resources = new Resources(transport);
       return resources.find()

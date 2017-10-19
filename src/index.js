@@ -1,6 +1,7 @@
 const Authentication = require('./authentication');
-const Schemas = require('./Schemas');
+const Schemas = require('./schemas');
 const Admin = require('./admin');
+const Users = require('./users');
 const Cluster = require('./cluster');
 const Resources = require('./resources');
 const Resource = require('./resource');
@@ -13,6 +14,7 @@ module.exports = {
   Authentication,
   Schemas,
   Admin,
+  Users,
   Cluster,
   Resources,
   Resource,

@@ -7,6 +7,9 @@ const _ = require('lodash');
 const Resource = require('./resource');
 const {QueryBase, Collection, notImplemented} = require('./utils');
 
+/**
+ * @class ResourcesQuery
+ */
 class ResourcesQuery extends QueryBase {
   /* Find resources by id
    * @param {string} type
