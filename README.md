@@ -3,12 +3,11 @@
 [![CircleCI](https://circleci.com/gh/OpenTMI/opentmi-jsclient/tree/master.svg?style=svg)](https://circleci.com/gh/OpenTMI/opentmi-jsclient/tree/master)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![License badge](https://img.shields.io/badge/license-MIT-blue.svg)](https://img.shields.io)
+[![Greenkeeper badge](https://badges.greenkeeper.io/OpenTMI/opentmi-jsclient.svg)](https://greenkeeper.io/)
 
 Promise based [OpenTMI](https://github.com/opentmi/opentmi) javascript client for node.js and browser.
 
 ## Requirements
-
-[![Greenkeeper badge](https://badges.greenkeeper.io/OpenTMI/opentmi-jsclient.svg)](https://greenkeeper.io/)
 * [socket.io-client](https://github.com/socketio/socket.io-client) (for socketio connections)
 * [axios](https://github.com/axios/axios) (Promise based http client)
 
