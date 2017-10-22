@@ -1,8 +1,11 @@
 <h1 align="center">opentmi-jsclient</h1>
 
 [![CircleCI](https://circleci.com/gh/OpenTMI/opentmi-jsclient/tree/master.svg?style=svg)](https://circleci.com/gh/OpenTMI/opentmi-jsclient/tree/master)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+<br>
+[![License badge](https://img.shields.io/badge/license-MIT-blue.svg)](https://img.shields.io)
 
-Promise based OpenTMI javascript client for node.js and browser.
+Promise based [OpenTMI](https://github.com/opentmi/opentmi) javascript client for node.js and browser.
 
 ## Requirements
 
