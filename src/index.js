@@ -11,6 +11,10 @@ const Resources = require('./resources');
 const Resource = require('./resource');
 const Results = require('./results');
 const Result = require('./result');
+const Items = require('./items');
+const Item = require('./item');
+const Loans = require('./loans');
+const Loan = require('./loan');
 const utils = require('./utils');
 const Transport = require('./transports');
 
@@ -24,6 +28,10 @@ module.exports = {
   Resource,
   Results,
   Result,
+  Items,
+  Item,
+  Loans,
+  Loan,
   utils,
   Transport
 };

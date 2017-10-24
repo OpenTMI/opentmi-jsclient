@@ -26,6 +26,16 @@ class Resource extends Document {
    */
   name(value) { return this.getOrSet('name', value); }
 
+  barcode(value) { return this.getOrSet('barcode', value); }
+
+  imageSrc(value) { return this.getOrSet('image_src', value); }
+
+  description(value)  { return this.getOrSet('text_description', value); }
+
+  reference(value)  { return this.getOrSet('external_reference', value); }
+
+
+
   /**
    * Manage location information
    * @example

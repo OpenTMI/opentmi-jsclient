@@ -77,6 +77,10 @@ class User extends Document {
   isAdmin() {
     return this._isNotImplemented();
   }
+
+  myLoans() {
+    return Loans.forUser(this, this._transport);
+  }
 }
 
 module.exports = User;

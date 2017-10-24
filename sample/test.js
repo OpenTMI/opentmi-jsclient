@@ -4,7 +4,7 @@ const _ = require('lodash');
 
 const {
   Authentication, Admin, Cluster,
-  Transport, Schemas, Resources, Results, Users
+  Transport, Schemas, Resources, Results, Items, Users, Loans
 } = require('../src');
 const {Query} = Resources;
 
@@ -26,6 +26,12 @@ const print = (message) => () => {
   //.then(print('get Result schema')).then(() => schema.schema('Result'))
   //.then(print('get Result schema')).then(() => schema.schema('Result'))
   .then(() => {
+    const loans = new Loans(transport);
+    loans.find().exec().then(items => {
+      _.each(items, item => console.log(item.toString()))
+    });
+  })
+  /*.then(() => {
       return Users
         .WHOAMI(transport)
         .then( (me) => {
@@ -87,7 +93,7 @@ const print = (message) => () => {
     }
     return Promise.resolve();
   })
-  /*.then(() => {
+  .then(() => {
     const DELAY = 10;
     return print(`delay ${DELAY}s`)().then( () => Promise.delay(DELAY * 1000))
       .then(print('continue..'));

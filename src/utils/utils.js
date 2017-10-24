@@ -15,4 +15,4 @@ module.exports.timeSince = (when) => {
   return obj;
 };
 
-module.exports.notImplemented = () => Promise.reject(new Error('not implemented'));
+module.exports.notImplemented = (msg = 'not implemented') => Promise.reject(new Error(msg));
