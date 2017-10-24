@@ -16,3 +16,28 @@ module.exports.timeSince = (when) => {
 };
 
 module.exports.notImplemented = (msg = 'not implemented') => Promise.reject(new Error(msg));
+
+/**
+ * return date which are beginnign of given day
+ * @param {Date}date
+ */
+module.exports.beginningOfDay = (date) => {
+  const dateZero = new Date(date);
+  dateZero.setHours(0);
+  dateZero.setMinutes(0);
+  dateZero.setSeconds(0);
+  dateZero.setMilliseconds(0);
+  return dateZero;
+};
+/**
+ * return date which are end of given day
+ * @param {Date}date
+ */
+module.exports.endOfDay = (date) => {
+  const dateEnd = new Date(date);
+  dateEnd.setHours(23);
+  dateEnd.setMinutes(59);
+  dateEnd.setSeconds(59);
+  dateEnd.setMilliseconds(999);
+  return dateEnd;
+};

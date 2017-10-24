@@ -27,7 +27,11 @@ class Loan extends Document {
   loanDate(value) { return this.getOrSet('loan_date', value); }
   loaner(value) { return this.getOrSet('loaner', value); }
   notes(value) { return this.getOrSet('notes', value); }
-  items(value) { return new LoanItems(this._transport); }
+
+  loanItems() {
+    return this.get('loan_items');
+  }
+  //getLoanItems() { return LoanItems.from(new LoanItems(this._transport); }
 
   /*
   item: {type: ObjectId, ref: 'Item', required: true},

@@ -27,8 +27,11 @@ const print = (message) => () => {
   //.then(print('get Result schema')).then(() => schema.schema('Result'))
   .then(() => {
     const loans = new Loans(transport);
-    loans.find().exec().then(items => {
-      _.each(items, item => console.log(item.toString()))
+    loans.find()
+      .loadItems().loadResources().loadLoaner()
+      .exec().then(items => {
+      //_.each(items, item => console.log(item.toString()))
+      console.log(JSON.stringify(items[0].toJson(), null, 2))
     });
   })
   /*.then(() => {

@@ -5,24 +5,48 @@ const invariant = require('invariant');
 
 // application modules
 const Loan = require('./loan');
-const {QueryBase, Collection, notImplemented} = require('./utils');
+const {QueryBase, Collection, notImplemented, beginningOfDay, endOfDay} = require('./utils');
 
 /**
  * @class ItemsQuery
  */
 class LoansQuery extends QueryBase {
   /**
-   * Find items by loan date
+   * Populate loaned items
+   */
+  loadItems() {
+    return this.populate('items.item');
+  }
+  /**
+   * Populate unique resources
+   */
+  loadResources() {
+    return this.populate('items.resource');
+  }
+  /**
+   * Populate loaner (User)
+   */
+  loadLoaner() {
+    return this.populate('loaner');
+  }
+  /**
+   * Find loans by loan date
    * @return {LoansQuery}
    */
   loanDate(date) {
-    return this.has({'loan_date': {}});
+    return this.has({'loan_date': {$gte: beginningOfDay(date), $lte: endOfDay(date)}});
   }
-
+  /**
+   * Find loans by loaner
+   * @param {string}userid
+   */
   loaner(userid) {
     return this.has({'loaner': userid});
   }
-
+  /**
+   * Find loans which contains note
+   * @param {string}note
+   */
   hasNotes(note) {
     return this.has({'notes': `/${note}/`});
   }
@@ -38,9 +62,12 @@ class Loans extends Collection {
     this._notImplemented = notImplemented();
   }
 
+  /**
+   *
+   */
   static forUser(user, transport) {
     // @todo
-    const Loans = new Loans(this._transport);
+    const Loans = new Loans(transport);
     return Loans.find().id(user.id);
   }
 
