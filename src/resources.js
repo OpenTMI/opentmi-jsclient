@@ -23,7 +23,7 @@ class ResourcesQuery extends QueryBase {
   /**
    * Resource has parent
    * @param {String} id - optional parent resource id
-   * @return {MongooseQueryClient}
+   * @return {MongooseQueryClient} returns this
    */
   hasParent(id = undefined) {
     if (_.isUndefined(id)) {
@@ -34,16 +34,16 @@ class ResourcesQuery extends QueryBase {
 
   /**
    * Resource doesn't have parent
-   * @return {MongooseQueryClient}
+   * @return {MongooseQueryClient} returns this
    */
   hasNoParent() {
     return this.has({parent: {$exists: false}});
   }
 
   /**
-   * Find resources with type
-   * @param {string} type
-   * @return {Query}
+   * Find resources with name
+   * @param {string} name resource name
+   * @return {Query} returns this
    */
   name(name) {
     invariant(_.isString(name), 'type should be a string');
@@ -51,8 +51,8 @@ class ResourcesQuery extends QueryBase {
   }
   /**
    * Find resources by type
-   * @param {string} type
-   * @return {Query}
+   * @param {string} type resource type
+   * @return {Query} returns this
    */
   type(type) {
     invariant(_.isString(type), 'type should be a string');
@@ -61,8 +61,8 @@ class ResourcesQuery extends QueryBase {
 
   /**
    * Find resources by status
-   * @param {string} status
-   * @return {Query}
+   * @param {string} status resource status. One of 'active', 'maintenance', 'broken'
+   * @return {Query} returns this
    */
   status(status) {
     const STATUS = ['active', 'maintenance', 'broken'];
@@ -72,8 +72,8 @@ class ResourcesQuery extends QueryBase {
 
   /**
    * Find resources by usage type
-   * @param {String} usageType
-   * @return {MongooseQueryClient}
+   * @param {String} usageType resource usage type
+   * @return {MongooseQueryClient} returns this
    */
   usageType(usageType) {
     invariant(_.isString(usageType), 'usageType should be a string');
@@ -82,19 +82,21 @@ class ResourcesQuery extends QueryBase {
 
   /**
    * Find resources by a tag
-   * @param {string} tag
-   * @param {bool} isTrue - optional - default: true
-   * @return {Query}
+   * @param {string} tag tag name
+   * @param {bool} isTrue tag value, optional. default: true
+   * @return {Query} returns this
    */
   haveTag(tag, isTrue = true) {
     invariant(_.isBoolean(isTrue), 'isTrue should be a boolean');
-    return this.has({tags: {tag: isTrue}});
+    const obj = {tags: {}};
+    obj.tags[tag] = isTrue;
+    return this.has(obj);
   }
 
   /**
    * Find resources by multiple tags
-   * @param {array<String>} tags
-   * @return {Query}
+   * @param {array<String>} tags array of tag names
+   * @return {Query} returns this
    */
   haveTags(tags) {
     invariant(_.isArray(tags), 'tags should be an array');
@@ -115,7 +117,7 @@ class Resources extends Collection {
 
   /**
    * Find Resources
-   * @return {ResourcesQuery}
+   * @return {ResourcesQuery} returns Query object
    */
   find() {
     return new ResourcesQuery(this, Resource);
@@ -123,7 +125,7 @@ class Resources extends Collection {
 
   /**
    * Update documents
-   * @return {*}
+   * @return {Promise} not implemented
    */
   update() {
     return this._notImplemented();

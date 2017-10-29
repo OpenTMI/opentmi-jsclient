@@ -14,7 +14,7 @@ class Resource extends Document {
 
   /**
    * Get resource info as short string
-   * @return {string}
+   * @return {string} single line of resource data
    */
   toString() {
     return `${this.id}: ${this.name()}`;
@@ -22,7 +22,8 @@ class Resource extends Document {
 
   /**
    * Get resource name or set it
-   * @return {string}
+   * @param {String}value resource name
+   * @return {string|Resource} resource name or Resource object
    */
   name(value) { return this.getOrSet('name', value); }
 
@@ -38,14 +39,14 @@ class Resource extends Document {
   /**
    * Manage location information
    * @example
-   * // set site and country
-   * doc
-   *  .location.site('oulu')
-   *  .location.country('finland')
-   * @return {{site: (function(this:Resource)), country: (function(this:Resource)),
-   * city: (function(this:Resource)), address: (function(this:Resource)), postcode:
+   *   // set site and country
+   *   doc
+   *    .location.site('oulu')
+   *    .location.country('finland')
+   *  @return {{site: (function(this:Resource)), country: (function(this:Resource)),
+   *  city: (function(this:Resource)), address: (function(this:Resource)), postcode:
    * (function(this:Resource)), room: (function(this:Resource)), subRoom:
-   * (function(this:Resource)), geo: (function(this:Resource))}}
+   * (function(this:Resource)), geo: (function(this:Resource))}} Location object
    */
   get location() {
     const loc = {

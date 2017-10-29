@@ -38,9 +38,9 @@ const retryUpdate = require('./../retry');
 class Document extends Base {
   /**
    * Document constructor
-   * @param {Transport}transport
-   * @param {String}path
-   * @param {Object}originalJson
+   * @param {Transport}transport transport layer
+   * @param {String}path Document rest uri
+   * @param {Object}originalJson document data as plain json
    */
   constructor(transport, path, originalJson) {
     super(transport, path);
@@ -54,7 +54,7 @@ class Document extends Base {
 
   /**
    * Get resource data as plain json object
-   * @return {object}
+   * @return {object} returns document as plain json
    */
   toJson() {
     return _.cloneDeep(this._resource);
@@ -62,7 +62,7 @@ class Document extends Base {
 
   /**
    * get changes as json object
-   * @return {object}
+   * @return {object} returns changes as plain json
    */
   getChanges() {
     return _.cloneDeep(this._changes);
@@ -70,7 +70,7 @@ class Document extends Base {
 
   /**
    * returns true when there is changes made by client
-   * @return {boolean}
+   * @return {boolean} check if document is "dirty" - has local changes
    */
   isDirty() {
     return !_.isEqual(this._original, this._resource);
@@ -80,9 +80,11 @@ class Document extends Base {
    * Save document. If conflicts happen try merge and save again.
    * if there is no retries left or some server side changes causes conflict
    * promise is rejected and reason property tells was it no retries left or merge conflicts.
-   * @return {Promise}
+   * @param {Number}retryCount count how many times we try to save.
+   * @return {Promise} Resolves Document itself when save success
    */
   save(retryCount = 2) {
+    invariant(_.isNumber(retryCount), 'retryCount should be a number');
     if (this.isDirty()) {
       const changes = this.getChanges();
       invariant(changes[this._idProperty] !==
@@ -97,7 +99,7 @@ class Document extends Base {
   /**
    * Get resource value by Key.
    * @param {String} key - key can be nested as well like "a.b.c"
-   * @param {String} defaultValue
+   * @param {String} defaultValue optional default value
    * @return {String|Object} value for the key or undefined if not found
    */
   get(key, defaultValue = undefined) {
@@ -106,8 +108,8 @@ class Document extends Base {
 
   /**
    * Set value for a key
-   * @param {String} key
-   * @param {*}value
+   * @param {String} key key for update
+   * @param {*}value value for update
    * @return {Document} returns this
    */
   set(key, value) {
@@ -194,13 +196,13 @@ module.exports = Document;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Admin.html">Admin</a></li><li><a href="Authentication.html">Authentication</a></li><li><a href="Cluster.html">Cluster</a></li><li><a href="Document.html">Document</a></li><li><a href="Group.html">Group</a></li><li><a href="Item.html">Item</a></li><li><a href="Items.html">Items</a></li><li><a href="ItemsQuery.html">ItemsQuery</a></li><li><a href="Loan.html">Loan</a></li><li><a href="Loans.html">Loans</a></li><li><a href="MongooseQueryClient.html">MongooseQueryClient</a></li><li><a href="QueryBase.html">QueryBase</a></li><li><a href="Resource.html">Resource</a></li><li><a href="Resources.html">Resources</a></li><li><a href="ResourcesQuery.html">ResourcesQuery</a></li><li><a href="Results.html">Results</a></li><li><a href="ResultsQuery.html">ResultsQuery</a></li><li><a href="Schemas.html">Schemas</a></li><li><a href="Transport.html">Transport</a></li><li><a href="User.html">User</a></li><li><a href="Users.html">Users</a></li><li><a href="UsersQuery.html">UsersQuery</a></li></ul><h3>Global</h3><ul><li><a href="global.html#beginningOfDay">beginningOfDay</a></li><li><a href="global.html#endOfDay">endOfDay</a></li><li><a href="global.html#notImplemented">notImplemented</a></li><li><a href="global.html#timeSince">timeSince</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Admin.html">Admin</a></li><li><a href="Authentication.html">Authentication</a></li><li><a href="Cluster.html">Cluster</a></li><li><a href="Document.html">Document</a></li><li><a href="Group.html">Group</a></li><li><a href="Item.html">Item</a></li><li><a href="Items.html">Items</a></li><li><a href="ItemsQuery.html">ItemsQuery</a></li><li><a href="Loan.html">Loan</a></li><li><a href="LoanItem.html">LoanItem</a></li><li><a href="Loans.html">Loans</a></li><li><a href="MongooseQueryClient.html">MongooseQueryClient</a></li><li><a href="QueryBase.html">QueryBase</a></li><li><a href="Resource.html">Resource</a></li><li><a href="Resources.html">Resources</a></li><li><a href="ResourcesQuery.html">ResourcesQuery</a></li><li><a href="Results.html">Results</a></li><li><a href="ResultsQuery.html">ResultsQuery</a></li><li><a href="Schemas.html">Schemas</a></li><li><a href="Transport.html">Transport</a></li><li><a href="User.html">User</a></li><li><a href="Users.html">Users</a></li><li><a href="UsersQuery.html">UsersQuery</a></li></ul><h3>Global</h3><ul><li><a href="global.html#beginningOfDay">beginningOfDay</a></li><li><a href="global.html#endOfDay">endOfDay</a></li><li><a href="global.html#notImplemented">notImplemented</a></li><li><a href="global.html#timeSince">timeSince</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 29 2017 19:27:44 GMT+0200 (EET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 29 2017 21:46:59 GMT+0200 (EET)
 </footer>
 
 <script> prettyPrint(); </script>

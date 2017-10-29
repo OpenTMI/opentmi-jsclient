@@ -1,7 +1,7 @@
 /**
  * Return object which contains duration between given date and current date
  * @param {Date}when first date to be compared against current date
- * @returns {Object) object which contains durations
+ * @returns {Object} object which contains durations
  */
 module.exports.timeSince = (when) => {
   const obj = {};

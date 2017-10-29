@@ -12,7 +12,7 @@ const {QueryBase, Collection, notImplemented} = require('./utils');
 class ResultsQuery extends QueryBase {
   /**
    * Find results which are using hw dut(s)
-   * @return {ResultsQuery}
+   * @return {ResultsQuery} returns this
    */
   isHW() {
     return this.has({'exec.dut.type': 'hw'});
@@ -20,8 +20,8 @@ class ResultsQuery extends QueryBase {
 
   /**
    * Find results by verdict
-   * @param {String}verdict
-   * @return {ResultsQuery}
+   * @param {String}verdict test verdict
+   * @return {ResultsQuery} returns this
    */
   verdict(verdict) {
     invariant(_.isString(verdict), 'verdictr should be a string');
@@ -30,7 +30,7 @@ class ResultsQuery extends QueryBase {
 
   /**
    * Find failed test results
-   * @return {ResultsQuery}
+   * @return {ResultsQuery} returns this
    */
   isFailed() {
     return this.verdict('fail');
@@ -38,7 +38,7 @@ class ResultsQuery extends QueryBase {
 
   /**
    * Find pass test results
-   * @return {ResultsQuery}
+   * @return {ResultsQuery} returns this
    */
   isPass() {
     return this.verdict('pass');
@@ -46,7 +46,7 @@ class ResultsQuery extends QueryBase {
 
   /**
    * Find inconclusive results
-   * @return {ResultsQuery}
+   * @return {ResultsQuery} returns this
    */
   isInconclusive() {
     return this.verdict(('inconclusive'));
@@ -54,8 +54,8 @@ class ResultsQuery extends QueryBase {
 
   /**
    * Find results which belong to campaign
-   * @param {String}campaign
-   * @return {ResultsQuery}
+   * @param {String}campaign Campaign name
+   * @return {ResultsQuery} returns this
    */
   belongToCampaign(campaign) {
     invariant(_.isString(campaign), 'campaign should be a string');
@@ -64,8 +64,8 @@ class ResultsQuery extends QueryBase {
 
   /**
    * Find results which belong to job
-   * @param {String}job
-   * @return {ResultsQuery}
+   * @param {String}job job name
+   * @return {ResultsQuery} returns this
    */
   belongToJob(job) {
     invariant(_.isString(job), 'job should be a string');
@@ -74,12 +74,12 @@ class ResultsQuery extends QueryBase {
 
   /**
    * Find results which note contains text
-   * @param {String}str
-   * @return {ResultsQuery}
+   * @param {String}str string that contains in note
+   * @return {ResultsQuery} returns this
    */
   containsNote(str) {
     invariant(_.isString(str), 'str should be a string');
-    return this.has({'exec.note': str});
+    return this.has({'exec.note': `/${str}/`});
   }
 }
 

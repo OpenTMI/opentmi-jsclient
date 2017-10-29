@@ -7,6 +7,7 @@ class Result extends Document {
   /**
    * Constructor for Resources model
    * @param {Transport}transport - Transport object
+   * @param {Object}resultJson result as a plain json
    * @private
    */
   constructor(transport, resultJson) {
@@ -14,26 +15,33 @@ class Result extends Document {
   }
 
   /**
-   * Get resource info as short string
-   * @return {string}
+   * Get result as short string
+   * @return {string} returns result as single line
    */
   toString() {
     return `${this.time()}: ${this.name} - ${this.verdict()}`;
   }
 
   /**
-   * Get resource name or set it
-   * @return {string}
+   * Get test case id
+   * @return {string} test case id
    */
   tcid() {
     return this.get('tcid');
   }
+
+  /**
+   * Get test case id
+   */
   get name() { return this.tcid(); }
+  /**
+   * Get test case id
+   */
   get testcaseId() { return this.tcid(); }
 
   /**
    * Get result verdict
-   * @return {String}
+   * @return {String} returns test verdict
    */
   verdict() {
     return this.get('exec.verdict');
@@ -41,6 +49,7 @@ class Result extends Document {
 
   /**
    * Get result creation time
+   * @returns {Date} result creation time
    */
   time() {
     return this.get('cre.time');
@@ -48,7 +57,7 @@ class Result extends Document {
 
   /**
    * Get execution duration
-   * @return {*}
+   * @return {Number} test execution duration
    */
   duration() {
     return this.get('exec.duration');

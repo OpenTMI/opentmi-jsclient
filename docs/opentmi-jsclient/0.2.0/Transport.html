@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>Transport<span class="signature">(Rest, IO)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>Transport<span class="signature">(host, Rest, IO)</span><span class="type-signature"></span></h2>
         
     
 </header>
@@ -41,7 +41,7 @@
     
 
     
-    <h4 class="name" id="Transport"><span class="type-signature"></span>new Transport<span class="signature">(Rest, IO)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Transport"><span class="type-signature"></span>new Transport<span class="signature">(host, Rest, IO)</span><span class="type-signature"></span></h4>
     
 
     
@@ -85,10 +85,38 @@
 
         <tr>
             
+                <td class="name"><code>host</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">opentmi uri</td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>Rest</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">Axios</span>
+
+
             
             </td>
 
@@ -107,6 +135,11 @@
             
 
             <td class="type">
+            
+                
+<span class="param-type">SocketIO</span>
+
+
             
             </td>
 
@@ -155,7 +188,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line18">line 18</a>
+        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line19">line 19</a>
     </li></ul></dd>
     
 
@@ -247,7 +280,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line63">line 63</a>
+        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line64">line 64</a>
     </li></ul></dd>
     
 
@@ -309,7 +342,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line55">line 55</a>
+        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line56">line 56</a>
     </li></ul></dd>
     
 
@@ -371,7 +404,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line47">line 47</a>
+        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line48">line 48</a>
     </li></ul></dd>
     
 
@@ -433,7 +466,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line302">line 302</a>
+        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line305">line 305</a>
     </li></ul></dd>
     
 
@@ -495,7 +528,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line38">line 38</a>
+        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line39">line 39</a>
     </li></ul></dd>
     
 
@@ -557,7 +590,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line30">line 30</a>
+        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line31">line 31</a>
     </li></ul></dd>
     
 
@@ -686,7 +719,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line80">line 80</a>
+        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line81">line 81</a>
     </li></ul></dd>
     
 
@@ -712,6 +745,10 @@
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    resolves IO connection
+</div>
+
 
 
 <dl>
@@ -798,7 +835,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">uri for request</td>
         </tr>
 
     
@@ -839,7 +876,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line294">line 294</a>
+        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line297">line 297</a>
     </li></ul></dd>
     
 
@@ -947,7 +984,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line133">line 133</a>
+        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line134">line 134</a>
     </li></ul></dd>
     
 
@@ -973,6 +1010,10 @@
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    resolves when IO is disconnected
+</div>
+
 
 
 <dl>
@@ -999,7 +1040,7 @@
     
 
     
-    <h4 class="name" id="emit"><span class="type-signature"></span>emit<span class="signature">(event, data, timeout)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    <h4 class="name" id="emit"><span class="type-signature"></span>emit<span class="signature">(event, data, timeout)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
     
 
     
@@ -1146,7 +1187,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line194">line 194</a>
+        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line196">line 196</a>
     </li></ul></dd>
     
 
@@ -1172,6 +1213,10 @@
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    resolves when emit is done
+</div>
+
 
 
 <dl>
@@ -1180,7 +1225,7 @@
     </dt>
     <dd>
         
-<span class="param-type">*</span>
+<span class="param-type">Promise</span>
 
 
     </dd>
@@ -1322,7 +1367,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line262">line 262</a>
+        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line265">line 265</a>
     </li></ul></dd>
     
 
@@ -1525,7 +1570,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line273">line 273</a>
+        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line276">line 276</a>
     </li></ul></dd>
     
 
@@ -1641,7 +1686,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">uri for request</td>
         </tr>
 
     
@@ -1664,7 +1709,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">json object to be send</td>
         </tr>
 
     
@@ -1705,7 +1750,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line285">line 285</a>
+        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line288">line 288</a>
     </li></ul></dd>
     
 
@@ -1761,7 +1806,7 @@
     
 
     
-    <h4 class="name" id="request"><span class="type-signature"></span>request<span class="signature">(req)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="request"><span class="type-signature"></span>request<span class="signature">(req)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
     
 
     
@@ -1865,7 +1910,7 @@ method: 'get'</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line205">line 205</a>
+        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line208">line 208</a>
     </li></ul></dd>
     
 
@@ -1888,6 +1933,28 @@ method: 'get'</td>
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    resolves when request success
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -1899,7 +1966,7 @@ method: 'get'</td>
     
 
     
-    <h4 class="name" id="requestIO"><span class="type-signature"></span>requestIO<span class="signature">(req)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="requestIO"><span class="type-signature"></span>requestIO<span class="signature">(req)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
     
 
     
@@ -2000,7 +2067,7 @@ method: 'get'</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line148">line 148</a>
+        <a href="transports_index.js.html">transports/index.js</a>, <a href="transports_index.js.html#line150">line 150</a>
     </li></ul></dd>
     
 
@@ -2023,6 +2090,28 @@ method: 'get'</td>
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    resolves when response is received
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -2044,13 +2133,13 @@ method: 'get'</td>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Admin.html">Admin</a></li><li><a href="Authentication.html">Authentication</a></li><li><a href="Cluster.html">Cluster</a></li><li><a href="Document.html">Document</a></li><li><a href="Group.html">Group</a></li><li><a href="Item.html">Item</a></li><li><a href="Items.html">Items</a></li><li><a href="ItemsQuery.html">ItemsQuery</a></li><li><a href="Loan.html">Loan</a></li><li><a href="Loans.html">Loans</a></li><li><a href="MongooseQueryClient.html">MongooseQueryClient</a></li><li><a href="QueryBase.html">QueryBase</a></li><li><a href="Resource.html">Resource</a></li><li><a href="Resources.html">Resources</a></li><li><a href="ResourcesQuery.html">ResourcesQuery</a></li><li><a href="Results.html">Results</a></li><li><a href="ResultsQuery.html">ResultsQuery</a></li><li><a href="Schemas.html">Schemas</a></li><li><a href="Transport.html">Transport</a></li><li><a href="User.html">User</a></li><li><a href="Users.html">Users</a></li><li><a href="UsersQuery.html">UsersQuery</a></li></ul><h3>Global</h3><ul><li><a href="global.html#beginningOfDay">beginningOfDay</a></li><li><a href="global.html#endOfDay">endOfDay</a></li><li><a href="global.html#notImplemented">notImplemented</a></li><li><a href="global.html#timeSince">timeSince</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Admin.html">Admin</a></li><li><a href="Authentication.html">Authentication</a></li><li><a href="Cluster.html">Cluster</a></li><li><a href="Document.html">Document</a></li><li><a href="Group.html">Group</a></li><li><a href="Item.html">Item</a></li><li><a href="Items.html">Items</a></li><li><a href="ItemsQuery.html">ItemsQuery</a></li><li><a href="Loan.html">Loan</a></li><li><a href="LoanItem.html">LoanItem</a></li><li><a href="Loans.html">Loans</a></li><li><a href="MongooseQueryClient.html">MongooseQueryClient</a></li><li><a href="QueryBase.html">QueryBase</a></li><li><a href="Resource.html">Resource</a></li><li><a href="Resources.html">Resources</a></li><li><a href="ResourcesQuery.html">ResourcesQuery</a></li><li><a href="Results.html">Results</a></li><li><a href="ResultsQuery.html">ResultsQuery</a></li><li><a href="Schemas.html">Schemas</a></li><li><a href="Transport.html">Transport</a></li><li><a href="User.html">User</a></li><li><a href="Users.html">Users</a></li><li><a href="UsersQuery.html">UsersQuery</a></li></ul><h3>Global</h3><ul><li><a href="global.html#beginningOfDay">beginningOfDay</a></li><li><a href="global.html#endOfDay">endOfDay</a></li><li><a href="global.html#notImplemented">notImplemented</a></li><li><a href="global.html#timeSince">timeSince</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 29 2017 19:27:45 GMT+0200 (EET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 29 2017 21:46:59 GMT+0200 (EET)
 </footer>
 
 <script> prettyPrint(); </script>

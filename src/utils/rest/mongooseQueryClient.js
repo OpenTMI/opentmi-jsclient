@@ -137,7 +137,7 @@ class MongooseQueryClient {
 
   /**
    * Populate selected fields
-   * @param {array<string>|String|Object} fields
+   * @param {array<string>|String|Object} fields field(s) to be populated
    * @return {MongooseQueryClient} return itself
    */
   populate(fields) {

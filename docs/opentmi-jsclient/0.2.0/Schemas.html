@@ -147,7 +147,7 @@ Object manage all low level communication and authentication
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="schemas.js.html">schemas.js</a>, <a href="schemas.js.html#line10">line 10</a>
+        <a href="schemas.js.html">schemas.js</a>, <a href="schemas.js.html#line8">line 8</a>
     </li></ul></dd>
     
 
@@ -253,7 +253,7 @@ Object manage all low level communication and authentication
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="schemas.js.html">schemas.js</a>, <a href="schemas.js.html#line25">line 25</a>
+        <a href="schemas.js.html">schemas.js</a>, <a href="schemas.js.html#line23">line 23</a>
     </li></ul></dd>
     
 
@@ -309,7 +309,7 @@ Object manage all low level communication and authentication
     
 
     
-    <h4 class="name" id="getAllSchemas"><span class="type-signature"></span>getAllSchemas<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id="getAllSchemas"><span class="type-signature"></span>getAllSchemas<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;Array.&lt;Object>>}</span></h4>
     
 
     
@@ -361,7 +361,7 @@ Object manage all low level communication and authentication
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="schemas.js.html">schemas.js</a>, <a href="schemas.js.html#line45">line 45</a>
+        <a href="schemas.js.html">schemas.js</a>, <a href="schemas.js.html#line43">line 43</a>
     </li></ul></dd>
     
 
@@ -387,6 +387,10 @@ Object manage all low level communication and authentication
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    resolves array of schema objects
+</div>
+
 
 
 <dl>
@@ -395,7 +399,7 @@ Object manage all low level communication and authentication
     </dt>
     <dd>
         
-<span class="param-type">Promise</span>
+<span class="param-type">Promise.&lt;Array.&lt;Object>></span>
 
 
     </dd>
@@ -463,13 +467,18 @@ This can be used for example generate html forms.
 
             <td class="type">
             
+                
+<span class="param-type">String</span>
+
+
+            
             </td>
 
             
 
             
 
-            <td class="description last"></td>
+            <td class="description last">collection name</td>
         </tr>
 
     
@@ -510,7 +519,7 @@ This can be used for example generate html forms.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="schemas.js.html">schemas.js</a>, <a href="schemas.js.html#line36">line 36</a>
+        <a href="schemas.js.html">schemas.js</a>, <a href="schemas.js.html#line34">line 34</a>
     </li></ul></dd>
     
 
@@ -536,6 +545,10 @@ This can be used for example generate html forms.
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    resolves collection schema as json-schema -format
+</div>
+
 
 
 <dl>
@@ -572,13 +585,13 @@ This can be used for example generate html forms.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Admin.html">Admin</a></li><li><a href="Authentication.html">Authentication</a></li><li><a href="Cluster.html">Cluster</a></li><li><a href="Document.html">Document</a></li><li><a href="Group.html">Group</a></li><li><a href="Item.html">Item</a></li><li><a href="Items.html">Items</a></li><li><a href="ItemsQuery.html">ItemsQuery</a></li><li><a href="Loan.html">Loan</a></li><li><a href="Loans.html">Loans</a></li><li><a href="MongooseQueryClient.html">MongooseQueryClient</a></li><li><a href="QueryBase.html">QueryBase</a></li><li><a href="Resource.html">Resource</a></li><li><a href="Resources.html">Resources</a></li><li><a href="ResourcesQuery.html">ResourcesQuery</a></li><li><a href="Results.html">Results</a></li><li><a href="ResultsQuery.html">ResultsQuery</a></li><li><a href="Schemas.html">Schemas</a></li><li><a href="Transport.html">Transport</a></li><li><a href="User.html">User</a></li><li><a href="Users.html">Users</a></li><li><a href="UsersQuery.html">UsersQuery</a></li></ul><h3>Global</h3><ul><li><a href="global.html#beginningOfDay">beginningOfDay</a></li><li><a href="global.html#endOfDay">endOfDay</a></li><li><a href="global.html#notImplemented">notImplemented</a></li><li><a href="global.html#timeSince">timeSince</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Admin.html">Admin</a></li><li><a href="Authentication.html">Authentication</a></li><li><a href="Cluster.html">Cluster</a></li><li><a href="Document.html">Document</a></li><li><a href="Group.html">Group</a></li><li><a href="Item.html">Item</a></li><li><a href="Items.html">Items</a></li><li><a href="ItemsQuery.html">ItemsQuery</a></li><li><a href="Loan.html">Loan</a></li><li><a href="LoanItem.html">LoanItem</a></li><li><a href="Loans.html">Loans</a></li><li><a href="MongooseQueryClient.html">MongooseQueryClient</a></li><li><a href="QueryBase.html">QueryBase</a></li><li><a href="Resource.html">Resource</a></li><li><a href="Resources.html">Resources</a></li><li><a href="ResourcesQuery.html">ResourcesQuery</a></li><li><a href="Results.html">Results</a></li><li><a href="ResultsQuery.html">ResultsQuery</a></li><li><a href="Schemas.html">Schemas</a></li><li><a href="Transport.html">Transport</a></li><li><a href="User.html">User</a></li><li><a href="Users.html">Users</a></li><li><a href="UsersQuery.html">UsersQuery</a></li></ul><h3>Global</h3><ul><li><a href="global.html#beginningOfDay">beginningOfDay</a></li><li><a href="global.html#endOfDay">endOfDay</a></li><li><a href="global.html#notImplemented">notImplemented</a></li><li><a href="global.html#timeSince">timeSince</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 29 2017 19:27:45 GMT+0200 (EET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 29 2017 21:46:59 GMT+0200 (EET)
 </footer>
 
 <script> prettyPrint(); </script>

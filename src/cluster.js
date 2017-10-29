@@ -32,6 +32,7 @@ class Cluster {
 
   /**
    * Restart workers. Require admin access.
+   * @return {Promise} resolves when workers are resterted
    */
   restartWorkers() {
     invariant(this._transport.isLoggedIn, 'Transport should be logged in as admin');
@@ -46,6 +47,10 @@ class Cluster {
         throw error;
       });
   }
+  /**
+   * Reload clusters states
+   * @returns {undefined} returns nothing
+   */
   refresh() {
     // @todo not required yet
     // invariant(this._transport.isLoggedIn, 'Transport should be logged in');
