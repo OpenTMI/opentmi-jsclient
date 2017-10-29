@@ -73,7 +73,7 @@ auth
 
 ### Customize
 
-It is easy to create API support for custom API's. See example below:
+It is easy to create support for custom API's. See example below:
 
 ```
 class CustomAPI {
@@ -83,9 +83,8 @@ class CustomAPI {
   some() {
     debug('attempt to restart all workers');
     return this._transport
-      .get('/api/v0/addons-api')
-      .then((response) => response.data;
-      });
+      .get('/addon-api')
+      .then(response => response.data);
   }
 }
 const customApi = new CustomAPI(transport);
