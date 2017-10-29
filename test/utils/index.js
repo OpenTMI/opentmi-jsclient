@@ -4,83 +4,89 @@ const querystring = require('querystring');
 
 const Query = require('../../src/utils/rest/mongooseQueryClient');
 const {retryUpdate, objectMerge, notImplemented} = require('../../src/utils');
+
 const toUrl = querystring.stringify;
 
 
-describe('Query', function() {
+describe('Query', function () {
   let q;
-  beforeEach(function() {
+  beforeEach(function () {
     q = new Query();
   });
 
-  it('is empty by default', function() {
-    assert.equal(q.toString(), "");
+  it('is empty by default', function () {
+    assert.equal(q.toString(), '');
   });
 
-  describe('works with query type', function() {
-    it('find', function() {
-      assert.equal(q.find().toString(), "t=find");
+  describe('works with query type', function () {
+    it('find', function () {
+      assert.equal(q.find().toString(), 't=find');
     });
-    it('count', function() {
-      assert.equal(q.count().toString(), "t=count");
+    it('count', function () {
+      assert.equal(q.count().toString(), 't=count');
     });
-    it('distinct', function() {
-      assert.equal(q.distinct().toString(), "t=distinct");
-    });
-  });
-  describe('works with has', function() {
-    it('something', function() {
-      assert.equal(q.has({some: 'thing'}).toString(), toUrl({q: JSON.stringify({"some":"thing"})}));
+    it('distinct', function () {
+      assert.equal(q.distinct().toString(), 't=distinct');
     });
   });
-  describe('works with options', function() {
-    it('select', function() {
+  describe('works with has', function () {
+    it('something', function () {
+      assert.equal(
+        q.has({some: 'thing'})
+          .has({are: 'this'})
+          .toString(),
+        toUrl({q: JSON.stringify({some: 'thing', are: 'this'})})
+      );
+    });
+  });
+  describe('works with options', function () {
+    it('select', function () {
       assert.equal(q.select(['some', 'thing']).toString(), 'f=some%20thing');
     });
-    it('populate', function() {
+    it('populate', function () {
       assert.equal(q.populate(['some', 'thing']).toString(), 'p=some%20thing');
     });
-    it('asFlat', function() {
+    it('asFlat', function () {
       assert.equal(q.asFlat().toString(), 'fl=true');
     });
-    it('asJson', function() {
+    it('asJson', function () {
       assert.equal(q.asJson().toString(), 'fl=false');
     });
-    it('limit', function() {
+    it('limit', function () {
       assert.equal(q.limit(10).toString(), 'l=10');
     });
-    it('skip', function() {
+    it('skip', function () {
       assert.equal(q.skip(20).toString(), 'sk=20');
     });
   });
 });
 
-describe('mergeObject', function() {
-  it('success with changes', function() {
-    const result = objectMerge({a: 1, b: 0}, {a: 2}, {b:1});
+describe('mergeObject', function () {
+  it('success with changes', function () {
+    const result = objectMerge({a: 1, b: 0}, {a: 2}, {b: 1});
     assert.deepEqual(result.merged, {a: 2, b: 1});
   });
-  it('success with new properties', function() {
-    const result = objectMerge({a: 1}, {a: 2}, {b:1});
+  it('success with new properties', function () {
+    const result = objectMerge({a: 1}, {a: 2}, {b: 1});
     assert.deepEqual(result.merged, {a: 2, b: 1});
   });
-  it('success with changes', function() {
-    const result = objectMerge({a: 1}, {a: 2}, {b:1});
+  it('success with changes', function () {
+    const result = objectMerge({a: 1}, {a: 2}, {b: 1});
     assert.deepEqual(result.merged, {a: 2, b: 1});
   });
-  it('conflicts', function() {
-    const result = objectMerge({a: 1}, {a: 2}, {a:3});
+  it('conflicts', function () {
+    const result = objectMerge({a: 1}, {a: 2}, {a: 3});
     assert.deepEqual(result.conflicts, {a: {a: 2, o: 1, b: 3}});
   });
 });
 
-describe('retryUpdate', function() {
-  it('if success no needs for update', function() {
+describe('retryUpdate', function () {
+  it('if success no needs for update', function () {
     const original = {a: 1};
     const changes = {a: 2};
     const resolveData = {
-        response: { status: 200, data: changes }
-      };
+      response: {status: 200, data: changes}
+    };
     const spyUpdateResolves = sinon.spy();
     const spyUpdateRejects = sinon.spy();
     const spyUpdateCalls = sinon.spy();
@@ -91,7 +97,7 @@ describe('retryUpdate', function() {
         .catch((error) => {
           spyUpdateRejects(error);
           throw error;
-        })
+        });
     };
     return retryUpdate(original, changes, update).then(() => {
       assert.equal(spyUpdateCalls.callCount, 1);
@@ -99,16 +105,16 @@ describe('retryUpdate', function() {
       assert.equal(spyUpdateRejects.callCount, 0);
       assert.deepEqual(spyUpdateCalls.getCall(0).args[0], changes);
       assert.deepEqual(spyUpdateResolves.getCall(0).args[0], resolveData);
-    })
+    });
   });
-  it('merge required and success', function() {
+  it('merge required and success', function () {
     const original = {a: 1, b: 1};
     const changes = {a: 2};
     const resolveData = {
-      response: { status: 200, data: {a: 3, b: 2} }
+      response: {status: 200, data: {a: 3, b: 2}}
     };
     const rejectData = {
-      response: { status: 409, data: {b: 2} }
+      response: {status: 409, data: {b: 2}}
     };
 
     const spyUpdateResolves = sinon.spy();
@@ -116,9 +122,9 @@ describe('retryUpdate', function() {
     const spyUpdateCalls = sinon.spy();
     const update = (data) => {
       spyUpdateCalls(data);
-      if(spyUpdateCalls.callCount === 1) {
+      if (spyUpdateCalls.callCount === 1) {
         spyUpdateRejects(rejectData);
-        return Promise.reject(rejectData)
+        return Promise.reject(rejectData);
       }
       spyUpdateResolves(resolveData);
       return Promise.resolve(resolveData);
@@ -129,14 +135,14 @@ describe('retryUpdate', function() {
       assert.equal(spyUpdateRejects.callCount, 1);
     });
   });
-  it('merge required but conflicts', function() {
+  it('merge required but conflicts', function () {
     const original = {a: 1};
     const changes = {a: 2};
     const resolveData = {
-      response: { status: 200, data: {} }
+      response: {status: 200, data: {}}
     };
     const rejectData = {
-      response: { status: 409, data: {a: 3} }
+      response: {status: 409, data: {a: 3}}
     };
 
     const spyUpdateResolves = sinon.spy();
@@ -144,9 +150,9 @@ describe('retryUpdate', function() {
     const spyUpdateCalls = sinon.spy();
     const update = (data) => {
       spyUpdateCalls(data);
-      if(spyUpdateCalls.callCount === 1) {
+      if (spyUpdateCalls.callCount === 1) {
         spyUpdateRejects(rejectData);
-        return Promise.reject(rejectData)
+        return Promise.reject(rejectData);
       }
       spyUpdateResolves(resolveData);
       return Promise.resolve(resolveData);
@@ -160,11 +166,11 @@ describe('retryUpdate', function() {
   });
 });
 
-describe('utils', function() {
-  it('is empty by default', function() {
+describe('utils', function () {
+  it('is empty by default', function () {
     return notImplemented()
       .then(() => {
-        throw new Error("Should not pass");
+        throw new Error('Should not pass');
       })
       .catch(() => {});
   });

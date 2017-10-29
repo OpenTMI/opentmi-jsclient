@@ -1,3 +1,5 @@
+/** @module Authentication */
+
 const invariant = require('invariant');
 const _ = require('lodash');
 const Promise = require('bluebird');

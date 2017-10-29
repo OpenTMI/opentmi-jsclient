@@ -1,3 +1,4 @@
+/** @module Results */
 // 3rd party modules
 // application modules
 const {Document} = require('./utils');
@@ -6,7 +7,7 @@ const {Document} = require('./utils');
 class Result extends Document {
   /**
    * Constructor for Resources model
-   * @param {Transport} transport - Transport object
+   * @param {Transport}transport - Transport object
    */
   constructor(transport, resultJson) {
     super(transport, `/api/v0/results/${resultJson._id}`, resultJson);

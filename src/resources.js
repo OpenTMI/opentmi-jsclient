@@ -1,3 +1,6 @@
+/**
+ * @module Resources
+ */
 // 3rd party modules
 const invariant = require('invariant');
 const _ = require('lodash');
@@ -7,6 +10,9 @@ const _ = require('lodash');
 const Resource = require('./resource');
 const {QueryBase, Collection, notImplemented} = require('./utils');
 
+/**
+ * @class ResourcesQuery
+ */
 class ResourcesQuery extends QueryBase {
   /* Find resources by id
    * @param {string} type
@@ -107,7 +113,7 @@ class Resources extends Collection {
    */
   constructor(transport) {
     super(transport, '/api/v0/resources');
-    this._notImplemented = notImplemented();
+    this._notImplemented = notImplemented;
   }
 
   /**
