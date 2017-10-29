@@ -4,6 +4,7 @@ const querystring = require('querystring');
 
 const Query = require('../../src/utils/rest/mongooseQueryClient');
 const {retryUpdate, objectMerge, notImplemented} = require('../../src/utils');
+
 const toUrl = querystring.stringify;
 
 
@@ -30,7 +31,12 @@ describe('Query', function() {
   });
   describe('works with has', function() {
     it('something', function() {
-      assert.equal(q.has({some: 'thing'}).toString(), toUrl({q: JSON.stringify({"some":"thing"})}));
+      assert.equal(
+        q.has({some: 'thing'})
+          .has({are: 'this'})
+          .toString(),
+        toUrl({q: JSON.stringify({some: 'thing', are: 'this'})})
+      );
     });
   });
   describe('works with options', function() {

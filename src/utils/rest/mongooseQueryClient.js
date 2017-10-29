@@ -143,8 +143,9 @@ class MongooseQueryClient {
       fields = [fields];
     }
     if (_.isArray(fields)) {
-      const p = _.get(this._query, 'p', '').split(' ');
-      p.push(fields);
+      let p = _.get(this._query, 'p', '').split(' ');
+      p = _.filter(p, s => s.length);
+      p.push(...fields);
       this._query.p = _.uniq(p).join(' ');
     } else {
       this._query.p = _.cloneDeep(fields);
