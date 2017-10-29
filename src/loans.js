@@ -68,7 +68,7 @@ class Loans extends Collection {
    * Find loans by user
    * @param {User}user
    * @param {Transport}transport
-   * @return {Promise<[Loan]>} resolves Loans
+   * @return {Promise.<Loan[]>} resolves Loans
    */
   static forUser(user, transport) {
     invariant(_.isObject(user), 'user should be an User object');

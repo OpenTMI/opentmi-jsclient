@@ -41,18 +41,27 @@ class Users extends Collection {
 
   /**
    * Find Users
-   * @return {UsersQuery}
+   * @return {UsersQuery} Returns query object to find Users
    */
   find() {
     return new UsersQuery(this, User);
   }
 
+  /**
+   * Find out who am I based on login
+   * @return {Promise.<User>} resolves User object
+   */
   whoami() {
     return this._transport
       .get('/auth/me')
       .then(response => new User(this._transport, response.data));
   }
 
+  /**
+   * Find out who am I based on login
+   * @param {Transport}transport Transport layer
+   * @return {Promise.<User>} resolves User object
+   */
   static WHOAMI(transport) {
     const users = new Users(transport);
     return users.whoami();
@@ -60,7 +69,7 @@ class Users extends Collection {
 
   /**
    * Update documents
-   * @return {*}
+   * @return {Promise} not implemented
    */
   update() {
     return this._notImplemented('Users update is not implemented');

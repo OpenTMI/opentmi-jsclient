@@ -13,6 +13,7 @@ class User extends Document {
   /**
    * Constructor for Resources model
    * @param {Transport} transport - Transport object
+   * @param {Object}userJson User data as plain json object
    */
   constructor(transport, userJson) {
     super(transport, `/api/v0/users/${userJson._id}`, userJson);
@@ -20,7 +21,7 @@ class User extends Document {
 
   /**
    * Get resource info as short string
-   * @return {string}
+   * @return {string} user information as single line
    */
   toString() {
     return `${this.name}`;
@@ -28,15 +29,18 @@ class User extends Document {
 
   /**
    * Get user name
-   * @return {String}
+   * @return {String} returns user name
    */
   get name() { return this.get('name'); }
+
   /**
    * Get or set email address
    * @param {String}email
    * @return {User|string}
    */
-  email(email) { return this.getOrSet('email', email); }
+  email(email) {
+    return this.getOrSet('email', email);
+  }
 
   /**
    * Get user owned apikeys
@@ -64,7 +68,7 @@ class User extends Document {
 
   /**
    * Get user groups
-   * @return {Promise<Array<Group>>}
+   * @return {Promise.<Group[]>}
    */
   groups() {
     const promises = _.map(
@@ -76,14 +80,14 @@ class User extends Document {
 
   /**
    * Check if user belong to admin group
-   * @return {Promise<boolean>}
+   * @return {Promise.<boolean>}
    */
   isAdmin() {
     return this._isNotImplemented('is admin is not implemented');
   }
   /**
    * Resolve user loans
-   * @return {Promise<[Loan]>}
+   * @return {Promise.<Loan[]>}
    */
   myLoans() {
     return Loans.forUser(this, this._transport);

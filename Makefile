@@ -44,7 +44,7 @@ coverage:
 	NODE_ENV=test istanbul cover -- _mocha --recursive -R ${REPORTER} -g '${FILTER}'
 
 doc:
-	./node_modules/.bin/jsdoc -d docs --readme README.md -r src package.json
+	./node_modules/.bin/jsdoc -d docs --readme README.md -r src package.json --verbose
 
 lint:
 	eslint src test
