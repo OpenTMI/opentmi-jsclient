@@ -1,5 +1,3 @@
-/** @module Authentication */
-
 const invariant = require('invariant');
 const _ = require('lodash');
 const Promise = require('bluebird');
@@ -7,10 +5,18 @@ const Promise = require('bluebird');
 // application modules
 const {debug} = require('./utils');
 
+/**
+ * Authentication controller
+ * This class provides login API's like login, logout
+ * @example
+ * const auth = new Authentication(transport);
+ * auth
+ *   .login('user@email.com', 'password')
+ *   .whoami().then(user => console.log(user.toString()));
+ */
 class Authentication {
   /**
-   * Constructor for Authentication controller.
-   * Object manage all low level communication and authentication
+   * Constructor for Authentication controller
    * @param {Transport} transport - transport layer for communication
    */
   constructor(transport) {
@@ -20,8 +26,8 @@ class Authentication {
 
   /**
    * Login to OpenTMI
-   * @param {string}email
-   * @param {string}password
+   * @param {string}email user email address
+   * @param {string}password user password
    * @param {string}token - optional token
    * @return {Promise.<string>} - return a token
    */

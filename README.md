@@ -6,13 +6,14 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/OpenTMI/opentmi-jsclient.svg)](https://greenkeeper.io/)
 
 Promise based [OpenTMI](https://github.com/opentmi/opentmi) javascript client for node.js and browser.
+Extendable for custom API's provided by opentmi addons.
 
 ## Requirements
 * [socket.io-client](https://github.com/socketio/socket.io-client) (for socketio connections)
 * [axios](https://github.com/axios/axios) (Promise based http client)
 
 ## Documentation
-[API documentation](https://opentmi.github.io/opentmi-jsclient/opentmi-jsclient/0.1.0/)
+[API documentation](https://opentmi.github.io/opentmi-jsclient/opentmi-jsclient/0.2.0/)
 
 
 ## Build
@@ -68,6 +69,28 @@ auth
 ```
 
 **Note:** see more examples from [sample](sample) -folder.
+
+
+### Customize
+
+It is easy to create API support for custom API's. See example below:
+
+```
+class CustomAPI {
+  constructor(transport) {
+    this._transport = transport;
+  }
+  some() {
+    debug('attempt to restart all workers');
+    return this._transport
+      .get('/api/v0/addons-api')
+      .then((response) => response.data;
+      });
+  }
+}
+const customApi = new CustomAPI(transport);
+customApi.some().then(data => console.log(data));
+```
 
 ### License
 [MIT](LICENSE)

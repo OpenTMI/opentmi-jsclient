@@ -1,5 +1,3 @@
-/** @module Admins */
-
 const invariant = require('invariant');
 const {debug} = require('./utils');
 
