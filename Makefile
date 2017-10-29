@@ -47,7 +47,7 @@ doc:
 	./node_modules/.bin/jsdoc -d docs --readme README.md -r src package.json
 
 lint:
-	eslint src
+	eslint src test
 
 lint-fix:
 	eslint src --fix
