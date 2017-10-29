@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: items.js</title>
+    <title>JSDoc: Source: testcases.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: items.js</h1>
+    <h1 class="page-title">Source: testcases.js</h1>
 
     
 
@@ -27,112 +27,81 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>// 3rd party modules
-const _ = require('lodash');
 const invariant = require('invariant');
 
 // application modules
-const Item = require('./item');
+const Testcase = require('./testcase');
 const {QueryBase, Collection, notImplemented} = require('./utils');
 
 /**
- * @class ItemsQuery
+ * @class TestcasesQuery
  */
-class ItemsQuery extends QueryBase {
+class TestcasesQuery extends QueryBase {
   /**
-   * Find items by barcode
-   * @param {String}barcode barcore to be find
+   * Find testcases by id
+   * @param {String}id testcase id
    * @return {ItemsQuery} returns this
    */
-  barcode(barcode) {
-    return this.has({barcode: barcode});
+  tcid(id) {
+    return this.has({tcid: `/${id}/`});
   }
 
   /**
-   * Find items by name
-   * @param {String}name item name
-   * @return {ItemsQuery} returns this
+   * Test case is marked as skip
+   * @return {TestcasesQuery} returns this
    */
-  name(name) {
-    return this.has({name: name});
+  isSkip() {
+    return this.has({'execution.skip': true});
   }
 
   /**
-   * Find items by availability
-   * @param {Number|undefined}available - should be at least 1 or available amount of resources
-   * @return {ItemsQuery} returns this
+   * Test case is marked as archived
+   * @return {TestcasesQuery} returns this
    */
-  available(available = undefined) {
-    invariant(_.isNumber(available), 'available should be a number');
-    if (_.isUndefined(available)) {
-      return this.has({available: {$gt: 0}});
-    }
-    return this.has({available: available});
+  isArchived() {
+    return this.has({'archive.value': true});
   }
 
-
   /**
-   * Find items by category
-   * @param {String}category - resource category, allowed values:
-   * 'accessory', 'board', 'component', 'other'
-   * @return {ItemsQuery} returns this
+   * Find tests with type
+   * @param {String}type test case type e.g. smoke, acceptance,...
+   * @return {TestcasesQuery} returns this
    */
-  category(category) {
-    invariant(_.isString(category), 'category should be a string');
-    const allowedValues = [
-      'accessory',
-      'board',
-      'component',
-      'other'];
-    invariant(_.indexOf(allowedValues, category) !== -1, 'should be allowed category');
-    return this.has({category: category});
-  }
-  /**
-   * Find only accessories
-   * @return {ItemsQuery} return this
-   */
-  categoryAccessories() { return this.category('accessory'); }
-  /**
-   * Find only boards
-   * @return {ItemsQuery} return this
-   */
-  categoryBoards() { return this.category('board'); }
-  /**
-   * Find only components
-   * @return {ItemsQuery} return this
-   */
-  categoryComponents() { return this.category('components'); }
-  /**
-   * Find only other category resources
-   * @return {ItemsQuery} return this
-   */
-  categoryOthers() { return this.category('other'); }
-
-  /**
-   * Find items by manufacturer
-   * @param {String}name - manufacturer
-   * @return {ItemsQuery} return this
-   */
-  manufacturer(name) {
-    return this.has({'manufacturer.name': name});
+  type(type) {
+    const ALLOWED_TYPES = [
+      'installation',
+      'compatibility',
+      'smoke',
+      'regression',
+      'acceptance',
+      'alpha',
+      'beta',
+      'stability',
+      'functional',
+      'destructive',
+      'performance',
+      'reliability'];
+    invariant(ALLOWED_TYPES.indexOf(type) !== 0, 'not allowed type');
+    return this.has({'other_info.type': type});
   }
 }
 
-class Items extends Collection {
+class Testcases extends Collection {
   /**
    * Constructor for Items model
    * @param {Transport} transport - Transport object
    */
   constructor(transport) {
-    super(transport, '/api/v0/items');
+    super(transport, '/api/v0/testcases');
     this._notImplemented = notImplemented;
   }
 
   /**
-   * Find Items
-   * @return {ResultsQuery} returns Query object
+   * Find Testcases
+   * @return {TestcasesQuery} returns Query object
    */
   find() {
-    return new ItemsQuery(this, Item);
+    return new TestcasesQuery(this, Testcase);
   }
 
   /**
@@ -144,7 +113,7 @@ class Items extends Collection {
   }
 }
 
-module.exports = Items;
+module.exports = Testcases;
 </code></pre>
         </article>
     </section>

@@ -7,6 +7,8 @@ const Resources = require('./resources');
 const Resource = require('./resource');
 const Results = require('./results');
 const Result = require('./result');
+const Testcases = require('./testcases');
+const Testcase = require('./testcase');
 const Items = require('./items');
 const Item = require('./item');
 const Loans = require('./loans');
@@ -24,6 +26,8 @@ module.exports = {
   Resource,
   Results,
   Result,
+  Testcases,
+  Testcase,
   Items,
   Item,
   Loans,

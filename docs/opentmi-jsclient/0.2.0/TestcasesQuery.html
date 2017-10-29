@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Item</title>
+    <title>JSDoc: Class: TestcasesQuery</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Item</h1>
+    <h1 class="page-title">Class: TestcasesQuery</h1>
 
     
 
@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>Item<span class="signature">(transport, resourceJson)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>TestcasesQuery<span class="signature">()</span><span class="type-signature"></span></h2>
         
     
 </header>
@@ -41,95 +41,19 @@
     
 
     
-    <h4 class="name" id="Item"><span class="type-signature"></span>new Item<span class="signature">(transport, resourceJson)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="TestcasesQuery"><span class="type-signature"></span>new TestcasesQuery<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
 
 
 
-<div class="description">
-    Manage single resource
-</div>
 
 
 
 
 
 
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>transport</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Transport.html">Transport</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">transport layer</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>resourceJson</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">plain json object</td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -165,7 +89,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="item.js.html">item.js</a>, <a href="item.js.html#line11">line 11</a>
+        <a href="testcases.js.html">testcases.js</a>, <a href="testcases.js.html#line8">line 8</a>
     </li></ul></dd>
     
 
@@ -219,7 +143,7 @@
     
 
     
-    <h4 class="name" id="category"><span class="type-signature"></span>category<span class="signature">(value)</span><span class="type-signature"> &rarr; {<a href="Item.html">Item</a>|String}</span></h4>
+    <h4 class="name" id="isArchived"><span class="type-signature"></span>isArchived<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="TestcasesQuery.html">TestcasesQuery</a>}</span></h4>
     
 
     
@@ -227,7 +151,223 @@
 
 
 <div class="description">
-    Get category or set it
+    Test case is marked as archived
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="testcases.js.html">testcases.js</a>, <a href="testcases.js.html#line33">line 33</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    returns this
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="TestcasesQuery.html">TestcasesQuery</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="isSkip"><span class="type-signature"></span>isSkip<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="TestcasesQuery.html">TestcasesQuery</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Test case is marked as skip
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="testcases.js.html">testcases.js</a>, <a href="testcases.js.html#line25">line 25</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    returns this
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="TestcasesQuery.html">TestcasesQuery</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="tcid"><span class="type-signature"></span>tcid<span class="signature">(id)</span><span class="type-signature"> &rarr; {<a href="ItemsQuery.html">ItemsQuery</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Find testcases by id
 </div>
 
 
@@ -263,7 +403,7 @@
 
         <tr>
             
-                <td class="name"><code>value</code></td>
+                <td class="name"><code>id</code></td>
             
 
             <td class="type">
@@ -279,7 +419,7 @@
 
             
 
-            <td class="description last">new category</td>
+            <td class="description last">testcase id</td>
         </tr>
 
     
@@ -320,7 +460,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="item.js.html">item.js</a>, <a href="item.js.html#line35">line 35</a>
+        <a href="testcases.js.html">testcases.js</a>, <a href="testcases.js.html#line17">line 17</a>
     </li></ul></dd>
     
 
@@ -347,7 +487,7 @@
 
         
 <div class="param-desc">
-    return category or Item when update new value
+    returns this
 </div>
 
 
@@ -358,10 +498,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="Item.html">Item</a></span>
-|
-
-<span class="param-type">String</span>
+<span class="param-type"><a href="ItemsQuery.html">ItemsQuery</a></span>
 
 
     </dd>
@@ -379,7 +516,7 @@
     
 
     
-    <h4 class="name" id="getImage"><span class="type-signature"></span>getImage<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;buffer>}</span></h4>
+    <h4 class="name" id="type"><span class="type-signature"></span>type<span class="signature">(type)</span><span class="type-signature"> &rarr; {<a href="TestcasesQuery.html">TestcasesQuery</a>}</span></h4>
     
 
     
@@ -387,115 +524,7 @@
 
 
 <div class="description">
-    Get item image as buffer
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="item.js.html">item.js</a>, <a href="item.js.html#line52">line 52</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    image buffer
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise.&lt;buffer></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="manufacturer"><span class="type-signature"></span>manufacturer<span class="signature">(name)</span><span class="type-signature"> &rarr; {<a href="Item.html">Item</a>|String}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Get manufacturer or set it
+    Find tests with type
 </div>
 
 
@@ -531,7 +560,7 @@
 
         <tr>
             
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>type</code></td>
             
 
             <td class="type">
@@ -547,7 +576,7 @@
 
             
 
-            <td class="description last">manufacturer name</td>
+            <td class="description last">test case type e.g. smoke, acceptance,...</td>
         </tr>
 
     
@@ -588,7 +617,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="item.js.html">item.js</a>, <a href="item.js.html#line44">line 44</a>
+        <a href="testcases.js.html">testcases.js</a>, <a href="testcases.js.html#line42">line 42</a>
     </li></ul></dd>
     
 
@@ -615,7 +644,7 @@
 
         
 <div class="param-desc">
-    return manufactorer or Item
+    returns this
 </div>
 
 
@@ -626,278 +655,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="Item.html">Item</a></span>
-|
-
-<span class="param-type">String</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="name"><span class="type-signature"></span>name<span class="signature">(value)</span><span class="type-signature"> &rarr; {<a href="Item.html">Item</a>|string}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Get item name or set it
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>value</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">new name</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="item.js.html">item.js</a>, <a href="item.js.html#line28">line 28</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    returns item name or Item
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="Item.html">Item</a></span>
-|
-
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="toString"><span class="type-signature"></span>toString<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Get resource info as short string
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="item.js.html">item.js</a>, <a href="item.js.html#line19">line 19</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    returns single line about item
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
+<span class="param-type"><a href="TestcasesQuery.html">TestcasesQuery</a></span>
 
 
     </dd>

@@ -21,7 +21,8 @@
     "coverage": "make coverage",
     "clean": "make clean",
     "doc": "make doc",
-    "lint": "make lint"
+    "lint": "make lint",
+    "lint-fix": "make lint-fix"
   },
   "keywords": [
     "opentmi",

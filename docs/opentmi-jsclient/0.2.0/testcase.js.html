@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: utils/rest/base.js</title>
+    <title>JSDoc: Source: testcase.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: utils/rest/base.js</h1>
+    <h1 class="page-title">Source: testcase.js</h1>
 
     
 
@@ -26,36 +26,66 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const invariant = require('invariant');
-const {notImplemented} = require('../utils');
+            <pre class="prettyprint source linenums"><code>// 3rd party modules
+// application modules
+const {Document} = require('./utils');
 
-/**
- * @private
- */
-class Base {
+
+class Testcase extends Document {
   /**
-   * General base constructor for Rest resources
-   * @param {Transport} transport - Transport object&lt;
-   * @param {string} path - path for REST API
+   * Constructor for Testcase model
+   * @param {Transport}transport - Transport object
+   * @param {Object}testcaseJson testcase as a plain json
+   * @private
    */
-  constructor(transport, path) {
-    invariant(transport, 'transport is mandatory');
-    this._transport = transport;
-    this._path = path;
-    this._notImplemented = notImplemented;
+  constructor(transport, testcaseJson) {
+    super(transport, `/api/v0/testcases/${testcaseJson._id}`, testcaseJson);
   }
+
   /**
-   * set rest path
-   * @param {String}path path uri
-   * @return {Base} returns this
+   * Get result as short string
+   * @return {string} returns result as single line
    */
-  setPath(path) {
-    this._path = path;
-    return this;
+  toString() {
+    return `${this.name}: ${this.purpose()} (avg: ${this.duration()}s)`;
+  }
+
+  /**
+   * Get test case id
+   * @return {string} test case id
+   */
+  tcid() {
+    return this.get('tcid');
+  }
+
+  /**
+   * Get test case id
+   */
+  get name() { return this.tcid(); }
+  /**
+   * Get test case id
+   */
+  get testcaseId() { return this.tcid(); }
+
+  /**
+   * Get average execution time
+   * @return {Number} test execution duration in seconds
+   */
+  duration() {
+    return this.get('history.durationAvg');
+  }
+
+  /**
+   * Get or set test case purpose
+   * @param {String}purpose purpose of tc
+   * @return {Testcase|String} returns purpose or Testcase
+   */
+  purpose(purpose) {
+    return this.getOrSet('other_info.purpose', purpose);
   }
 }
 
-module.exports = Base;
+module.exports = Testcase;
 </code></pre>
         </article>
     </section>
