@@ -216,7 +216,7 @@ class MongooseQueryClient {
   /**
    * Document has "something", e.g. {name: "jussi"}
    * @param {object} something object to be included in query
-   * @return {MongooseQueryClient} return itself
+   * @return {MongooseQueryClient return itself
    * @example
    *  MongooseQueryClient
    *    .has({'a': 'b'})
