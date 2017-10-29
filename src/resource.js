@@ -30,10 +30,9 @@ class Resource extends Document {
 
   imageSrc(value) { return this.getOrSet('image_src', value); }
 
-  description(value)  { return this.getOrSet('text_description', value); }
+  description(value) { return this.getOrSet('text_description', value); }
 
-  reference(value)  { return this.getOrSet('external_reference', value); }
-
+  reference(value) { return this.getOrSet('external_reference', value); }
 
 
   /**

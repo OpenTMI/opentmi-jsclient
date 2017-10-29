@@ -1,3 +1,8 @@
+/**
+ * Return object which contains duration between given date and current date
+ * @param {Date}when first date to be compared against current date
+ * @returns {Object) object which contains durations
+ */
 module.exports.timeSince = (when) => {
   const obj = {};
   obj._milliseconds = (new Date()).valueOf() - when.valueOf();
@@ -15,11 +20,17 @@ module.exports.timeSince = (when) => {
   return obj;
 };
 
+/**
+ * Rejects with message "not implemented" (default msg)
+ * @param {String} msg - reject message
+ * @returns {Promise<String>} - reject
+ */
 module.exports.notImplemented = (msg = 'not implemented') => Promise.reject(new Error(msg));
 
 /**
  * return date which are beginnign of given day
- * @param {Date}date
+ * @param {Date} date - input date
+ * @returns {Date} - date beginning of given day
  */
 module.exports.beginningOfDay = (date) => {
   const dateZero = new Date(date);
@@ -31,7 +42,8 @@ module.exports.beginningOfDay = (date) => {
 };
 /**
  * return date which are end of given day
- * @param {Date}date
+ * @param {Date} date - input date
+ * @returns {Date} - date end of given day
  */
 module.exports.endOfDay = (date) => {
   const dateEnd = new Date(date);

@@ -134,13 +134,17 @@ class MongooseQueryClient {
    * @return {MongooseQueryClient}
    */
   populate(fields) {
-    invariant(_.isArray(fields) || _.isString(fields) || _.isPlainObject(fields), 'fields should be string, array or plain object');
+    invariant(
+      _.isArray(fields) || _.isString(fields) || _.isPlainObject(fields),
+      'fields should be string, array or plain object'
+    );
     if (_.isString(fields)) {
+      // eslint-disable-next-line no-param-reassign
       fields = [fields];
     }
     if (_.isArray(fields)) {
-      let p = _.get(this._query, 'p', '').split(' ');
-      p.push(fields)
+      const p = _.get(this._query, 'p', '').split(' ');
+      p.push(fields);
       this._query.p = _.uniq(p).join(' ');
     } else {
       this._query.p = _.cloneDeep(fields);

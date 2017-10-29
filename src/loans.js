@@ -5,7 +5,9 @@ const invariant = require('invariant');
 
 // application modules
 const Loan = require('./loan');
-const {QueryBase, Collection, notImplemented, beginningOfDay, endOfDay} = require('./utils');
+const {
+  QueryBase, Collection, notImplemented, beginningOfDay, endOfDay
+} = require('./utils');
 
 /**
  * @class ItemsQuery
@@ -34,21 +36,21 @@ class LoansQuery extends QueryBase {
    * @return {LoansQuery}
    */
   loanDate(date) {
-    return this.has({'loan_date': {$gte: beginningOfDay(date), $lte: endOfDay(date)}});
+    return this.has({loan_date: {$gte: beginningOfDay(date), $lte: endOfDay(date)}});
   }
   /**
    * Find loans by loaner
    * @param {string}userid
    */
   loaner(userid) {
-    return this.has({'loaner': userid});
+    return this.has({loaner: userid});
   }
   /**
    * Find loans which contains note
    * @param {string}note
    */
   hasNotes(note) {
-    return this.has({'notes': `/${note}/`});
+    return this.has({notes: `/${note}/`});
   }
 }
 

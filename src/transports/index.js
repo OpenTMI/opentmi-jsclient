@@ -192,6 +192,7 @@ class Transport {
    * @return {*}
    */
   emit(event, data = {}, timeout = undefined) {
+    invariant(_.isString(event), 'event should be a string');
     return this.requestIO({event, data, timeout});
   }
   /**

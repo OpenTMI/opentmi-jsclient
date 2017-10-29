@@ -1,6 +1,8 @@
 // application modules
 const {Document} = require('./utils');
 const _ = require('lodash');
+const Item = require('./item');
+const Resource = require('./resource');
 
 class LoanItem {
   constructor(item) {

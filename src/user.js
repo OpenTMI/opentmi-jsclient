@@ -67,8 +67,10 @@ class User extends Document {
    * @return {Promise<Array<Group>>}
    */
   groups() {
-    let promises = _.map(this.get('groups'),
-      group => Group.fromId(this._transport, group));
+    const promises = _.map(
+      this.get('groups'),
+      group => Group.fromId(this._transport, group)
+    );
     return Promise.all(promises);
   }
 

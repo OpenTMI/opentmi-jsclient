@@ -16,7 +16,7 @@ class ItemsQuery extends QueryBase {
    * @return {ItemsQuery}
    */
   barcode(barcode) {
-    return this.has({'barcode': barcode});
+    return this.has({barcode: barcode});
   }
 
   /**
@@ -24,7 +24,7 @@ class ItemsQuery extends QueryBase {
    * @return {ItemsQuery}
    */
   name(name) {
-    return this.has({'name': name});
+    return this.has({name: name});
   }
 
   /**
@@ -35,10 +35,9 @@ class ItemsQuery extends QueryBase {
   available(available = undefined) {
     invariant(_.isNumber(available), 'available should be a number');
     if (_.isUndefined(available)) {
-      return this.has({'available': {$gt: 0}});
-    } else {
-      return this.has({'available': available});
+      return this.has({available: {$gt: 0}});
     }
+    return this.has({available: available});
   }
 
 
@@ -54,13 +53,13 @@ class ItemsQuery extends QueryBase {
       'board',
       'component',
       'other'];
-    invariant(_.indexOf(allowedValues, category)!==-1, 'should be allowed category');
-    return this.has({'category': category});
+    invariant(_.indexOf(allowedValues, category) !== -1, 'should be allowed category');
+    return this.has({category: category});
   }
 
   categoryAccessories() { return this.category('accessory'); }
   categoryBoards() { return this.category('board'); }
-  categoryComponents() { return this.category('components') }
+  categoryComponents() { return this.category('components'); }
   categoryOthers() { return this.category('other'); }
 
   /**

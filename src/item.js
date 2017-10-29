@@ -17,20 +17,24 @@ class Item extends Document {
    * @return {string}
    */
   toString() {
-    return `${this.category()}: ${this.manufacturer()?this.manufacturer():''} - ${this.name()}`;
+    return `${this.category()}: ${this.manufacturer() ? this.manufacturer() : ''} - ${this.name()}`;
   }
 
   /**
    * Get item name or set it
+   * @param {String}value new name
    * @return {Item|string}
    */
   name(value) { return this.getOrSet('name', value); }
 
   /**
    * Get category or set it
-   * @return {Item|String}
+   * @param {String}value new category
+   * @returns {Item|String} return category or Item when update new value
    */
-  category(value) { return this.getOrSet('category', value); }
+  category(value) {
+    return this.getOrSet('category', value);
+  }
 
   /**
    * Get manufacturer or set it

@@ -48,3 +48,6 @@ doc:
 
 lint:
 	eslint src
+
+lint-fix:
+	eslint src --fix
