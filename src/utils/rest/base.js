@@ -1,6 +1,9 @@
 const invariant = require('invariant');
 const {notImplemented} = require('../utils');
 
+/**
+ * @private
+ */
 class Base {
   /**
    * General base constructor for Rest resources

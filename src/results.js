@@ -1,4 +1,3 @@
-/** @module Results */
 // 3rd party modules
 const _ = require('lodash');
 const invariant = require('invariant');
@@ -96,7 +95,11 @@ class Results extends Collection {
 
   /**
    * Find Results
-   * @return {ResultsQuery}
+   * @return {ResultsQuery} returns ResultsQuery object
+   * @example
+   *  Results.find()
+   *    .limit(10)
+   *    .exec() // find last 10 results
    */
   find() {
     return new ResultsQuery(this, Result);
@@ -104,7 +107,7 @@ class Results extends Collection {
 
   /**
    * Update documents
-   * @return {Promise}
+   * @return {Promise} not implemented
    */
   update() {
     return this._notImplemented('results update is not implemented');

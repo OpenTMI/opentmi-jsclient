@@ -1,4 +1,3 @@
-/** @module Groups */
 // 3rd party modules
 // application modules
 const {Document} = require('./utils');
@@ -8,6 +7,7 @@ class Group extends Document {
   /**
    * Constructor for Resources model
    * @param {Transport} transport - Transport object
+   * @param {Object}groupJson - group as plain json
    */
   constructor(transport, groupJson) {
     super(transport, `/api/v0/groups/${groupJson._id}`, groupJson);

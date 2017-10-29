@@ -4,13 +4,15 @@ const _ = require('lodash');
 const Base = require('./base');
 const retryUpdate = require('./../retry');
 
-
+/**
+ * Low level Document object, which handle modifications and storing
+ */
 class Document extends Base {
   /**
-   * Low level Document object, which handle modifications and storing
-   * @param transport
-   * @param path
-   * @param originalJson
+   * Document constructor
+   * @param {Transport}transport
+   * @param {String}path
+   * @param {Object}originalJson
    */
   constructor(transport, path, originalJson) {
     super(transport, path);
@@ -110,20 +112,20 @@ class Document extends Base {
   }
   /**
    * getter for Document version
-   * @return {number}
+   * @return {number} returns document version number
    */
   get version() { return this.get('__v'); }
 
   /**
    * Get resource identity
-   * @return {string}
+   * @return {string} returns document id
    */
   get id() { return this.get(this._idProperty); }
 
   /**
    * reload document information from backend.
    * This also revert all client modified data back that is not saved!
-   * @return {Promise<Document>}
+   * @return {Promise<Document>} resolves Document
    */
   refresh() {
     return this._transport
@@ -137,12 +139,17 @@ class Document extends Base {
 
   /**
    * delete this document
-   * @return {Promise}
+   * @return {Promise} Resolves when operation success
    */
   delete() {
     return this._transport.delete({path: this._path});
   }
 
+  /**
+   * Update document
+   * @param {Object}data data to be updated
+   * @returns {Promise} resolves when opration success
+   */
   _update(data) {
     return this._transport.put(this._path, data);
   }

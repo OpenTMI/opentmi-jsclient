@@ -4,7 +4,12 @@ const querystring = require('querystring');
 
 /** Query class
  * Is pair for {@link https://github.com/jupe/mongoose-query|mongoose-query} -library which allows to
- * manage DB queries based on rest query parameters
+ * construct DB queries based on rest query parameters
+ * @example
+ * mongooseQuery
+ *   .skip(10)      // skip first 10 docs
+ *   .limit(10)     // fetch only 10 docs
+ *   .has({a: '1'}) // find docs where a == '1'
  */
 class MongooseQueryClient {
   /**
@@ -21,7 +26,8 @@ class MongooseQueryClient {
 
   /**
    * parse query from string
-   * @param {String}str
+   * @param {String}str uri parameters as a string
+   * @returns {MongooseQueryClient} returns itself
    */
   fromString(str) {
     invariant(_.isString(str), 'str should be string');
@@ -29,11 +35,12 @@ class MongooseQueryClient {
     if (_.has(this._query, 'q')) {
       this._query.q = JSON.parse(_.get(this._query, 'q'));
     }
+    return this;
   }
 
   /**
    * Returns query as a url string
-   * @return {string}
+   * @return {string} returns query as a url parameters string
    */
   toString() {
     const query = _.cloneDeep(this._query);
@@ -44,7 +51,7 @@ class MongooseQueryClient {
 
   /**
    * Return find -part object from query
-   * @return {MongooseQueryClient._query.q|{}}
+   * @return {MongooseQueryClient._query.q|{}} returns q part of query
    */
   get query() {
     return this._query.q;
@@ -60,7 +67,7 @@ class MongooseQueryClient {
 
   /**
    * do default find query
-   * @return {MongooseQueryClient}
+   * @return {MongooseQueryClient} returns itself
    */
   find() {
     this._query.t = 'find';
@@ -77,7 +84,7 @@ class MongooseQueryClient {
 
   /**
    * do distinct query
-   * @return {MongooseQueryClient}
+   * @return {MongooseQueryClient} return itself
    */
   distinct() {
     this._query.t = 'distinct';
@@ -86,7 +93,7 @@ class MongooseQueryClient {
 
   /**
    * fetch only first match document
-   * @return {MongooseQueryClient}
+   * @return {MongooseQueryClient} return itself
    */
   findOne() {
     this._query.t = 'findOne';
@@ -95,7 +102,7 @@ class MongooseQueryClient {
 
   /**
    * get just count of match document
-   * @return {MongooseQueryClient}
+   * @return {MongooseQueryClient} return itself
    */
   count() {
     this._query.t = 'count';
@@ -104,7 +111,7 @@ class MongooseQueryClient {
 
   /**
    * aggregate query
-   * @return {MongooseQueryClient}
+   * @return {MongooseQueryClient} return itself
    */
   aggregate() {
     this._query.t = 'aggregate';
@@ -113,8 +120,8 @@ class MongooseQueryClient {
 
   /**
    * mapReduce
-   * @param mapFunction
-   * @return {MongooseQueryClient}
+   * @param {Function|String}mapFunction map function
+   * @return {MongooseQueryClient} return itself
    */
   mapReduce(mapFunction) {
     if (_.isFunction(mapFunction)) {
@@ -131,7 +138,7 @@ class MongooseQueryClient {
   /**
    * Populate selected fields
    * @param {array<string>|String|Object} fields
-   * @return {MongooseQueryClient}
+   * @return {MongooseQueryClient} return itself
    */
   populate(fields) {
     invariant(
@@ -156,7 +163,7 @@ class MongooseQueryClient {
   /**
    * Select fields
    * @param {array<String>} fields to be fetch, e.g. ['name']
-   * @return {MongooseQueryClient}
+   * @return {MongooseQueryClient} return itself
    */
   select(fields) {
     invariant(_.isArray(fields), 'fields should be array');
@@ -167,7 +174,7 @@ class MongooseQueryClient {
   /**
    * Result as a flat.
    * e.g. {"a.b": "b"}
-   * @return {MongooseQueryClient}
+   * @return {MongooseQueryClient} return itself
    */
   asFlat() {
     this._query.fl = true;
@@ -177,7 +184,7 @@ class MongooseQueryClient {
   /**
    * Result as a json
    * e.g. {"a": {"b": "b"}}
-   * @return {MongooseQueryClient}
+   * @return {MongooseQueryClient} return itself
    */
   asJson() {
     this._query.fl = false;
@@ -187,7 +194,7 @@ class MongooseQueryClient {
   /**
    * limit results
    * @param {number} limit - maximum number of results to be fetched
-   * @return {MongooseQueryClient}
+   * @return {MongooseQueryClient} return itself
    */
   limit(limit) {
     invariant(_.isNumber(limit), 'limit should be number');
@@ -198,7 +205,7 @@ class MongooseQueryClient {
   /**
    * Skip number of results
    * @param {number} skip - number of document to be skip
-   * @return {MongooseQueryClient}
+   * @return {MongooseQueryClient} return itself
    */
   skip(skip) {
     invariant(_.isNumber(skip), 'skip should be number');
@@ -209,7 +216,11 @@ class MongooseQueryClient {
   /**
    * Document has "something", e.g. {name: "jussi"}
    * @param {object} something object to be included in query
-   * @return {MongooseQueryClient}
+   * @return {MongooseQueryClient return itself
+   * @example
+   *  MongooseQueryClient
+   *    .has({'a': 'b'})
+   *    .has({'a': 'b'})
    */
   has(something) {
     _.isPlainObject(something, 'something should be plain object');

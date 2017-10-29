@@ -11,9 +11,10 @@ const MongooseQueryClient = require('./mongooseQueryClient');
  */
 class QueryBase extends MongooseQueryClient {
   /**
-   *
-   * @param {Collection}collection
-   * @param {Document}baseClass
+   * Constructor for QueryBase
+   * @param {Collection}collection collection object
+   * @param {Document}baseClass Class that collection holds
+   * @private
    */
   constructor(collection, baseClass) {
     super();

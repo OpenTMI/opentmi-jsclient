@@ -1,7 +1,3 @@
-/**
- * A module that exports all straight API's!
- * @module API
- */
 const Authentication = require('./authentication');
 const Schemas = require('./schemas');
 const Admin = require('./admin');

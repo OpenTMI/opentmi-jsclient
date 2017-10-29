@@ -1,4 +1,3 @@
-/** @module Users */
 // 3rd party modules
 const _ = require('lodash');
 const Promise = require('bluebird');
