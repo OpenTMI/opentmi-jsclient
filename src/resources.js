@@ -113,7 +113,7 @@ class Resources extends Collection {
    */
   constructor(transport) {
     super(transport, '/api/v0/resources');
-    this._notImplemented = notImplemented();
+    this._notImplemented = notImplemented;
   }
 
   /**

@@ -67,10 +67,11 @@ class Document extends Base {
   /**
    * Get resource value by Key.
    * @param {String} key - key can be nested as well like "a.b.c"
+   * @param {String} defaultValue
    * @return {String|Object} value for the key or undefined if not found
    */
-  get(key) {
-    return _.get(this._resource, key);
+  get(key, defaultValue = undefined) {
+    return _.get(this._resource, key, defaultValue);
   }
 
   /**

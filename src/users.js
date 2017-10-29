@@ -63,7 +63,7 @@ class Users extends Collection {
    * @return {*}
    */
   update() {
-    return this._notImplemented();
+    return this._notImplemented('Users update is not implemented');
   }
 }
 

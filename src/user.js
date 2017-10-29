@@ -6,6 +6,7 @@ const Promise = require('bluebird');
 // application modules
 const {Document} = require('./utils');
 const Group = require('./group');
+const Loans = require('./loans');
 
 
 class User extends Document {
@@ -66,7 +67,8 @@ class User extends Document {
    * @return {Promise<Array<Group>>}
    */
   groups() {
-    let promises = _.map(this.get('groups'), group => Group.fromId(this._transport, group));
+    let promises = _.map(this.get('groups'),
+      group => Group.fromId(this._transport, group));
     return Promise.all(promises);
   }
 
@@ -75,9 +77,12 @@ class User extends Document {
    * @return {Promise<boolean>}
    */
   isAdmin() {
-    return this._isNotImplemented();
+    return this._isNotImplemented('is admin is not implemented');
   }
-
+  /**
+   * Resolve user loans
+   * @return {Promise<[Loan]>}
+   */
   myLoans() {
     return Loans.forUser(this, this._transport);
   }

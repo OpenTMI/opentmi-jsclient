@@ -1,6 +1,27 @@
 // application modules
 const {Document} = require('./utils');
+const _ = require('lodash');
 
+class LoanItem {
+  constructor(item) {
+    this._item = item;
+  }
+  toJson() { return _.cloneDeep(this._item); }
+  toString() { return this._item._id; }
+  /**
+   * Get return date
+   * @return {Date|undefined} Date when loan is returned, otherwise undefined.
+   */
+  returnDate() {
+    return this.get('return_date');
+  }
+  get item() {
+    return new Item(this._item);
+  }
+  get resource() {
+    return new Resource(this._item.resource);
+  }
+}
 
 class Loan extends Document {
   /**
@@ -21,28 +42,30 @@ class Loan extends Document {
   }
 
   /**
-   * Get item name or set it
-   * @return {Item|string}
+   * Get loan date or set it (admin only)
+   * @return {Loan|string}
    */
   loanDate(value) { return this.getOrSet('loan_date', value); }
+
+  /**
+   * Get loaner or set it (admin only)
+   * @return {Loan|string}
+   */
   loaner(value) { return this.getOrSet('loaner', value); }
+
+  /**
+   * Get notes or set it (admin only)
+   * @return {Loan|String}
+   */
   notes(value) { return this.getOrSet('notes', value); }
 
+  /**
+   * Resolve loan items
+   * @return {LoanItem}
+   */
   loanItems() {
-    return this.get('loan_items');
+    return _.map(this.get('loan_items', []), item => new LoanItem(item));
   }
-  //getLoanItems() { return LoanItems.from(new LoanItems(this._transport); }
-
-  /*
-  item: {type: ObjectId, ref: 'Item', required: true},
-  return_date: {
-    type: Date,
-    validate: {
-      validator: isValidDate,
-      message: '{VALUE} cannot be parsed to a date.'
-    }},
-  resource: {type: ObjectId, ref: 'Resource'}
-  */
 }
 
 module.exports = Loan;

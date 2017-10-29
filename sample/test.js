@@ -4,12 +4,17 @@ const _ = require('lodash');
 
 const {
   Authentication, Admin, Cluster,
-  Transport, Schemas, Resources, Results, Items, Users, Loans
+  Transport, Schemas, Resources,
+  Results, Items, Users, Loans
 } = require('../src');
 const {Query} = Resources;
 
 const RESTART_WORKERS = false;
 const GET_VERSION = false;
+
+process.on('unhandledRejection', function(err, promise) {
+    console.error('Unhandled rejection (promise: ', promise, ', reason: ', err, ').');
+});
 
 const transport = new Transport('http://localhost:3000');
 const auth = new Authentication(transport);
@@ -25,7 +30,7 @@ const print = (message) => () => {
   //.then(print('get collections')).then(schema.collections.bind(schema))
   //.then(print('get Result schema')).then(() => schema.schema('Result'))
   //.then(print('get Result schema')).then(() => schema.schema('Result'))
-  .then(() => {
+  /*.then(() => {
     const loans = new Loans(transport);
     loans.find()
       .loadItems().loadResources().loadLoaner()
@@ -33,6 +38,21 @@ const print = (message) => () => {
       //_.each(items, item => console.log(item.toString()))
       console.log(JSON.stringify(items[0].toJson(), null, 2))
     });
+  })
+  .then(() => {
+    return Users.WHOAMI(transport)
+      .then(user => user.myLoans())
+      .then(loans => {
+        console.log('loans:', loans)
+      })
+  });*/
+  .then(() => {
+    return Loans.forUser({id: "5825bb7cfe7545132c88c773"}, transport)
+      .then(loans => {
+        console.log('loans:', loans)
+        //console.log(loans[0].loanItems())
+      })
+
   })
   /*.then(() => {
       return Users

@@ -91,7 +91,7 @@ class Results extends Collection {
    */
   constructor(transport) {
     super(transport, '/api/v0/results');
-    this._notImplemented = notImplemented();
+    this._notImplemented = notImplemented;
   }
 
   /**
@@ -107,7 +107,7 @@ class Results extends Collection {
    * @return {Promise}
    */
   update() {
-    return this._notImplemented();
+    return this._notImplemented('results update is not implemented');
   }
 }
 

@@ -59,20 +59,23 @@ class Loans extends Collection {
    */
   constructor(transport) {
     super(transport, '/api/v0/loans');
-    this._notImplemented = notImplemented();
+    this._notImplemented = notImplemented;
   }
 
   /**
-   *
+   * Find loans by user
+   * @param {User}user
+   * @param {Transport}transport
+   * @return {Promise<[Loan]>} resolves Loans
    */
   static forUser(user, transport) {
-    // @todo
-    const Loans = new Loans(transport);
-    return Loans.find().id(user.id);
+    invariant(_.isObject(user), 'user should be an User object');
+    const loans = new Loans(transport);
+    return loans.find().loaner(user.id).exec();
   }
 
   /**
-   * Find Items
+   * Construct Loans query object
    * @return {LoansQuery}
    */
   find() {
