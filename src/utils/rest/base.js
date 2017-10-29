@@ -18,10 +18,12 @@ class Base {
   }
   /**
    * set rest path
-   * @param {String}path path uri 
+   * @param {String}path path uri
+   * @return {Base} returns this
    */
   setPath(path) {
     this._path = path;
+    return this;
   }
 }
 

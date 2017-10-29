@@ -1,5 +1,4 @@
 // 3rd party modules
-const _ = require('lodash');
 const invariant = require('invariant');
 
 // application modules
@@ -42,19 +41,19 @@ class TestcasesQuery extends QueryBase {
    */
   type(type) {
     const ALLOWED_TYPES = [
-        'installation',
-        'compatibility',
-        'smoke',
-        'regression',
-        'acceptance',
-        'alpha',
-        'beta',
-        'stability',
-        'functional',
-        'destructive',
-        'performance',
-        'reliability'];
-    invariant(ALLOWED_TYPES.indexOf(type)!==0, 'not allowed type');
+      'installation',
+      'compatibility',
+      'smoke',
+      'regression',
+      'acceptance',
+      'alpha',
+      'beta',
+      'stability',
+      'functional',
+      'destructive',
+      'performance',
+      'reliability'];
+    invariant(ALLOWED_TYPES.indexOf(type) !== 0, 'not allowed type');
     return this.has({'other_info.type': type});
   }
 }
