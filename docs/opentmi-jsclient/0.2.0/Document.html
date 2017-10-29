@@ -105,7 +105,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">transport layer</td>
         </tr>
 
     
@@ -128,7 +128,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Document rest uri</td>
         </tr>
 
     
@@ -151,7 +151,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">document data as plain json</td>
         </tr>
 
     
@@ -284,7 +284,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils_rest_document.js.html">utils/rest/document.js</a>, <a href="utils_rest_document.js.html#line123">line 123</a>
+        <a href="utils_rest_document.js.html">utils/rest/document.js</a>, <a href="utils_rest_document.js.html#line125">line 125</a>
     </li></ul></dd>
     
 
@@ -346,7 +346,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils_rest_document.js.html">utils/rest/document.js</a>, <a href="utils_rest_document.js.html#line117">line 117</a>
+        <a href="utils_rest_document.js.html">utils/rest/document.js</a>, <a href="utils_rest_document.js.html#line119">line 119</a>
     </li></ul></dd>
     
 
@@ -475,7 +475,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils_rest_document.js.html">utils/rest/document.js</a>, <a href="utils_rest_document.js.html#line153">line 153</a>
+        <a href="utils_rest_document.js.html">utils/rest/document.js</a>, <a href="utils_rest_document.js.html#line155">line 155</a>
     </li></ul></dd>
     
 
@@ -583,7 +583,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils_rest_document.js.html">utils/rest/document.js</a>, <a href="utils_rest_document.js.html#line144">line 144</a>
+        <a href="utils_rest_document.js.html">utils/rest/document.js</a>, <a href="utils_rest_document.js.html#line146">line 146</a>
     </li></ul></dd>
     
 
@@ -722,7 +722,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">optional default value</td>
         </tr>
 
     
@@ -763,7 +763,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils_rest_document.js.html">utils/rest/document.js</a>, <a href="utils_rest_document.js.html#line75">line 75</a>
+        <a href="utils_rest_document.js.html">utils/rest/document.js</a>, <a href="utils_rest_document.js.html#line77">line 77</a>
     </li></ul></dd>
     
 
@@ -900,6 +900,10 @@
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    returns changes as plain json
+</div>
+
 
 
 <dl>
@@ -1050,7 +1054,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils_rest_document.js.html">utils/rest/document.js</a>, <a href="utils_rest_document.js.html#line107">line 107</a>
+        <a href="utils_rest_document.js.html">utils/rest/document.js</a>, <a href="utils_rest_document.js.html#line109">line 109</a>
     </li></ul></dd>
     
 
@@ -1194,6 +1198,10 @@ doc.set('key1', 'myvalue')
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    check if document is "dirty" - has local changes
+</div>
+
 
 
 <dl>
@@ -1273,7 +1281,7 @@ This also revert all client modified data back that is not saved!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils_rest_document.js.html">utils/rest/document.js</a>, <a href="utils_rest_document.js.html#line130">line 130</a>
+        <a href="utils_rest_document.js.html">utils/rest/document.js</a>, <a href="utils_rest_document.js.html#line132">line 132</a>
     </li></ul></dd>
     
 
@@ -1329,7 +1337,7 @@ This also revert all client modified data back that is not saved!
     
 
     
-    <h4 class="name" id="save"><span class="type-signature"></span>save<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id="save"><span class="type-signature"></span>save<span class="signature">(retryCount)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
     
 
     
@@ -1348,6 +1356,63 @@ promise is rejected and reason property tells was it no retries left or merge co
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>retryCount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    2
+                
+                </td>
+            
+
+            <td class="description last">count how many times we try to save.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -1383,7 +1448,7 @@ promise is rejected and reason property tells was it no retries left or merge co
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils_rest_document.js.html">utils/rest/document.js</a>, <a href="utils_rest_document.js.html#line57">line 57</a>
+        <a href="utils_rest_document.js.html">utils/rest/document.js</a>, <a href="utils_rest_document.js.html#line58">line 58</a>
     </li></ul></dd>
     
 
@@ -1409,6 +1474,10 @@ promise is rejected and reason property tells was it no retries left or merge co
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    Resolves Document itself when save success
+</div>
+
 
 
 <dl>
@@ -1495,7 +1564,7 @@ promise is rejected and reason property tells was it no retries left or merge co
 
             
 
-            <td class="description last"></td>
+            <td class="description last">key for update</td>
         </tr>
 
     
@@ -1518,7 +1587,7 @@ promise is rejected and reason property tells was it no retries left or merge co
 
             
 
-            <td class="description last"></td>
+            <td class="description last">value for update</td>
         </tr>
 
     
@@ -1559,7 +1628,7 @@ promise is rejected and reason property tells was it no retries left or merge co
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils_rest_document.js.html">utils/rest/document.js</a>, <a href="utils_rest_document.js.html#line85">line 85</a>
+        <a href="utils_rest_document.js.html">utils/rest/document.js</a>, <a href="utils_rest_document.js.html#line87">line 87</a>
     </li></ul></dd>
     
 
@@ -1693,6 +1762,10 @@ promise is rejected and reason property tells was it no retries left or merge co
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    returns document as plain json
+</div>
+
 
 
 <dl>
@@ -1729,13 +1802,13 @@ promise is rejected and reason property tells was it no retries left or merge co
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Admin.html">Admin</a></li><li><a href="Authentication.html">Authentication</a></li><li><a href="Cluster.html">Cluster</a></li><li><a href="Document.html">Document</a></li><li><a href="Group.html">Group</a></li><li><a href="Item.html">Item</a></li><li><a href="Items.html">Items</a></li><li><a href="ItemsQuery.html">ItemsQuery</a></li><li><a href="Loan.html">Loan</a></li><li><a href="Loans.html">Loans</a></li><li><a href="MongooseQueryClient.html">MongooseQueryClient</a></li><li><a href="QueryBase.html">QueryBase</a></li><li><a href="Resource.html">Resource</a></li><li><a href="Resources.html">Resources</a></li><li><a href="ResourcesQuery.html">ResourcesQuery</a></li><li><a href="Results.html">Results</a></li><li><a href="ResultsQuery.html">ResultsQuery</a></li><li><a href="Schemas.html">Schemas</a></li><li><a href="Transport.html">Transport</a></li><li><a href="User.html">User</a></li><li><a href="Users.html">Users</a></li><li><a href="UsersQuery.html">UsersQuery</a></li></ul><h3>Global</h3><ul><li><a href="global.html#beginningOfDay">beginningOfDay</a></li><li><a href="global.html#endOfDay">endOfDay</a></li><li><a href="global.html#notImplemented">notImplemented</a></li><li><a href="global.html#timeSince">timeSince</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Admin.html">Admin</a></li><li><a href="Authentication.html">Authentication</a></li><li><a href="Cluster.html">Cluster</a></li><li><a href="Document.html">Document</a></li><li><a href="Group.html">Group</a></li><li><a href="Item.html">Item</a></li><li><a href="Items.html">Items</a></li><li><a href="ItemsQuery.html">ItemsQuery</a></li><li><a href="Loan.html">Loan</a></li><li><a href="LoanItem.html">LoanItem</a></li><li><a href="Loans.html">Loans</a></li><li><a href="MongooseQueryClient.html">MongooseQueryClient</a></li><li><a href="QueryBase.html">QueryBase</a></li><li><a href="Resource.html">Resource</a></li><li><a href="Resources.html">Resources</a></li><li><a href="ResourcesQuery.html">ResourcesQuery</a></li><li><a href="Results.html">Results</a></li><li><a href="ResultsQuery.html">ResultsQuery</a></li><li><a href="Schemas.html">Schemas</a></li><li><a href="Transport.html">Transport</a></li><li><a href="User.html">User</a></li><li><a href="Users.html">Users</a></li><li><a href="UsersQuery.html">UsersQuery</a></li></ul><h3>Global</h3><ul><li><a href="global.html#beginningOfDay">beginningOfDay</a></li><li><a href="global.html#endOfDay">endOfDay</a></li><li><a href="global.html#notImplemented">notImplemented</a></li><li><a href="global.html#timeSince">timeSince</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 29 2017 19:27:44 GMT+0200 (EET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 29 2017 21:38:22 GMT+0200 (EET)
 </footer>
 
 <script> prettyPrint(); </script>

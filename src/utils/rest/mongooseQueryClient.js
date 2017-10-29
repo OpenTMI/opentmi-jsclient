@@ -137,7 +137,7 @@ class MongooseQueryClient {
 
   /**
    * Populate selected fields
-   * @param {array<string>|String|Object} fields
+   * @param {array<string>|String|Object} fields field(s) to be populated
    * @return {MongooseQueryClient} return itself
    */
   populate(fields) {
@@ -216,7 +216,7 @@ class MongooseQueryClient {
   /**
    * Document has "something", e.g. {name: "jussi"}
    * @param {object} something object to be included in query
-   * @return {MongooseQueryClient return itself
+   * @return {MongooseQueryClient} return itself
    * @example
    *  MongooseQueryClient
    *    .has({'a': 'b'})

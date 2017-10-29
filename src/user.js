@@ -34,8 +34,8 @@ class User extends Document {
 
   /**
    * Get or set email address
-   * @param {String}email
-   * @return {User|string}
+   * @param {String}email user email address
+   * @return {User|string} email address or this when updating
    */
   email(email) {
     return this.getOrSet('email', email);
@@ -43,7 +43,7 @@ class User extends Document {
 
   /**
    * Get user owned apikeys
-   * @return {String|Object}
+   * @return {String|Object} returns apikeys
    */
   apikeys() {
     return this.get('apikeys');
@@ -51,7 +51,7 @@ class User extends Document {
 
   /**
    * Get last visited date
-   * @return {Date}
+   * @return {Date} returns last visited as a Date
    */
   lastVisited() {
     return new Date(this.get('lastVisited'));
@@ -59,7 +59,7 @@ class User extends Document {
 
   /**
    * Get user registeration date
-   * @return {Date}
+   * @return {Date} returns registered date
    */
   registered() {
     return new Date(this.get('registered'));
@@ -67,7 +67,7 @@ class User extends Document {
 
   /**
    * Get user groups
-   * @return {Promise.<Group[]>}
+   * @return {Promise.<Group[]>} resolves user groups
    */
   groups() {
     const promises = _.map(
@@ -79,14 +79,15 @@ class User extends Document {
 
   /**
    * Check if user belong to admin group
-   * @return {Promise.<boolean>}
+   * @return {Promise.<boolean>} not implemented
    */
   isAdmin() {
     return this._isNotImplemented('is admin is not implemented');
   }
+
   /**
    * Resolve user loans
-   * @return {Promise.<Loan[]>}
+   * @return {Promise.<Loan[]>} resolves user loans
    */
   myLoans() {
     return Loans.forUser(this, this._transport);

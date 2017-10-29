@@ -3,12 +3,24 @@ const {Document} = require('./utils');
 const _ = require('lodash');
 const Item = require('./item');
 const Resource = require('./resource');
-
+/** @class LoanItem */
 class LoanItem {
+  /**
+   * LoanItem constructor
+   * @param {Object}item plain object
+   */
   constructor(item) {
     this._item = item;
   }
+  /**
+   * get item as plain json
+   * @return {Object} returns loanitem as plain json
+   */
   toJson() { return _.cloneDeep(this._item); }
+  /**
+   * returns loan item as single line
+   * @returns {String} loan item details as single line
+   */
   toString() { return this._item._id; }
   /**
    * Get return date
@@ -17,9 +29,17 @@ class LoanItem {
   returnDate() {
     return this.get('return_date');
   }
+  /**
+   * get Item
+   * @return {Item} returns Item
+   */
   get item() {
     return new Item(this._item);
   }
+  /**
+   * get resource
+   * @return {Resource} returns Resource
+   */
   get resource() {
     return new Resource(this._item.resource);
   }
@@ -36,8 +56,8 @@ class Loan extends Document {
   }
 
   /**
-   * Get resource info as short string
-   * @return {string}
+   * Get loan info as short string
+   * @return {string} single line about loan
    */
   toString() {
     return `${this.loaner()}`;
@@ -45,25 +65,28 @@ class Loan extends Document {
 
   /**
    * Get loan date or set it (admin only)
-   * @return {Loan|string}
+   * @param {Date} value optional date when updating
+   * @return {Loan|string} returns loan date or Loan
    */
   loanDate(value) { return this.getOrSet('loan_date', value); }
 
   /**
    * Get loaner or set it (admin only)
-   * @return {Loan|string}
+   * @param {String}value optoinal loaner id when updating
+   * @return {Loan|string} returns loaner id or Loan
    */
   loaner(value) { return this.getOrSet('loaner', value); }
 
   /**
    * Get notes or set it (admin only)
-   * @return {Loan|String}
+   * @param {Stirng}value optional notes when updating
+   * @return {Loan|String} returns notes or Loan
    */
   notes(value) { return this.getOrSet('notes', value); }
 
   /**
    * Resolve loan items
-   * @return {LoanItem}
+   * @return {LoanItem} returns LoanItems
    */
   loanItems() {
     return _.map(this.get('loan_items', []), item => new LoanItem(item));

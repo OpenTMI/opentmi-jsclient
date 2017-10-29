@@ -31,12 +31,24 @@ const {Document} = require('./utils');
 const _ = require('lodash');
 const Item = require('./item');
 const Resource = require('./resource');
-
+/** @class LoanItem */
 class LoanItem {
+  /**
+   * LoanItem constructor
+   * @param {Object}item plain object
+   */
   constructor(item) {
     this._item = item;
   }
+  /**
+   * get item as plain json
+   * @return {Object} returns loanitem as plain json
+   */
   toJson() { return _.cloneDeep(this._item); }
+  /**
+   * returns loan item as single line
+   * @returns {String} loan item details as single line
+   */
   toString() { return this._item._id; }
   /**
    * Get return date
@@ -45,9 +57,17 @@ class LoanItem {
   returnDate() {
     return this.get('return_date');
   }
+  /**
+   * get Item
+   * @return {Item} returns Item
+   */
   get item() {
     return new Item(this._item);
   }
+  /**
+   * get resource
+   * @return {Resource} returns Resource
+   */
   get resource() {
     return new Resource(this._item.resource);
   }
@@ -64,8 +84,8 @@ class Loan extends Document {
   }
 
   /**
-   * Get resource info as short string
-   * @return {string}
+   * Get loan info as short string
+   * @return {string} single line about loan
    */
   toString() {
     return `${this.loaner()}`;
@@ -73,25 +93,28 @@ class Loan extends Document {
 
   /**
    * Get loan date or set it (admin only)
-   * @return {Loan|string}
+   * @param {Date} value optional date when updating
+   * @return {Loan|string} returns loan date or Loan
    */
   loanDate(value) { return this.getOrSet('loan_date', value); }
 
   /**
    * Get loaner or set it (admin only)
-   * @return {Loan|string}
+   * @param {String}value optoinal loaner id when updating
+   * @return {Loan|string} returns loaner id or Loan
    */
   loaner(value) { return this.getOrSet('loaner', value); }
 
   /**
    * Get notes or set it (admin only)
-   * @return {Loan|String}
+   * @param {Stirng}value optional notes when updating
+   * @return {Loan|String} returns notes or Loan
    */
   notes(value) { return this.getOrSet('notes', value); }
 
   /**
    * Resolve loan items
-   * @return {LoanItem}
+   * @return {LoanItem} returns LoanItems
    */
   loanItems() {
     return _.map(this.get('loan_items', []), item => new LoanItem(item));
@@ -109,13 +132,13 @@ module.exports = Loan;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Admin.html">Admin</a></li><li><a href="Authentication.html">Authentication</a></li><li><a href="Cluster.html">Cluster</a></li><li><a href="Document.html">Document</a></li><li><a href="Group.html">Group</a></li><li><a href="Item.html">Item</a></li><li><a href="Items.html">Items</a></li><li><a href="ItemsQuery.html">ItemsQuery</a></li><li><a href="Loan.html">Loan</a></li><li><a href="Loans.html">Loans</a></li><li><a href="MongooseQueryClient.html">MongooseQueryClient</a></li><li><a href="QueryBase.html">QueryBase</a></li><li><a href="Resource.html">Resource</a></li><li><a href="Resources.html">Resources</a></li><li><a href="ResourcesQuery.html">ResourcesQuery</a></li><li><a href="Results.html">Results</a></li><li><a href="ResultsQuery.html">ResultsQuery</a></li><li><a href="Schemas.html">Schemas</a></li><li><a href="Transport.html">Transport</a></li><li><a href="User.html">User</a></li><li><a href="Users.html">Users</a></li><li><a href="UsersQuery.html">UsersQuery</a></li></ul><h3>Global</h3><ul><li><a href="global.html#beginningOfDay">beginningOfDay</a></li><li><a href="global.html#endOfDay">endOfDay</a></li><li><a href="global.html#notImplemented">notImplemented</a></li><li><a href="global.html#timeSince">timeSince</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Admin.html">Admin</a></li><li><a href="Authentication.html">Authentication</a></li><li><a href="Cluster.html">Cluster</a></li><li><a href="Document.html">Document</a></li><li><a href="Group.html">Group</a></li><li><a href="Item.html">Item</a></li><li><a href="Items.html">Items</a></li><li><a href="ItemsQuery.html">ItemsQuery</a></li><li><a href="Loan.html">Loan</a></li><li><a href="LoanItem.html">LoanItem</a></li><li><a href="Loans.html">Loans</a></li><li><a href="MongooseQueryClient.html">MongooseQueryClient</a></li><li><a href="QueryBase.html">QueryBase</a></li><li><a href="Resource.html">Resource</a></li><li><a href="Resources.html">Resources</a></li><li><a href="ResourcesQuery.html">ResourcesQuery</a></li><li><a href="Results.html">Results</a></li><li><a href="ResultsQuery.html">ResultsQuery</a></li><li><a href="Schemas.html">Schemas</a></li><li><a href="Transport.html">Transport</a></li><li><a href="User.html">User</a></li><li><a href="Users.html">Users</a></li><li><a href="UsersQuery.html">UsersQuery</a></li></ul><h3>Global</h3><ul><li><a href="global.html#beginningOfDay">beginningOfDay</a></li><li><a href="global.html#endOfDay">endOfDay</a></li><li><a href="global.html#notImplemented">notImplemented</a></li><li><a href="global.html#timeSince">timeSince</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 29 2017 19:27:44 GMT+0200 (EET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 29 2017 21:38:22 GMT+0200 (EET)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -40,7 +40,7 @@ const {QueryBase, Collection, notImplemented} = require('./utils');
 class ResultsQuery extends QueryBase {
   /**
    * Find results which are using hw dut(s)
-   * @return {ResultsQuery}
+   * @return {ResultsQuery} returns this
    */
   isHW() {
     return this.has({'exec.dut.type': 'hw'});
@@ -48,8 +48,8 @@ class ResultsQuery extends QueryBase {
 
   /**
    * Find results by verdict
-   * @param {String}verdict
-   * @return {ResultsQuery}
+   * @param {String}verdict test verdict
+   * @return {ResultsQuery} returns this
    */
   verdict(verdict) {
     invariant(_.isString(verdict), 'verdictr should be a string');
@@ -58,7 +58,7 @@ class ResultsQuery extends QueryBase {
 
   /**
    * Find failed test results
-   * @return {ResultsQuery}
+   * @return {ResultsQuery} returns this
    */
   isFailed() {
     return this.verdict('fail');
@@ -66,7 +66,7 @@ class ResultsQuery extends QueryBase {
 
   /**
    * Find pass test results
-   * @return {ResultsQuery}
+   * @return {ResultsQuery} returns this
    */
   isPass() {
     return this.verdict('pass');
@@ -74,7 +74,7 @@ class ResultsQuery extends QueryBase {
 
   /**
    * Find inconclusive results
-   * @return {ResultsQuery}
+   * @return {ResultsQuery} returns this
    */
   isInconclusive() {
     return this.verdict(('inconclusive'));
@@ -82,8 +82,8 @@ class ResultsQuery extends QueryBase {
 
   /**
    * Find results which belong to campaign
-   * @param {String}campaign
-   * @return {ResultsQuery}
+   * @param {String}campaign Campaign name
+   * @return {ResultsQuery} returns this
    */
   belongToCampaign(campaign) {
     invariant(_.isString(campaign), 'campaign should be a string');
@@ -92,8 +92,8 @@ class ResultsQuery extends QueryBase {
 
   /**
    * Find results which belong to job
-   * @param {String}job
-   * @return {ResultsQuery}
+   * @param {String}job job name
+   * @return {ResultsQuery} returns this
    */
   belongToJob(job) {
     invariant(_.isString(job), 'job should be a string');
@@ -102,12 +102,12 @@ class ResultsQuery extends QueryBase {
 
   /**
    * Find results which note contains text
-   * @param {String}str
-   * @return {ResultsQuery}
+   * @param {String}str string that contains in note
+   * @return {ResultsQuery} returns this
    */
   containsNote(str) {
     invariant(_.isString(str), 'str should be a string');
-    return this.has({'exec.note': str});
+    return this.has({'exec.note': `/${str}/`});
   }
 }
 
@@ -153,13 +153,13 @@ module.exports = Results;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Admin.html">Admin</a></li><li><a href="Authentication.html">Authentication</a></li><li><a href="Cluster.html">Cluster</a></li><li><a href="Document.html">Document</a></li><li><a href="Group.html">Group</a></li><li><a href="Item.html">Item</a></li><li><a href="Items.html">Items</a></li><li><a href="ItemsQuery.html">ItemsQuery</a></li><li><a href="Loan.html">Loan</a></li><li><a href="Loans.html">Loans</a></li><li><a href="MongooseQueryClient.html">MongooseQueryClient</a></li><li><a href="QueryBase.html">QueryBase</a></li><li><a href="Resource.html">Resource</a></li><li><a href="Resources.html">Resources</a></li><li><a href="ResourcesQuery.html">ResourcesQuery</a></li><li><a href="Results.html">Results</a></li><li><a href="ResultsQuery.html">ResultsQuery</a></li><li><a href="Schemas.html">Schemas</a></li><li><a href="Transport.html">Transport</a></li><li><a href="User.html">User</a></li><li><a href="Users.html">Users</a></li><li><a href="UsersQuery.html">UsersQuery</a></li></ul><h3>Global</h3><ul><li><a href="global.html#beginningOfDay">beginningOfDay</a></li><li><a href="global.html#endOfDay">endOfDay</a></li><li><a href="global.html#notImplemented">notImplemented</a></li><li><a href="global.html#timeSince">timeSince</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Admin.html">Admin</a></li><li><a href="Authentication.html">Authentication</a></li><li><a href="Cluster.html">Cluster</a></li><li><a href="Document.html">Document</a></li><li><a href="Group.html">Group</a></li><li><a href="Item.html">Item</a></li><li><a href="Items.html">Items</a></li><li><a href="ItemsQuery.html">ItemsQuery</a></li><li><a href="Loan.html">Loan</a></li><li><a href="LoanItem.html">LoanItem</a></li><li><a href="Loans.html">Loans</a></li><li><a href="MongooseQueryClient.html">MongooseQueryClient</a></li><li><a href="QueryBase.html">QueryBase</a></li><li><a href="Resource.html">Resource</a></li><li><a href="Resources.html">Resources</a></li><li><a href="ResourcesQuery.html">ResourcesQuery</a></li><li><a href="Results.html">Results</a></li><li><a href="ResultsQuery.html">ResultsQuery</a></li><li><a href="Schemas.html">Schemas</a></li><li><a href="Transport.html">Transport</a></li><li><a href="User.html">User</a></li><li><a href="Users.html">Users</a></li><li><a href="UsersQuery.html">UsersQuery</a></li></ul><h3>Global</h3><ul><li><a href="global.html#beginningOfDay">beginningOfDay</a></li><li><a href="global.html#endOfDay">endOfDay</a></li><li><a href="global.html#notImplemented">notImplemented</a></li><li><a href="global.html#timeSince">timeSince</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 29 2017 19:27:44 GMT+0200 (EET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 29 2017 21:38:22 GMT+0200 (EET)
 </footer>
 
 <script> prettyPrint(); </script>

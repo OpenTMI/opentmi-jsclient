@@ -20,7 +20,7 @@ class Group extends Document {
 
   /**
    * Get resource info as short string
-   * @return {string}
+   * @return {string} returns group data as single line
    */
   toString() {
     return `${this.name}`;
@@ -28,13 +28,13 @@ class Group extends Document {
 
   /**
    * Get group name
-   * @return {String}
+   * @return {String} returns group name
    */
   get name() { return this.get('name'); }
 
   /**
    * Check if group is a admin
-   * @return {boolean}
+   * @return {boolean} returns true if group is admin
    */
   isAdmin() {
     return this.name() === 'admin';

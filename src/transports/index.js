@@ -12,8 +12,9 @@ const {debug, timeSince} = require('../utils');
 class Transport {
   /**
    * Constructor for default transport layer
-   * @param Rest axios(default) -kind of object which provide REST API
-   * @param IO   socket.io-client(default) -kind of object which provide event based communication
+   * @param {String}host opentmi uri
+   * @param {Axios}Rest axios(default) -kind of object which provide REST API
+   * @param {SocketIO}IO   socket.io-client(default) -kind of object which provide event based communication
    */
   constructor(host = '', Rest = axios, IO = SocketIO) {
     this.Rest = Rest;
@@ -25,7 +26,7 @@ class Transport {
   }
   /**
    * get authentication token
-   * @return {string}
+   * @return {string} returns token
    */
   get token() {
     return this._token;
@@ -33,7 +34,7 @@ class Transport {
 
   /**
    * set new token
-   * @param {string} token
+   * @param {string} token set token
    */
   set token(token) {
     invariant(_.isUndefined(token) || _.isString(token), 'You should call login() first');
@@ -42,7 +43,7 @@ class Transport {
 
   /**
    * get current latency based on IO ping-pong packages
-   * @return {float}
+   * @return {float} returns IO latency
    */
   get latency() {
     return this._latency;
@@ -50,7 +51,7 @@ class Transport {
 
   /**
    * Check if we have logged in - and have a token
-   * @return {boolean}
+   * @return {boolean} returns true have token
    */
   get isLoggedIn() {
     return _.isString(this.token);
@@ -58,7 +59,7 @@ class Transport {
 
   /**
    * Check if IO is connected
-   * @return {boolean}
+   * @return {boolean} returns true when IO is connected
    */
   get isConnected() {
     return !_.isUndefined(this._socket);
@@ -75,7 +76,7 @@ class Transport {
   /**
    * Connect socketIO
    * @param {string} namespace - optional namespace
-   * @return {Promise}
+   * @return {Promise} resolves IO connection
    */
   connect(namespace = '') {
     return new Promise((resolve, reject) => {
@@ -128,7 +129,7 @@ class Transport {
   }
   /**
    * Disconnect SIO
-   * @return {Promise}
+   * @return {Promise} resolves when IO is disconnected
    */
   disconnect() {
     return new Promise((resolve) => {
@@ -144,6 +145,7 @@ class Transport {
   /**
    * low level request for IO channel
    * @param {object} req - event: <string>, data: <object>[, timeout: <number]
+   * @returns {Promise} resolves when response is received
    */
   requestIO(req) {
     /* class IOResponse {
@@ -189,7 +191,7 @@ class Transport {
    * @param {string} event - event name
    * @param {object} data - optional data
    * @param {number} timeout - optional timeout
-   * @return {*}
+   * @return {Promise} resolves when emit is done
    */
   emit(event, data = {}, timeout = undefined) {
     invariant(_.isString(event), 'event should be a string');
@@ -201,6 +203,7 @@ class Transport {
    * default parameters:
    * url: '/',
    * method: 'get'
+   * @returns {Promise} resolves when request success
    */
   request(req) {
     const {CancelToken} = this.Rest;
@@ -278,8 +281,8 @@ class Transport {
 
   /**
    * Put request
-   * @param {String}url
-   * @param {object}data
+   * @param {String}url uri for request
+   * @param {object}data json object to be send
    * @return {Promise} - resolves response object
    */
   put(url, data) {
@@ -288,7 +291,7 @@ class Transport {
 
   /**
    * delete request
-   * @param {String}url
+   * @param {String}url uri for request
    * @return {Promise} - resolves response object
    */
   delete(url) {
@@ -297,7 +300,7 @@ class Transport {
 
   /**
    * get socketIO instance
-   * @return {SocketIO-client}
+   * @return {SocketIO-client} returns SocketIO-client object
    */
   get sio() {
     invariant(this._socket, 'You should call Connect first');

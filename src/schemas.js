@@ -1,8 +1,6 @@
 const invariant = require('invariant');
 const Promise = require('bluebird');
 
-// application modules
-
 
 /**
  * Schemas object
@@ -30,8 +28,8 @@ class Schemas {
   /**
    * Get collection json schema.
    * This can be used for example generate html forms.
-   * @param collection
-   * @return {Promise.<object>}
+   * @param {String}collection collection name
+   * @return {Promise.<object>} resolves collection schema as json-schema -format
    */
   schema(collection) {
     return this._transport.get(`/api/v0/schemas/${collection}`)
@@ -40,7 +38,7 @@ class Schemas {
 
   /**
    * get all schemas
-   * @return {Promise}
+   * @return {Promise.<Object[]>} resolves array of schema objects
    */
   getAllSchemas() {
     return this.collections()

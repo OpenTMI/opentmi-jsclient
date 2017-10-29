@@ -14,7 +14,7 @@ class Item extends Document {
 
   /**
    * Get resource info as short string
-   * @return {string}
+   * @return {string} returns single line about item
    */
   toString() {
     return `${this.category()}: ${this.manufacturer() ? this.manufacturer() : ''} - ${this.name()}`;
@@ -23,7 +23,7 @@ class Item extends Document {
   /**
    * Get item name or set it
    * @param {String}value new name
-   * @return {Item|string}
+   * @return {Item|string} returns item name or Item
    */
   name(value) { return this.getOrSet('name', value); }
 
@@ -38,8 +38,8 @@ class Item extends Document {
 
   /**
    * Get manufacturer or set it
-   * @params {String}name - manufacturer
-   * @return {Item|String}
+   * @param {String}name - manufacturer name
+   * @return {Item|String} return manufactorer or Item
    */
   manufacturer(name) {
     return this.getOrSet({'manufacturer.name': name});

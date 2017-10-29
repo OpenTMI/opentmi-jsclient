@@ -10,9 +10,9 @@ const retryUpdate = require('./../retry');
 class Document extends Base {
   /**
    * Document constructor
-   * @param {Transport}transport
-   * @param {String}path
-   * @param {Object}originalJson
+   * @param {Transport}transport transport layer
+   * @param {String}path Document rest uri
+   * @param {Object}originalJson document data as plain json
    */
   constructor(transport, path, originalJson) {
     super(transport, path);
@@ -26,7 +26,7 @@ class Document extends Base {
 
   /**
    * Get resource data as plain json object
-   * @return {object}
+   * @return {object} returns document as plain json
    */
   toJson() {
     return _.cloneDeep(this._resource);
@@ -34,7 +34,7 @@ class Document extends Base {
 
   /**
    * get changes as json object
-   * @return {object}
+   * @return {object} returns changes as plain json
    */
   getChanges() {
     return _.cloneDeep(this._changes);
@@ -42,7 +42,7 @@ class Document extends Base {
 
   /**
    * returns true when there is changes made by client
-   * @return {boolean}
+   * @return {boolean} check if document is "dirty" - has local changes
    */
   isDirty() {
     return !_.isEqual(this._original, this._resource);
@@ -52,9 +52,11 @@ class Document extends Base {
    * Save document. If conflicts happen try merge and save again.
    * if there is no retries left or some server side changes causes conflict
    * promise is rejected and reason property tells was it no retries left or merge conflicts.
-   * @return {Promise}
+   * @param {Number}retryCount count how many times we try to save.
+   * @return {Promise} Resolves Document itself when save success
    */
   save(retryCount = 2) {
+    invariant(_.isNumber(retryCount), 'retryCount should be a number');
     if (this.isDirty()) {
       const changes = this.getChanges();
       invariant(changes[this._idProperty] !==
@@ -69,7 +71,7 @@ class Document extends Base {
   /**
    * Get resource value by Key.
    * @param {String} key - key can be nested as well like "a.b.c"
-   * @param {String} defaultValue
+   * @param {String} defaultValue optional default value
    * @return {String|Object} value for the key or undefined if not found
    */
   get(key, defaultValue = undefined) {
@@ -78,8 +80,8 @@ class Document extends Base {
 
   /**
    * Set value for a key
-   * @param {String} key
-   * @param {*}value
+   * @param {String} key key for update
+   * @param {*}value value for update
    * @return {Document} returns this
    */
   set(key, value) {

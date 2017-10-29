@@ -51,7 +51,7 @@ class ResourcesQuery extends QueryBase {
   /**
    * Resource has parent
    * @param {String} id - optional parent resource id
-   * @return {MongooseQueryClient}
+   * @return {MongooseQueryClient} returns this
    */
   hasParent(id = undefined) {
     if (_.isUndefined(id)) {
@@ -62,16 +62,16 @@ class ResourcesQuery extends QueryBase {
 
   /**
    * Resource doesn't have parent
-   * @return {MongooseQueryClient}
+   * @return {MongooseQueryClient} returns this
    */
   hasNoParent() {
     return this.has({parent: {$exists: false}});
   }
 
   /**
-   * Find resources with type
-   * @param {string} type
-   * @return {Query}
+   * Find resources with name
+   * @param {string} name resource name
+   * @return {Query} returns this
    */
   name(name) {
     invariant(_.isString(name), 'type should be a string');
@@ -79,8 +79,8 @@ class ResourcesQuery extends QueryBase {
   }
   /**
    * Find resources by type
-   * @param {string} type
-   * @return {Query}
+   * @param {string} type resource type
+   * @return {Query} returns this
    */
   type(type) {
     invariant(_.isString(type), 'type should be a string');
@@ -89,8 +89,8 @@ class ResourcesQuery extends QueryBase {
 
   /**
    * Find resources by status
-   * @param {string} status
-   * @return {Query}
+   * @param {string} status resource status. One of 'active', 'maintenance', 'broken'
+   * @return {Query} returns this
    */
   status(status) {
     const STATUS = ['active', 'maintenance', 'broken'];
@@ -100,8 +100,8 @@ class ResourcesQuery extends QueryBase {
 
   /**
    * Find resources by usage type
-   * @param {String} usageType
-   * @return {MongooseQueryClient}
+   * @param {String} usageType resource usage type
+   * @return {MongooseQueryClient} returns this
    */
   usageType(usageType) {
     invariant(_.isString(usageType), 'usageType should be a string');
@@ -110,19 +110,21 @@ class ResourcesQuery extends QueryBase {
 
   /**
    * Find resources by a tag
-   * @param {string} tag
-   * @param {bool} isTrue - optional - default: true
-   * @return {Query}
+   * @param {string} tag tag name
+   * @param {bool} isTrue tag value, optional. default: true
+   * @return {Query} returns this
    */
   haveTag(tag, isTrue = true) {
     invariant(_.isBoolean(isTrue), 'isTrue should be a boolean');
-    return this.has({tags: {tag: isTrue}});
+    const obj = {tags: {}};
+    obj.tags[tag] = isTrue;
+    return this.has(obj);
   }
 
   /**
    * Find resources by multiple tags
-   * @param {array&lt;String>} tags
-   * @return {Query}
+   * @param {array&lt;String>} tags array of tag names
+   * @return {Query} returns this
    */
   haveTags(tags) {
     invariant(_.isArray(tags), 'tags should be an array');
@@ -143,7 +145,7 @@ class Resources extends Collection {
 
   /**
    * Find Resources
-   * @return {ResourcesQuery}
+   * @return {ResourcesQuery} returns Query object
    */
   find() {
     return new ResourcesQuery(this, Resource);
@@ -151,7 +153,7 @@ class Resources extends Collection {
 
   /**
    * Update documents
-   * @return {*}
+   * @return {Promise} not implemented
    */
   update() {
     return this._notImplemented();
@@ -169,13 +171,13 @@ module.exports = Resources;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Admin.html">Admin</a></li><li><a href="Authentication.html">Authentication</a></li><li><a href="Cluster.html">Cluster</a></li><li><a href="Document.html">Document</a></li><li><a href="Group.html">Group</a></li><li><a href="Item.html">Item</a></li><li><a href="Items.html">Items</a></li><li><a href="ItemsQuery.html">ItemsQuery</a></li><li><a href="Loan.html">Loan</a></li><li><a href="Loans.html">Loans</a></li><li><a href="MongooseQueryClient.html">MongooseQueryClient</a></li><li><a href="QueryBase.html">QueryBase</a></li><li><a href="Resource.html">Resource</a></li><li><a href="Resources.html">Resources</a></li><li><a href="ResourcesQuery.html">ResourcesQuery</a></li><li><a href="Results.html">Results</a></li><li><a href="ResultsQuery.html">ResultsQuery</a></li><li><a href="Schemas.html">Schemas</a></li><li><a href="Transport.html">Transport</a></li><li><a href="User.html">User</a></li><li><a href="Users.html">Users</a></li><li><a href="UsersQuery.html">UsersQuery</a></li></ul><h3>Global</h3><ul><li><a href="global.html#beginningOfDay">beginningOfDay</a></li><li><a href="global.html#endOfDay">endOfDay</a></li><li><a href="global.html#notImplemented">notImplemented</a></li><li><a href="global.html#timeSince">timeSince</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Admin.html">Admin</a></li><li><a href="Authentication.html">Authentication</a></li><li><a href="Cluster.html">Cluster</a></li><li><a href="Document.html">Document</a></li><li><a href="Group.html">Group</a></li><li><a href="Item.html">Item</a></li><li><a href="Items.html">Items</a></li><li><a href="ItemsQuery.html">ItemsQuery</a></li><li><a href="Loan.html">Loan</a></li><li><a href="LoanItem.html">LoanItem</a></li><li><a href="Loans.html">Loans</a></li><li><a href="MongooseQueryClient.html">MongooseQueryClient</a></li><li><a href="QueryBase.html">QueryBase</a></li><li><a href="Resource.html">Resource</a></li><li><a href="Resources.html">Resources</a></li><li><a href="ResourcesQuery.html">ResourcesQuery</a></li><li><a href="Results.html">Results</a></li><li><a href="ResultsQuery.html">ResultsQuery</a></li><li><a href="Schemas.html">Schemas</a></li><li><a href="Transport.html">Transport</a></li><li><a href="User.html">User</a></li><li><a href="Users.html">Users</a></li><li><a href="UsersQuery.html">UsersQuery</a></li></ul><h3>Global</h3><ul><li><a href="global.html#beginningOfDay">beginningOfDay</a></li><li><a href="global.html#endOfDay">endOfDay</a></li><li><a href="global.html#notImplemented">notImplemented</a></li><li><a href="global.html#timeSince">timeSince</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 29 2017 19:27:44 GMT+0200 (EET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 29 2017 21:38:22 GMT+0200 (EET)
 </footer>
 
 <script> prettyPrint(); </script>

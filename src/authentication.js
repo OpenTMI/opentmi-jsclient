@@ -56,7 +56,7 @@ class Authentication {
   /**
    * Find out who I'm.
    * Returns plain object with some details about yourself.
-   * @return {Promise<object>}
+   * @return {Promise<object>} resolves user details
    */
   whoami() {
     return this._transport.emit('whoami');
@@ -64,7 +64,7 @@ class Authentication {
 
   /**
    * Logout
-   * @return {Promise}
+   * @return {Promise} resolves when logged out succesfully
    */
   logout() {
     invariant(_.isString(this._transport.token), 'you are not logged in, jwt token missing');

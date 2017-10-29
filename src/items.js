@@ -12,7 +12,8 @@ const {QueryBase, Collection, notImplemented} = require('./utils');
 class ItemsQuery extends QueryBase {
   /**
    * Find items by barcode
-   * @return {ItemsQuery}
+   * @param {String}barcode barcore to be find
+   * @return {ItemsQuery} returns this
    */
   barcode(barcode) {
     return this.has({barcode: barcode});
@@ -20,7 +21,8 @@ class ItemsQuery extends QueryBase {
 
   /**
    * Find items by name
-   * @return {ItemsQuery}
+   * @param {String}name item name
+   * @return {ItemsQuery} returns this
    */
   name(name) {
     return this.has({name: name});
@@ -29,7 +31,7 @@ class ItemsQuery extends QueryBase {
   /**
    * Find items by availability
    * @param {Number|undefined}available - should be at least 1 or available amount of resources
-   * @return {ItemsQuery}
+   * @return {ItemsQuery} returns this
    */
   available(available = undefined) {
     invariant(_.isNumber(available), 'available should be a number');
@@ -43,7 +45,8 @@ class ItemsQuery extends QueryBase {
   /**
    * Find items by category
    * @param {String}category - resource category, allowed values:
-   * @return {ItemsQuery}
+   * 'accessory', 'board', 'component', 'other'
+   * @return {ItemsQuery} returns this
    */
   category(category) {
     invariant(_.isString(category), 'category should be a string');
@@ -55,16 +58,31 @@ class ItemsQuery extends QueryBase {
     invariant(_.indexOf(allowedValues, category) !== -1, 'should be allowed category');
     return this.has({category: category});
   }
-
+  /**
+   * Find only accessories
+   * @return {ItemsQuery} return this
+   */
   categoryAccessories() { return this.category('accessory'); }
+  /**
+   * Find only boards
+   * @return {ItemsQuery} return this
+   */
   categoryBoards() { return this.category('board'); }
+  /**
+   * Find only components
+   * @return {ItemsQuery} return this
+   */
   categoryComponents() { return this.category('components'); }
+  /**
+   * Find only other category resources
+   * @return {ItemsQuery} return this
+   */
   categoryOthers() { return this.category('other'); }
 
   /**
    * Find items by manufacturer
-   * @params {String}name - manufacturer
-   * @return {ItemsQuery}
+   * @param {String}name - manufacturer
+   * @return {ItemsQuery} return this
    */
   manufacturer(name) {
     return this.has({'manufacturer.name': name});
@@ -83,7 +101,7 @@ class Items extends Collection {
 
   /**
    * Find Items
-   * @return {ResultsQuery}
+   * @return {ResultsQuery} returns Query object
    */
   find() {
     return new ItemsQuery(this, Item);
@@ -91,7 +109,7 @@ class Items extends Collection {
 
   /**
    * Update documents
-   * @return {Promise}
+   * @return {Promise} not implemented
    */
   update() {
     return this._notImplemented('Item update is not implemented');
