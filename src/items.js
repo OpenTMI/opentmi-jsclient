@@ -96,7 +96,7 @@ class Items extends Collection {
    */
   constructor(transport) {
     super(transport, '/api/v0/items');
-    this._notImplemented = notImplemented();
+    this._notImplemented = notImplemented;
   }
 
   /**

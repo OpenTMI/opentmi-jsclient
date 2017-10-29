@@ -16,6 +16,13 @@ class Base {
     this._path = path;
     this._notImplemented = notImplemented;
   }
+  /**
+   * set rest path
+   * @param {String}path path uri 
+   */
+  setPath(path) {
+    this._path = path;
+  }
 }
 
 module.exports = Base;
