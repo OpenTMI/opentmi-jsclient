@@ -9,7 +9,7 @@ const print = message => () => {
 };
 
 const login = () => print('login')()
-  .then(() => auth.login('jussiva@gmail.com', 'heidiva'))
+  .then(() => auth.login('username', 'password'))
   .then(print('connect IO'))
   .then(transport.connect.bind(transport));
 

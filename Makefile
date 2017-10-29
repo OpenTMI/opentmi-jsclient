@@ -50,4 +50,4 @@ lint:
 	eslint src test
 
 lint-fix:
-	eslint src --fix
+	eslint src test --fix
