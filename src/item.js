@@ -9,7 +9,7 @@ class Item extends Document {
    * @param {object} resourceJson - plain json object
    */
   constructor(transport, resourceJson) {
-    super(transport, `/api/v0/items/${resourceJson.id}`, resourceJson);
+    super(transport, `/api/v0/items`, resourceJson);
   }
 
   /**
@@ -50,7 +50,7 @@ class Item extends Document {
    * @return {Promise<buffer>} image buffer
    */
   getImage() {
-    return this._transport.get(`/api/v0/items/${this.id}/image`)
+    return this._transport.get(`${this.path}/image`)
       .then(response => response.data);
   }
 }

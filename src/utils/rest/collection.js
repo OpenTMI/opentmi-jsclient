@@ -10,7 +10,7 @@ class Collection extends Base {
   _find(query) {
     invariant(_.isString(query), 'query hould be a string');
     invariant(this._transport.isLoggedIn, 'Transport should be logged in');
-    return this._transport.get(`${this._path}?${query}`)
+    return this._transport.get(`${this.colPath()}?${query}`)
       .then(resp => resp.data);
   }
 
@@ -22,8 +22,11 @@ class Collection extends Base {
     });
   }
 
-  _get() {
-    return this._notImplemented();
+  _get(id) {
+    invariant(_.isString(id), 'id hould be a string');
+    invariant(this._transport.isLoggedIn, 'Transport should be logged in');
+    return this._transport.get(this.docPath(id))
+      .then(resp => resp.data);
   }
 
   _delete() {

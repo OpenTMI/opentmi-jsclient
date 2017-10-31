@@ -1,6 +1,7 @@
 const invariant = require('invariant');
 const _ = require('lodash');
 
+const debug = require('../debug');
 const Base = require('./base');
 const retryUpdate = require('./../retry');
 
@@ -16,12 +17,26 @@ class Document extends Base {
    */
   constructor(transport, path, originalJson) {
     super(transport, path);
-    this._idProperty = originalJson.id ? 'id' : '_id';
-    invariant(_.isPlainObject(originalJson), 'originalJson should be plain object');
-    invariant(_.isString(originalJson[this._idProperty]), 'originalJson should have id');
-    this._original = _.cloneDeep(originalJson);
-    this._resource = _.cloneDeep(originalJson);
+    this._idProperty = '_id';
+    if (_.isUndefined(originalJson)) {
+      debug('Construct new document');
+       // new object
+      this._original = undefined;
+      this._resource = {};
+    } else {
+      debug('Construct existing document');
+      // old object
+      invariant(_.isPlainObject(originalJson), 'originalJson should be plain object');
+      invariant(_.isString(originalJson[this._idProperty]), 'originalJson should have id');
+      this._original = _.cloneDeep(originalJson);
+      this._resource = _.cloneDeep(originalJson);
+    }
     this._changes = {};
+    this._update = this._update.bind(this);
+  }
+
+  get isNew() {
+    return _.isUndefined(this._original);
   }
 
   /**
@@ -58,11 +73,12 @@ class Document extends Base {
   save(retryCount = 2) {
     invariant(_.isNumber(retryCount), 'retryCount should be a number');
     if (this.isDirty()) {
+      debug('Saving existing document');
       const changes = this.getChanges();
       invariant(changes[this._idProperty] !==
         this._original[this._idProperty], `${this._idProperty} is not the same!!`);
       changes.version = this.version;
-      return retryUpdate(this._original, changes, this._update.bind(this), retryCount)
+      return retryUpdate(this._original, changes, this._update, retryCount)
         .then(() => this);
     }
     return Promise.reject(new Error('no changes'));
@@ -124,6 +140,8 @@ class Document extends Base {
    */
   get id() { return this.get(this._idProperty); }
 
+  get path() { return this.docPath(this.id); }
+
   /**
    * reload document information from backend.
    * This also revert all client modified data back that is not saved!
@@ -131,7 +149,7 @@ class Document extends Base {
    */
   refresh() {
     return this._transport
-      .get(this._path)
+      .get(this.path)
       .then((response) => {
         this._original = _.cloneDeep(response.data);
         this._resource = _.cloneDeep(response.data);
@@ -144,7 +162,7 @@ class Document extends Base {
    * @return {Promise} Resolves when operation success
    */
   delete() {
-    return this._transport.delete({path: this._path});
+    return this._transport.delete({path: this.path});
   }
 
   /**
@@ -153,8 +171,49 @@ class Document extends Base {
    * @returns {Promise} resolves when opration success
    */
   _update(data) {
-    return this._transport.put(this._path, data);
+    return this._transport.put(this.path, data);
   }
 }
 
+/**
+ * Mix Document object so that it is
+ * possible to store new document
+ * @param {Document}base Document object
+ * @return {NewDocument} returns mixed Document object
+ * @constructor
+ */
+function IsNewDocument(base) {
+  class NewDocument extends base {
+    /**
+     * Wrap save method for first save
+     * @return {Promise.<Document>} resolves Document
+     */
+    save() {
+      // wrap save only at the beginning.
+      // when document is stored first time succesfully
+      // wrap original save function.
+      debug('Saving new document');
+      return this._create(this._resource)
+        .then(response => {
+          this._original = _.cloneDeep(response.data);
+          this._resource = _.cloneDeep(response.data);
+        })
+        .then(() => {
+          this.save = super.save; // continue old behavior
+          this._create = undefined; //no need create -api anymore
+          return this;
+        });
+    }
+    /**
+     * create document
+     * @param {Object}data document data to be stored
+     * @returns {Promise} resolves when opration success
+     */
+    _create(data) {
+      return this._transport.post(this.colPath(), data);
+    }
+  }
+  return NewDocument;
+}
+Document.IsNewDocument = IsNewDocument;
 module.exports = Document;

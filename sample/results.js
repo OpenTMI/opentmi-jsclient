@@ -5,10 +5,10 @@ const {
 } = require('./common');
 
 const {Results} = require('../src');
+const results = new Results(transport);
 
 login()
   .then(() => {
-    const results = new Results(transport);
     return results.find()
       .isHW()
       .limit(5)
@@ -19,6 +19,15 @@ login()
         _.each(results, r => console.log(r.toString()));
         // console.log(results[0].toJson());
       });
+  })
+  .then(() => {
+    // upload new result
+    return results
+      .create()
+      .tcid('123').verdict('pass')
+      .save()
+      .then(doc => console.log(doc.toString()))
+      .catch(error => console.error(error.message))
   })
   .then(logout)
   .catch(error => console.error(error.message));

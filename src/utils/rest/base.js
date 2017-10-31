@@ -8,7 +8,7 @@ class Base {
   /**
    * General base constructor for Rest resources
    * @param {Transport} transport - Transport object<
-   * @param {string} path - path for REST API
+   * @param {string} path - path for collection REST API
    */
   constructor(transport, path) {
     invariant(transport, 'transport is mandatory');
@@ -16,6 +16,10 @@ class Base {
     this._path = path;
     this._notImplemented = notImplemented;
   }
+  docPath(id) {
+    return `${this._path}/${id}`;
+  }
+  colPath() { return this._path; }
   /**
    * set rest path
    * @param {String}path path uri

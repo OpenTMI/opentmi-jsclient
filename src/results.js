@@ -4,7 +4,7 @@ const invariant = require('invariant');
 
 // application modules
 const Result = require('./result');
-const {QueryBase, Collection, notImplemented} = require('./utils');
+const {QueryBase, Collection, Document, notImplemented} = require('./utils');
 
 /**
  * @class ResultsQuery
@@ -111,6 +111,12 @@ class Results extends Collection {
    */
   update() {
     return this._notImplemented('results update is not implemented');
+  }
+
+  create() {
+    const NewResult = Document.IsNewDocument(Result);
+    const doc = new NewResult(this._transport);
+    return doc;
   }
 }
 
