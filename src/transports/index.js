@@ -245,7 +245,7 @@ class Transport {
               error, 'response.data.message', // take message by default
               _.get(
                 error, 'response.data.error', // then error if message not exists
-                error.message                 // last option to take original request failure reason
+                error.message // last option to take original request failure reason
               )
             )
           );
