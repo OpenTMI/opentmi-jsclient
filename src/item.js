@@ -9,7 +9,7 @@ class Item extends Document {
    * @param {object} resourceJson - plain json object
    */
   constructor(transport, resourceJson) {
-    super(transport, `/api/v0/items`, resourceJson);
+    super(transport, '/api/v0/items', resourceJson);
   }
 
   /**

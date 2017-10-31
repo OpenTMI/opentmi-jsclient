@@ -11,7 +11,7 @@ class Testcase extends Document {
    * @private
    */
   constructor(transport, testcaseJson) {
-    super(transport, `/api/v0/testcases`, testcaseJson);
+    super(transport, '/api/v0/testcases', testcaseJson);
   }
 
   /**

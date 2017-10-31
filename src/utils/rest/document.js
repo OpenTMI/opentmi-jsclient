@@ -20,7 +20,7 @@ class Document extends Base {
     this._idProperty = '_id';
     if (_.isUndefined(originalJson)) {
       debug('Construct new document');
-       // new object
+      // new object
       this._original = undefined;
       this._resource = {};
     } else {
@@ -194,13 +194,13 @@ function IsNewDocument(base) {
       // wrap original save function.
       debug('Saving new document');
       return this._create(this._resource)
-        .then(response => {
+        .then((response) => {
           this._original = _.cloneDeep(response.data);
           this._resource = _.cloneDeep(response.data);
         })
         .then(() => {
           this.save = super.save; // continue old behavior
-          this._create = undefined; //no need create -api anymore
+          this._create = undefined; // no need create -api anymore
           return this;
         });
     }

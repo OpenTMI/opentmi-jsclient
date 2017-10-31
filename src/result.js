@@ -11,7 +11,7 @@ class Result extends Document {
    * @private
    */
   constructor(transport, resultJson) {
-    super(transport, `/api/v0/results`, resultJson);
+    super(transport, '/api/v0/results', resultJson);
   }
 
   /**
@@ -24,6 +24,7 @@ class Result extends Document {
 
   /**
    * Get test case id
+   * @param {String}value set tc id
    * @return {string} test case id
    */
   tcid(value) {
@@ -41,6 +42,7 @@ class Result extends Document {
 
   /**
    * Get result verdict
+   * @param {String}value set verdict
    * @return {String} returns test verdict
    */
   verdict(value) {

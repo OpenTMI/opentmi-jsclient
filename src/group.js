@@ -10,7 +10,7 @@ class Group extends Document {
    * @param {Object}groupJson - group as plain json
    */
   constructor(transport, groupJson) {
-    super(transport, `/api/v0/groups`, groupJson);
+    super(transport, '/api/v0/groups', groupJson);
   }
 
   static fromId(transport, id) {
