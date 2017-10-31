@@ -239,9 +239,16 @@ class Transport {
                 .then(() => this.request(req));
             }
           }
-          _.set(error, 'message',
-            _.get(error, 'response.data.message',
-              _.get(error, 'response.data.error', error.message)));
+          _.set(
+            error, 'message',
+            _.get(
+              error, 'response.data.message', // take message by default
+              _.get(
+                error, 'response.data.error', // then error if message not exists
+                error.message                 // last option to take original request failure reason
+              )
+            )
+          );
         } else if (this.Rest.isCancel(error)) {
           debug(`Request canceled: ${error.message}`);
         } else if (error.request) {

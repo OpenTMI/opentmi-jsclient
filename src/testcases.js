@@ -3,7 +3,12 @@ const invariant = require('invariant');
 
 // application modules
 const Testcase = require('./testcase');
-const {QueryBase, Collection, Document, notImplemented} = require('./utils');
+const {
+  QueryBase,
+  Collection,
+  Document,
+  notImplemented
+} = require('./utils');
 
 /**
  * @class TestcasesQuery
@@ -52,7 +57,8 @@ class TestcasesQuery extends QueryBase {
       'functional',
       'destructive',
       'performance',
-      'reliability'];
+      'reliability'
+    ];
     invariant(ALLOWED_TYPES.indexOf(type) !== 0, 'not allowed type');
     return this.has({'other_info.type': type});
   }
@@ -90,8 +96,7 @@ class Testcases extends Collection {
    */
   create() {
     const NewTestcase = Document.IsNewDocument(Testcase);
-    const doc = new NewTestcase(this._transport);
-    return doc;
+    return new NewTestcase(this._transport);
   }
 }
 
