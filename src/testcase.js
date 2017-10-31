@@ -24,10 +24,11 @@ class Testcase extends Document {
 
   /**
    * Get test case id
+   * @param {String|Testcase}value get or set testcase
    * @return {string} test case id
    */
-  tcid() {
-    return this.get('tcid');
+  tcid(value) {
+    return this.getOrSet('tcid', value);
   }
 
   /**

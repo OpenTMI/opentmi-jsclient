@@ -239,7 +239,9 @@ class Transport {
                 .then(() => this.request(req));
             }
           }
-          _.set(error, 'message', _.get(error, 'response.data.message', error.message));
+          _.set(error, 'message',
+            _.get(error, 'response.data.message',
+              _.get(error, 'response.data.error', error.message)));
         } else if (this.Rest.isCancel(error)) {
           debug(`Request canceled: ${error.message}`);
         } else if (error.request) {

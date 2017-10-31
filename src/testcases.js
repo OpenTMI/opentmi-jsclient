@@ -3,7 +3,7 @@ const invariant = require('invariant');
 
 // application modules
 const Testcase = require('./testcase');
-const {QueryBase, Collection, notImplemented} = require('./utils');
+const {QueryBase, Collection, Document, notImplemented} = require('./utils');
 
 /**
  * @class TestcasesQuery
@@ -82,6 +82,16 @@ class Testcases extends Collection {
    */
   update() {
     return this._notImplemented('Item update is not implemented');
+  }
+
+  /**
+   * Create new test case
+   * @return {Testcase} returns new test case without id
+   */
+  create() {
+    const NewTestcase = Document.IsNewDocument(Testcase);
+    const doc = new NewTestcase(this._transport);
+    return doc;
   }
 }
 
