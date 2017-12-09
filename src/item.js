@@ -53,6 +53,14 @@ class Item extends Document {
     return this._transport.get(`${this.path}/image`)
       .then(response => response.data);
   }
+
+  barcode(value) { return this.getOrSet('barcode', value); }
+
+  imageSrc(value) { return this.getOrSet('image_src', value); }
+
+  description(value) { return this.getOrSet('text_description', value); }
+
+  reference(value) { return this.getOrSet('external_reference', value); }
 }
 
 module.exports = Item;

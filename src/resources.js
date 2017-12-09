@@ -21,6 +21,26 @@ class ResourcesQuery extends QueryBase {
   }
 
   /**
+   * Find resources by hwid
+   * @param {String}id
+   * @return {MongooseQueryClient}
+   */
+  hwid(id) {
+    invariant(_.isString(id), 'id should be a string');
+    return this.has({'hw.id': id});
+  }
+
+  /**
+   * Find resources by serial number
+   * @param {String}sn
+   * @return {MongooseQueryClient}
+   */
+  hwsn(sn) {
+    invariant(_.isString(sn), 'sn should be a string');
+    return this.has({'hw.sn': sn});
+  }
+
+  /**
    * Resource has parent
    * @param {String} id - optional parent resource id
    * @return {MongooseQueryClient} returns this
