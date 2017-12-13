@@ -42,7 +42,7 @@ class Resource extends Document {
    *  .hw.imei('12334')
    *  .hw.firmware.name('aa')
    *  .hw.firmware.version('1.0.0')
-   * @return {Object}
+   * @return {Object} hardware object
    */
   get hw() {
     const self = this;
@@ -51,8 +51,9 @@ class Resource extends Document {
         return {
           name: function name(value) { return this.getOrSet('hw.firmware.name', value); }.bind(self),
           version: function version(value) {
-            return this.getOrSet('hw.firmware.version', value); }.bind(self)
-        }
+            return this.getOrSet('hw.firmware.version', value);
+          }.bind(self)
+        };
       },
       sn: function sn(value) { return this.getOrSet('hw.sn', value); }.bind(this),
       imei: function imei(value) { return this.getOrSet('hw.imei', value); }.bind(this),
@@ -67,10 +68,7 @@ class Resource extends Document {
    *   doc
    *    .location.site('oulu')
    *    .location.country('finland')
-   *  @return {{site: (function(this:Resource)), country: (function(this:Resource)),
-   *  city: (function(this:Resource)), address: (function(this:Resource)), postcode:
-   * (function(this:Resource)), room: (function(this:Resource)), subRoom:
-   * (function(this:Resource)), geo: (function(this:Resource))}} Location object
+   *  @return {Object} Location object
    */
   get location() {
     const loc = {

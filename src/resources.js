@@ -13,7 +13,7 @@ const {QueryBase, Collection, notImplemented} = require('./utils');
 class ResourcesQuery extends QueryBase {
   /* Find resources by id
    * @param {string} id
-   * @return {MongooseQueryClient}
+   * @return {MongooseQueryClient} returns this
    */
   id(id) {
     invariant(_.isString(id), 'id should be a string');
@@ -22,8 +22,8 @@ class ResourcesQuery extends QueryBase {
 
   /**
    * Find resources by hwid
-   * @param {String}id
-   * @return {ResourcesQuery}
+   * @param {String} id hardware id as a string
+   * @return {ResourcesQuery} returns this
    */
   hwid(id) {
     invariant(_.isString(id), 'id should be a string');
@@ -32,8 +32,8 @@ class ResourcesQuery extends QueryBase {
 
   /**
    * Find resources by serial number
-   * @param {String}sn
-   * @return {ResourcesQuery}
+   * @param {String}sn hardware serial number as a string
+   * @return {ResourcesQuery} returns this
    */
   hwsn(sn) {
     invariant(_.isString(sn), 'sn should be a string');
