@@ -23,7 +23,13 @@ class Transport {
     this._host = host;
     this._latency = undefined;
     this._ioRequests = {};
+    this._sockets = {};
   }
+  
+  get _socket() {
+    return _.get(this._sockets, '');
+  }
+
   /**
    * get authentication token
    * @return {string} returns token
@@ -87,59 +93,69 @@ class Transport {
       };
       const sioUrl = `${this._url()}${namespace}`;
       debug(`socketIO url: ${sioUrl}, options: ${JSON.stringify(options)}`);
-      this._socket = this.IO(sioUrl, options);
-      this._socket.once('connect', resolve);
-      this._socket.once('reconnect', () => {
+      const socket = this.IO(sioUrl, options);
+      socket.once('connect', () => resolve(socket));
+      socket.once('reconnect', () => {
         debug('reconnecting');
       });
-      this._socket.once('connect_error', reject);
-    }).then(() => {
+      socket.once('connect_error', reject);
+      this._sockets[namespace] = socket;
+    }).then((socket) => {
       debug('SocketIO connected');
-      this._socket.on('error', (error) => {
+      socket.on('error', (error) => {
         debug(error);
       });
-      this._socket.on('reconnect', () => {
+      socket.on('reconnect', () => {
         debug('socketIO reconnect');
       });
-      this._socket.on('reconnect_attempt', () => {
+      socket.on('reconnect_attempt', () => {
         debug('socketIO reconnect_attempt');
       });
-      this._socket.on('reconnecting', (attempt) => {
+      socket.on('reconnecting', (attempt) => {
         debug(`socketIO reconnecting, attempt: ${attempt}`);
       });
-      this._socket.on('reconnect_error', (error) => {
+      socket.on('reconnect_error', (error) => {
         debug(error);
       });
-      this._socket.on('reconnect_failed', (error) => {
+      socket.on('reconnect_failed', (error) => {
         debug(error);
       });
-      this._socket.on('exit', () => {
+      socket.on('exit', () => {
         debug('Server is attemt to exit...');
       });
-      this._socket.on('pong', (latency) => {
+      socket.on('pong', (latency) => {
         this._latency = latency;
         debug(`pong latency: ${latency}ms`);
       });
-      return this._socket;
+      return socket;
     })
-      .catch((error) => {
-        debug(`socketIO connection fails: ${error.message}`);
-        throw error;
-      });
+    .catch((error) => {
+      debug(`socketIO connection fails: ${error.message}`);
+      throw error;
+    });
   }
   /**
    * Disconnect SIO
    * @return {Promise} resolves when IO is disconnected
    */
   disconnect() {
+    const nss = Object.keys(this._sockets);
+    const pending = _.map(nss, ns => this.disconnectNamespace(ns));
+    return Promise.all(pending);
+  }
+
+  disconnectNamespace(namespace='') {
+    debug(`Disconnecting ns: ${namespace}`);
+    const socket = _.get(this._sockets, namespace);
     return new Promise((resolve) => {
-      invariant(this._socket, 'token is not configured');
-      this._socket.once('disconnect', resolve);
-      this._socket.disconnect();
+      invariant(socket, 'socket is not open');
+      socket.once('disconnect', resolve);
+      socket.disconnect();
     })
-      .then(() => {
-        debug('SocketIO disconnected');
-      });
+    .then(() => {
+      debug('SocketIO disconnected');
+      _.unset(this._sockets, namespace);
+    });
   }
 
   /**
@@ -309,11 +325,11 @@ class Transport {
 
   /**
    * get socketIO instance
-   * @return {SocketIO-client} returns SocketIO-client object
+   * @return {Promise<SocketIO-client>} resolves SocketIO-client object for namespace
    */
-  get sio() {
-    invariant(this._socket, 'You should call Connect first');
-    return this._socket;
+  sio(namespace='') {
+    const socket = _.get(this._sockets, namespace);
+    return socket ? Promise.resolve(socket) : Promise.reject(new Error('No socket open for this namespace'));
   }
 }
 

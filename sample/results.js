@@ -21,13 +21,22 @@ login()
       });
   })
   .then(() => {
+    // start listening new result
+    return results.connect()
+      .then(() => {
+        results.on('new', (result) => {
+          console.log(result.toString());
+        });
+      })
+  })
+  .then(() => {
     // upload new result
     return results
       .create()
       .tcid('123').verdict('pass')
       .save()
       .then(doc => console.log(doc.toString()))
-      .catch(error => console.error(error.message))
+      .catch(error => console.error(error.message));
   })
   .then(logout)
   .catch(error => console.error(error.message));

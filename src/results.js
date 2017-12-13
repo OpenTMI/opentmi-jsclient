@@ -95,6 +95,22 @@ class Results extends Collection {
     this._notImplemented = notImplemented;
   }
 
+  connect() {
+    return this._transport.connect('/results');
+  }
+  on(event, callback) {
+    if(event === 'new') {
+      return this._transport.sio('/results')
+        .then(socket => {
+          socket.on('new', (data) => {
+            const result = new Result(this._transport, data);
+            callback(result);
+          });
+        });
+    }
+    return Promise.reject('Event is not supported');
+  }
+
   /**
    * Find Results
    * @return {ResultsQuery} returns ResultsQuery object
