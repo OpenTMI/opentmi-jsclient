@@ -99,16 +99,16 @@ class Results extends Collection {
     return this._transport.connect('/results');
   }
   on(event, callback) {
-    if(event === 'new') {
+    if (event === 'new') {
       return this._transport.sio('/results')
-        .then(socket => {
+        .then((socket) => {
           socket.on('new', (data) => {
             const result = new Result(this._transport, data);
             callback(result);
           });
         });
     }
-    return Promise.reject('Event is not supported');
+    return Promise.reject(new Error('Event is not supported'));
   }
 
   /**

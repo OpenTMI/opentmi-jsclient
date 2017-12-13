@@ -12,8 +12,8 @@ const {QueryBase, Collection, notImplemented} = require('./utils');
  */
 class ResourcesQuery extends QueryBase {
   /* Find resources by id
-   * @param {string} type
-   * @return {Query}
+   * @param {string} id
+   * @return {MongooseQueryClient}
    */
   id(id) {
     invariant(_.isString(id), 'id should be a string');
@@ -23,7 +23,7 @@ class ResourcesQuery extends QueryBase {
   /**
    * Find resources by hwid
    * @param {String}id
-   * @return {MongooseQueryClient}
+   * @return {ResourcesQuery}
    */
   hwid(id) {
     invariant(_.isString(id), 'id should be a string');
@@ -33,7 +33,7 @@ class ResourcesQuery extends QueryBase {
   /**
    * Find resources by serial number
    * @param {String}sn
-   * @return {MongooseQueryClient}
+   * @return {ResourcesQuery}
    */
   hwsn(sn) {
     invariant(_.isString(sn), 'sn should be a string');
@@ -43,7 +43,7 @@ class ResourcesQuery extends QueryBase {
   /**
    * Resource has parent
    * @param {String} id - optional parent resource id
-   * @return {MongooseQueryClient} returns this
+   * @return {ResourcesQuery} returns this
    */
   hasParent(id = undefined) {
     if (_.isUndefined(id)) {
@@ -54,7 +54,7 @@ class ResourcesQuery extends QueryBase {
 
   /**
    * Resource doesn't have parent
-   * @return {MongooseQueryClient} returns this
+   * @return {ResourcesQuery} returns this
    */
   hasNoParent() {
     return this.has({parent: {$exists: false}});
@@ -63,16 +63,17 @@ class ResourcesQuery extends QueryBase {
   /**
    * Find resources with name
    * @param {string} name resource name
-   * @return {Query} returns this
+   * @return {ResourcesQuery} returns this
    */
   name(name) {
     invariant(_.isString(name), 'type should be a string');
     return this.has({name});
   }
+
   /**
    * Find resources by type
    * @param {string} type resource type
-   * @return {Query} returns this
+   * @return {ResourcesQuery} returns this
    */
   type(type) {
     invariant(_.isString(type), 'type should be a string');
@@ -82,7 +83,7 @@ class ResourcesQuery extends QueryBase {
   /**
    * Find resources by status
    * @param {string} status resource status. One of 'active', 'maintenance', 'broken'
-   * @return {Query} returns this
+   * @return {ResourcesQuery} returns this
    */
   status(status) {
     const STATUS = ['active', 'maintenance', 'broken'];
@@ -93,7 +94,7 @@ class ResourcesQuery extends QueryBase {
   /**
    * Find resources by usage type
    * @param {String} usageType resource usage type
-   * @return {MongooseQueryClient} returns this
+   * @return {ResourcesQuery} returns this
    */
   usageType(usageType) {
     invariant(_.isString(usageType), 'usageType should be a string');
@@ -104,7 +105,7 @@ class ResourcesQuery extends QueryBase {
    * Find resources by a tag
    * @param {string} tag tag name
    * @param {bool} isTrue tag value, optional. default: true
-   * @return {Query} returns this
+   * @return {ResourcesQuery} returns this
    */
   haveTag(tag, isTrue = true) {
     invariant(_.isBoolean(isTrue), 'isTrue should be a boolean');
@@ -116,7 +117,7 @@ class ResourcesQuery extends QueryBase {
   /**
    * Find resources by multiple tags
    * @param {array<String>} tags array of tag names
-   * @return {Query} returns this
+   * @return {ResourcesQuery} returns this
    */
   haveTags(tags) {
     invariant(_.isArray(tags), 'tags should be an array');
