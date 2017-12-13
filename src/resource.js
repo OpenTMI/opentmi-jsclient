@@ -55,9 +55,9 @@ class Resource extends Document {
           }.bind(self)
         };
       },
-      sn: function sn(value) { return this.getOrSet('hw.sn', value);}.bind(this),
-      imei: function imei(value) { return this.getOrSet('hw.imei', value);}.bind(this),
-      id: function id(value) { return this.getOrSet('hw.id', value);}.bind(this)
+      sn: function sn(value) { return this.getOrSet('hw.sn', value); }.bind(this),
+      imei: function imei(value) { return this.getOrSet('hw.imei', value); }.bind(this),
+      id: function id(value) { return this.getOrSet('hw.id', value); }.bind(this)
     };
     return hw;
   }
