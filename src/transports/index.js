@@ -25,7 +25,7 @@ class Transport {
     this._ioRequests = {};
     this._sockets = {};
   }
-  
+
   get _socket() {
     return _.get(this._sockets, '');
   }
@@ -129,10 +129,10 @@ class Transport {
       });
       return socket;
     })
-    .catch((error) => {
-      debug(`socketIO connection fails: ${error.message}`);
-      throw error;
-    });
+      .catch((error) => {
+        debug(`socketIO connection fails: ${error.message}`);
+        throw error;
+      });
   }
   /**
    * Disconnect SIO
@@ -144,7 +144,7 @@ class Transport {
     return Promise.all(pending);
   }
 
-  disconnectNamespace(namespace='') {
+  disconnectNamespace(namespace = '') {
     debug(`Disconnecting ns: ${namespace}`);
     const socket = _.get(this._sockets, namespace);
     return new Promise((resolve) => {
@@ -152,10 +152,10 @@ class Transport {
       socket.once('disconnect', resolve);
       socket.disconnect();
     })
-    .then(() => {
-      debug('SocketIO disconnected');
-      _.unset(this._sockets, namespace);
-    });
+      .then(() => {
+        debug('SocketIO disconnected');
+        _.unset(this._sockets, namespace);
+      });
   }
 
   /**
@@ -325,9 +325,10 @@ class Transport {
 
   /**
    * get socketIO instance
+   * @param {String}namespace namespace which socket to be get
    * @return {Promise<SocketIO-client>} resolves SocketIO-client object for namespace
    */
-  sio(namespace='') {
+  sio(namespace = '') {
     const socket = _.get(this._sockets, namespace);
     return socket ? Promise.resolve(socket) : Promise.reject(new Error('No socket open for this namespace'));
   }
