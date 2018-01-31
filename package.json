@@ -38,7 +38,7 @@
     "socket.io-client": "^2.0.3"
   },
   "devDependencies": {
-    "babel-minify": "^0.2.0",
+    "babel-minify": "^0.3.0",
     "babel-preset-minify": "^0.2.0",
     "bower": "^1.7.9",
     "browserify": "^15.0.0",
