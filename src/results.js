@@ -93,11 +93,31 @@ class Results extends Collection {
   constructor(transport) {
     super(transport, '/api/v0/results');
     this._notImplemented = notImplemented;
+    this._namespace = '/results';
   }
 
+  /**
+   * connects to results related sio namespace
+   * @returns {Promise} resolves when connected
+   */
   connect() {
-    return this._transport.connect('/results');
+    return this._transport.connect(this._namespace);
   }
+
+  /**
+   * Disconnect results related sio namespace
+   * @return {Promise} resolves when disconnected
+   */
+  disconnect() {
+    return this._transport.disconnectNamespace(this._namespace);
+  }
+
+  /**
+   * Listen results related events
+   * @param {String}event event to be listen. Supported events: 'new'
+   * @param {Function}callback callback which is called when event received
+   * @return {Promise} resolves when start listening
+   */
   on(event, callback) {
     if (event === 'new') {
       return this._transport.sio('/results')
