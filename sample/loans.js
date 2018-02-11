@@ -1,5 +1,6 @@
+const _ = require('lodash');
 const {
-  login, transport, print, logout
+  login, transport, logout
 } = require('./common');
 
 const {Users, Loans} = require('../src');
@@ -11,8 +12,10 @@ login()
       .loadItems().loadResources().loadLoaner()
       .exec()
       .then((items) => {
-      // _.each(items, item => console.log(item.toString()))
-        console.log(JSON.stringify(items[0].toJson(), null, 2));
+        _.each(items, item => console.log(item.toString()));
+        if (items.length>0) {
+          console.log(JSON.stringify(items[0].toJson(), null, 2));
+        }
       });
   })
   .then(() => Users.WHOAMI(transport)

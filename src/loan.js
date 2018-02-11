@@ -52,7 +52,7 @@ class Loan extends Document {
    * @param {object} resourceJson - plain json object
    */
   constructor(transport, resourceJson) {
-    super(transport, `/api/v0/loans/${resourceJson.id}`, resourceJson);
+    super(transport, '/api/v0/loans', resourceJson);
   }
 
   /**
