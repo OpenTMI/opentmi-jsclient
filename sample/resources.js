@@ -15,11 +15,15 @@ login()
       .then((resource) => {
         console.log(resource.toString());
         return resource
+          .type('dut')
           .name(`${resource.name()}abc`)
           .location.site('oulu')
           .location.country('finland')
+          .hw.sn('12')
+          .hw.firmware.version('12')
+          .hw.firmware.name('test')
           .save()
-          .then(data => console.log(data.toString()));
+          .then(data => console.log(data));
       });
   })
   .then(logout)

@@ -3,7 +3,12 @@ const invariant = require('invariant');
 
 // application modules
 const Testcase = require('./testcase');
-const {QueryBase, Collection, notImplemented} = require('./utils');
+const {
+  QueryBase,
+  Collection,
+  Document,
+  notImplemented
+} = require('./utils');
 
 /**
  * @class TestcasesQuery
@@ -52,7 +57,8 @@ class TestcasesQuery extends QueryBase {
       'functional',
       'destructive',
       'performance',
-      'reliability'];
+      'reliability'
+    ];
     invariant(ALLOWED_TYPES.indexOf(type) !== 0, 'not allowed type');
     return this.has({'other_info.type': type});
   }
@@ -82,6 +88,15 @@ class Testcases extends Collection {
    */
   update() {
     return this._notImplemented('Item update is not implemented');
+  }
+
+  /**
+   * Create new test case
+   * @return {Testcase} returns new test case without id
+   */
+  create() {
+    const NewTestcase = Document.IsNewDocument(Testcase);
+    return new NewTestcase(this._transport);
   }
 }
 

@@ -11,7 +11,7 @@ class Result extends Document {
    * @private
    */
   constructor(transport, resultJson) {
-    super(transport, `/api/v0/results/${resultJson._id}`, resultJson);
+    super(transport, '/api/v0/results', resultJson);
   }
 
   /**
@@ -24,10 +24,11 @@ class Result extends Document {
 
   /**
    * Get test case id
+   * @param {String}value set tc id
    * @return {string} test case id
    */
-  tcid() {
-    return this.get('tcid');
+  tcid(value) {
+    return this.getOrSet('tcid', value);
   }
 
   /**
@@ -41,10 +42,11 @@ class Result extends Document {
 
   /**
    * Get result verdict
+   * @param {String}value set verdict
    * @return {String} returns test verdict
    */
-  verdict() {
-    return this.get('exec.verdict');
+  verdict(value) {
+    return this.getOrSet('exec.verdict', value);
   }
 
   /**

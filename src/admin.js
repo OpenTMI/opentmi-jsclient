@@ -26,14 +26,14 @@ class Admin {
 
   /**
    * Update opentmi server which are connected through Transport
-   * @param {string} version - tag/commitId to be deployed
+   * @param {string} revision - tag/commitId to be deployed
    * @return {Promise} resolves when upgrade is ready
    */
-  upgrade(version) {
+  upgrade(revision) {
     invariant(this._transport.isLoggedIn, 'Transport should be connected');
     debug('request opentmi version');
     return this._transport
-      .post('/api/v0/version', {version})
+      .post('/api/v0/version', {revision})
       .then(response => response.data);
   }
 }
