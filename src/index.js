@@ -13,6 +13,8 @@ const Items = require('./items');
 const Item = require('./item');
 const Loans = require('./loans');
 const Loan = require('./loan');
+const Events = require('./events');
+const Event = require('./event');
 const utils = require('./utils');
 const Transport = require('./transports');
 
@@ -32,6 +34,8 @@ module.exports = {
   Item,
   Loans,
   Loan,
+  Events,
+  Event,
   utils,
   Transport
 };
