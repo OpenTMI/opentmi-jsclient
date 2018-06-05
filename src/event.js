@@ -38,6 +38,19 @@ class Event extends Document {
      if (value) invariant(Event.PRIORITIES.indexOf(value) >= 0, 'Not allowed priority');
      return this.getOrSet('priority.level', value);
   }
+
+  resource(obj) {
+    invariant(_.isString(obj.id), 'resource object should have id');
+    return this.getOrSet('ref.resource', obj.id);
+  }
+  result(obj) {
+    invariant(_.isString(obj.id), 'result object should have id');
+    return this.getOrSet('ref.result', obj.id);
+  }
+  testcase(obj) {
+    invariant(_.isString(obj.id), 'testcase object should have id');
+    return this.getOrSet('ref.testcase', obj.id);
+  }
   emergency() {
     return this.priority('emerg');
   }
@@ -74,8 +87,33 @@ class Event extends Document {
     // e.g. PID of the process
     return this.getOrSet('id', value);
   }
+  static get MSG_IDS() {
+     return ['ALLOCATED', 'RELEASED', 'ENTER_MAINTENANCE', 'EXIT_MAINTENANCE', 'CREATED', 'DELETED', 'FLASHED'];
+  }
   msgid(value) {
+    if (value) invariant(Event.MSG_IDS.indexOf(value) >= 0, 'Not allowed msgid');
     return this.getOrSet('msgid', value);
+  }
+  allocated() {
+    return this.msgid('ALLOCATED');
+  }
+  released() {
+    return this.msgid('RELEASED');
+  }
+  enterMaintenance() {
+    return this.msgid('ENTER_MAINTENANCE');
+  }
+  exitMaintenance() {
+    return this.msgid('EXIT_MAINTENANCE');
+  }
+  created() {
+    return this.msgid('CREATED');
+  }
+  deleted() {
+    return this.msgid('DELETED');
+  }
+  flashed() {
+    return this.msgid('FLASHED');
   }
   tag(value) {
     return this.getOrSet('tag', value);
