@@ -51,7 +51,7 @@
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-mocha": "^5.0.0",
     "eslint-plugin-mocha-only": "0.0.3",
-    "eslint-plugin-node": "^6.0.0",
+    "eslint-plugin-node": "^7.0.0",
     "eslint-plugin-promise": "^3.6.0",
     "istanbul": "^0.4.3",
     "jsdoc": "^3.5.5",
