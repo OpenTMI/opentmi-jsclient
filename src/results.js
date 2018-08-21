@@ -151,10 +151,13 @@ class Results extends Collection {
     return this._notImplemented('results update is not implemented');
   }
 
+  /**
+   * Create new Result
+   * @return {Result} returns new result
+   */
   create() {
     const NewResult = Document.IsNewDocument(Result);
-    const doc = new NewResult(this._transport);
-    return doc;
+    return new NewResult(this._transport);
   }
 }
 
