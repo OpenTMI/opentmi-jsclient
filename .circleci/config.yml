@@ -33,10 +33,13 @@ jobs:
           command: npm run build
       - run:
           name: test-node
-          command: npm run test-node
+          command: npm run coverage
           environment:
-            REPORTER: mocha-junit-reporter
+            REPORTER: mocha-circleci-reporter
             MOCHA_FILE: junit/test-results.xml
+      - run:
+          name: coveralls
+          command: cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
       - run:
           name: test-browser
           command: npm run test-browser
@@ -52,7 +55,7 @@ jobs:
       - store_artifacts:
           path: junit
       - store_artifacts:
-          path: doc
+          path: docs
           prefix: documentations
       - store_artifacts:
           path: coverage
