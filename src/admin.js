@@ -27,14 +27,31 @@ class Admin {
   /**
    * Update opentmi server which are connected through Transport
    * @param {string} revision - tag/commitId to be deployed
+   * @param {bool} reloadWorkers - reload workers (default) or not to reload
    * @return {Promise} resolves when upgrade is ready
    */
-  upgrade(revision) {
+  upgrade(revision, reloadWorkers = true) {
     invariant(this._transport.isLoggedIn, 'Transport should be connected');
-    debug('request opentmi version');
+    debug('request to upgrade opentmi revision');
     return this._transport
       .post('/api/v0/version', {revision})
-      .then(response => response.data);
+      .then(() => {
+        if (reloadWorkers) {
+          return this.reloadWorkers();
+        }
+        return Promise.resolve();
+      });
+  }
+
+  /**
+   * Reload backend workers - e.g. after upgrade is finished
+   * @return {Promise} Resolves when reload is ready
+   */
+  reloadWorkers() {
+    invariant(this._transport.isLoggedIn, 'Transport should be connected');
+    debug('request to reload backend workers');
+    return this._transport
+      .post('/api/v0/restart');
   }
 }
 
