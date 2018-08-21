@@ -1,7 +1,7 @@
 const assert = require('assert');
 const moxios = require('moxios');
 
-const {Transport, Event} = require('../../src');
+const {Transport, Event, Events} = require('../../src');
 
 describe('Event', function () {
   let transport;
@@ -24,12 +24,24 @@ describe('Event', function () {
     const res = new Event(transport, toBe);
     assert.deepEqual(res.toJson(), toBe);
   });
+  it('create event from events', function () {
+    const events = new Events(transport);
+    const res = events.create();
+    assert.equal(res.isNew, true);
+  });
   it('call setters', function () {
     const res = new Event(transport, {_id: '123'});
     assert.equal(res.isDirty(), false);
     res
       .alert()
       .facility('resource')
+      .allocated()
+      .released()
+      .enterMaintenance()
+      .exitMaintenance()
+      .created()
+      .deleted()
+      .flashed()
       .allocated();
     assert.equal(res.isDirty(), true);
     const toBe = {_id: '123', priority: {level: 'alert', facility: 'resource'}, msgid: 'ALLOCATED'};
