@@ -1,6 +1,5 @@
 // 3rd party modules
 const _ = require('lodash');
-const Promise = require('bluebird');
 const invariant = require('invariant');
 
 // application modules
@@ -15,7 +14,7 @@ class Event extends Document {
    * @param {Object}eventJson User data as plain json object
    */
   constructor(transport, eventJson) {
-    super(transport, `/api/v0/events`, eventJson);
+    super(transport, '/api/v0/events', eventJson);
   }
 
   /**
@@ -25,18 +24,20 @@ class Event extends Document {
   toString() {
     return `${this.priority()}.${this.facility()}: ${this.msg()}`;
   }
-
+  /**
+   * get PRIORITIES as array
+   */
   static get PRIORITIES() {
-    return ['emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'debug']
+    return ['emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'debug'];
   }
+  /**
+   * Get event priority or set it
+   * @param {String}value new name
+   * @return {Item|string} returns item name or Item
+   */
   priority(value) {
-    /**
-     * Get event priority or set it
-     * @param {String}value new name
-     * @return {Item|string} returns item name or Item
-     */
-     if (value) invariant(Event.PRIORITIES.indexOf(value) >= 0, 'Not allowed priority');
-     return this.getOrSet('priority.level', value);
+    if (value) invariant(Event.PRIORITIES.indexOf(value) >= 0, 'Not allowed priority');
+    return this.getOrSet('priority.level', value);
   }
 
   resource(obj) {
@@ -88,7 +89,7 @@ class Event extends Document {
     return this.getOrSet('id', value);
   }
   static get MSG_IDS() {
-     return ['ALLOCATED', 'RELEASED', 'ENTER_MAINTENANCE', 'EXIT_MAINTENANCE', 'CREATED', 'DELETED', 'FLASHED'];
+    return ['ALLOCATED', 'RELEASED', 'ENTER_MAINTENANCE', 'EXIT_MAINTENANCE', 'CREATED', 'DELETED', 'FLASHED'];
   }
   msgid(value) {
     if (value) invariant(Event.MSG_IDS.indexOf(value) >= 0, 'Not allowed msgid');

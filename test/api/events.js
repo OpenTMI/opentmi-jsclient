@@ -20,10 +20,9 @@ describe('Event', function () {
     moxios.uninstall();
   });
   it('constructing with valid json', function () {
-    const toBe = {_id: '123', priority: {level: 'alert', 'facility': 'resource'}, msgid: 'ALLOCATED'};
+    const toBe = {_id: '123', priority: {level: 'alert', facility: 'resource'}, msgid: 'ALLOCATED'};
     const res = new Event(transport, toBe);
     assert.deepEqual(res.toJson(), toBe);
-
   });
   it('call setters', function () {
     const res = new Event(transport, {_id: '123'});
@@ -33,7 +32,7 @@ describe('Event', function () {
       .facility('resource')
       .allocated();
     assert.equal(res.isDirty(), true);
-    const toBe = {_id: '123', priority: {level: 'alert', 'facility': 'resource'}, msgid: 'ALLOCATED'};
+    const toBe = {_id: '123', priority: {level: 'alert', facility: 'resource'}, msgid: 'ALLOCATED'};
     assert.deepEqual(res.toJson(), toBe);
   });
 });

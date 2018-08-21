@@ -5,7 +5,9 @@ const _ = require('lodash');
 
 // application modules
 const Event = require('./event');
-const {QueryBase, Document, Collection, notImplemented} = require('./utils');
+const {
+  QueryBase, Document, Collection, notImplemented
+} = require('./utils');
 
 /**
  * @class EventsQuery
@@ -13,17 +15,25 @@ const {QueryBase, Document, Collection, notImplemented} = require('./utils');
  */
 class EventsQuery extends QueryBase {
   /* Find events by _id
-   * @param {string} type
-   * @return {Query}
+   * @param {string} _id
+   * @return {Query} -
    */
   _id(_id) {
     invariant(_.isString(_id), 'id should be a string');
     return this.has({_id});
   }
+  /** Set/Get priority
+   * @param {string} value -
+   * @return {Query} -
+   */
   priority(value) {
     invariant(Event.PRIORITIES.indexOf(value) >= 0, 'Not allowed priority');
     return this.has({'priority.level': value});
   }
+  /** Set/Get facility
+   * @param {string} value -
+   * @return {Query} -
+   */
   facility(value) {
     invariant(Event.FACILITIES.indexOf(value) >= 0, 'Not allowed facility');
     return this.has({'priority.facility': value});
