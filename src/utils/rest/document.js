@@ -129,6 +129,22 @@ class Document extends Base {
     return this.set(key, value);
   }
   /**
+   * Overwrite document with new allowedValue
+   * @param {Object} values - new data
+   * @return {Document} document object
+   */
+  overwrite(values) {
+    if (_.isEqual(this._resource, values)) {
+      return this;
+    }
+    if (this.isNew) {
+      this._resource = values;
+    } else {
+      this._changes = values;
+    }
+    return this;
+  }
+  /**
    * getter for Document version
    * @return {number} returns document version number
    */

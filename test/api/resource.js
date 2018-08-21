@@ -1,7 +1,7 @@
 const assert = require('assert');
 const moxios = require('moxios');
 
-const {Transport, Resource} = require('../../src');
+const {Transport, Resource, Resources} = require('../../src');
 
 describe('Resource', function () {
   let transport;
@@ -14,6 +14,16 @@ describe('Resource', function () {
   afterEach(function () {
     // import and pass your custom axios instance to this method
     moxios.uninstall();
+  });
+  it('create new resource', function () {
+    const resourceJson = {_id: '123', name: 'X', __v: 0};
+    const resources = new Resources(transport);
+    const res = resources.create();
+    assert.equal(res.isNew, true);
+    res.overwrite(resourceJson);
+    assert.equal(res.name(), 'X');
+    assert.equal(res.id, '123');
+    assert.equal(res.isDirty(), true);
   });
   it('constructing with valid json', function () {
     const resourceJson = {_id: '123', name: 'X', __v: 0};
