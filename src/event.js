@@ -4,7 +4,6 @@ const invariant = require('invariant');
 
 // application modules
 const {Document} = require('./utils');
-const Resource = require('./resource');
 
 
 class Event extends Document {
@@ -26,6 +25,7 @@ class Event extends Document {
   }
   /**
    * get PRIORITIES as array
+   * @return {Array<string>} list of priorities
    */
   static get PRIORITIES() {
     return ['emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'debug'];
