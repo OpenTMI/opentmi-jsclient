@@ -3,6 +3,38 @@ const moxios = require('moxios');
 
 const {Transport, Event, Events} = require('../../src');
 
+describe('Events', function () {
+  let transport;
+  beforeEach(function () {
+    // import and pass your custom axios instance to this method
+    moxios.install();
+    transport = new Transport();
+    moxios.stubRequest('/api/v0/events', {
+      status: 200,
+      response: {}
+    });
+  });
+  afterEach(function () {
+    // import and pass your custom axios instance to this method
+    moxios.uninstall();
+  });
+  it('find', function () {
+    const events = new Events(transport);
+    return events.find()
+      ._id('abc')
+      .priority('err')
+      .facility('auth');
+  });
+  it('update', function () {
+    const events = new Events(transport);
+    return events.update()
+      .then(() => assert.equal(false, true))
+      .catch(() => {
+        // not implemented - that why rejects
+        assert.equal(true, true);
+      });
+  });
+});
 describe('Event', function () {
   let transport;
   beforeEach(function () {
