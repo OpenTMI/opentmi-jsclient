@@ -72,6 +72,7 @@ describe('Event', function () {
       .critical()
       .error()
       .warning()
+      .emergency()
       .notice()
       .info()
       .debug()
