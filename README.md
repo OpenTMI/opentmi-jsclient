@@ -13,7 +13,7 @@ Extendable for custom API's provided by opentmi addons.
 * [axios](https://github.com/axios/axios) (Promise based http client)
 
 ## Documentation
-[API documentation](https://opentmi.github.io/opentmi-jsclient/opentmi-jsclient/0.2.0/)
+[API documentation](https://opentmi.github.io/opentmi-jsclient/)
 
 
 ## Build
