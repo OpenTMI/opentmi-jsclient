@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: event.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: event.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// 3rd party modules
+const _ = require('lodash');
+const invariant = require('invariant');
+
+// application modules
+const {Document} = require('./utils');
+
+
+class Event extends Document {
+  /**
+   * Constructor for Resources model
+   * @param {Transport} transport - Transport object
+   * @param {Object}eventJson User data as plain json object
+   */
+  constructor(transport, eventJson) {
+    super(transport, '/api/v0/events', eventJson);
+  }
+
+  /**
+   * Get resource info as short string
+   * @return {string} user information as single line
+   */
+  toString() {
+    return `${this.priority()}.${this.facility()}: ${this.msg()}`;
+  }
+  /**
+   * get PRIORITIES as array
+   * @return {Array&lt;string>} list of priorities
+   */
+  static get PRIORITIES() {
+    return ['emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'debug'];
+  }
+  /**
+   * Get event priority or set it
+   * @param {String}value new name
+   * @return {Item|string} returns item name or Item
+   */
+  priority(value) {
+    if (value) invariant(Event.PRIORITIES.indexOf(value) >= 0, 'Not allowed priority');
+    return this.getOrSet('priority.level', value);
+  }
+
+  resource(obj) {
+    invariant(_.isString(obj.id), 'resource object should have id');
+    return this.getOrSet('ref.resource', obj.id);
+  }
+  result(obj) {
+    invariant(_.isString(obj.id), 'result object should have id');
+    return this.getOrSet('ref.result', obj.id);
+  }
+  testcase(obj) {
+    invariant(_.isString(obj.id), 'testcase object should have id');
+    return this.getOrSet('ref.testcase', obj.id);
+  }
+  emergency() {
+    return this.priority('emerg');
+  }
+  alert() {
+    return this.priority('alert');
+  }
+  critical() {
+    return this.priority('crit');
+  }
+  error() {
+    return this.priority('err');
+  }
+  warning() {
+    return this.priority('warning');
+  }
+  notice() {
+    return this.priority('notice');
+  }
+  info() {
+    return this.priority('info');
+  }
+  debug() {
+    return this.priority('debug');
+  }
+
+  static get FACILITIES() {
+    return ['auth', 'cron', 'daemon', 'mail', 'news', 'syslog', 'user', 'resource', 'testcase'];
+  }
+  facility(value) {
+    if (value) invariant(Event.FACILITIES.indexOf(value) >= 0, 'Not allowed facility');
+    return this.getOrSet('priority.facility', value);
+  }
+  id(value) {
+    // e.g. PID of the process
+    return this.getOrSet('id', value);
+  }
+  static get MSG_IDS() {
+    return ['ALLOCATED', 'RELEASED', 'ENTER_MAINTENANCE', 'EXIT_MAINTENANCE', 'CREATED', 'DELETED', 'FLASHED'];
+  }
+  msgid(value) {
+    if (value) invariant(Event.MSG_IDS.indexOf(value) >= 0, 'Not allowed msgid');
+    return this.getOrSet('msgid', value);
+  }
+  allocated() {
+    return this.msgid('ALLOCATED');
+  }
+  released() {
+    return this.msgid('RELEASED');
+  }
+  enterMaintenance() {
+    return this.msgid('ENTER_MAINTENANCE');
+  }
+  exitMaintenance() {
+    return this.msgid('EXIT_MAINTENANCE');
+  }
+  created() {
+    return this.msgid('CREATED');
+  }
+  deleted() {
+    return this.msgid('DELETED');
+  }
+  flashed() {
+    return this.msgid('FLASHED');
+  }
+  tag(value) {
+    return this.getOrSet('tag', value);
+  }
+  msg(value) {
+    return this.getOrSet('msg', value);
+  }
+}
+
+module.exports = Event;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Admin.html">Admin</a></li><li><a href="Authentication.html">Authentication</a></li><li><a href="Cluster.html">Cluster</a></li><li><a href="Document.html">Document</a></li><li><a href="Event.html">Event</a></li><li><a href="Events.html">Events</a></li><li><a href="EventsQuery.html">EventsQuery</a></li><li><a href="Group.html">Group</a></li><li><a href="IsNewDocument.html">IsNewDocument</a></li><li><a href="Item.html">Item</a></li><li><a href="Items.html">Items</a></li><li><a href="ItemsQuery.html">ItemsQuery</a></li><li><a href="Loan.html">Loan</a></li><li><a href="LoanItem.html">LoanItem</a></li><li><a href="Loans.html">Loans</a></li><li><a href="MongooseQueryClient.html">MongooseQueryClient</a></li><li><a href="QueryBase.html">QueryBase</a></li><li><a href="Resource.html">Resource</a></li><li><a href="Resources.html">Resources</a></li><li><a href="ResourcesQuery.html">ResourcesQuery</a></li><li><a href="Results.html">Results</a></li><li><a href="ResultsQuery.html">ResultsQuery</a></li><li><a href="Schemas.html">Schemas</a></li><li><a href="Testcases.html">Testcases</a></li><li><a href="TestcasesQuery.html">TestcasesQuery</a></li><li><a href="Transport.html">Transport</a></li><li><a href="User.html">User</a></li><li><a href="Users.html">Users</a></li><li><a href="UsersQuery.html">UsersQuery</a></li></ul><h3>Global</h3><ul><li><a href="global.html#beginningOfDay">beginningOfDay</a></li><li><a href="global.html#endOfDay">endOfDay</a></li><li><a href="global.html#notImplemented">notImplemented</a></li><li><a href="global.html#timeSince">timeSince</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Sep 30 2018 13:24:33 GMT+0300 (EEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
