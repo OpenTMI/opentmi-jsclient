@@ -40,7 +40,7 @@ const transport = new Transport('http://localhost:3000')
 const auth = new Authentication(transport);
 auth
   .login('user@mail.com', 'password')
-  .then(transport.connect.bind(transport))
+  .then(() => transport.connect())
   .then(() => {
       const collection = new Resources(transport);
       return collection.find()
@@ -64,7 +64,7 @@ const transport = new Transport('http://localhost:3000')
 const auth = new Authentication(transport);
 auth
   .login('user@mail.com', 'password')
-  .then(transport.connect.bind(transport))
+  .then(() => transport.connect())
 </script>
 ```
 
@@ -81,7 +81,7 @@ class CustomAPI {
     this._transport = transport;
   }
   some() {
-    debug('attempt to restart all workers');
+    debug('attempt to get something from custom addon api');
     return this._transport
       .get('/addon-api')
       .then(response => response.data);
