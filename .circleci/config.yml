@@ -1,10 +1,14 @@
 version: 2
+
+defaults: &defaults
+  working_directory: ~/repo
+  docker:
+    - image: circleci/node:6.11.4-browsers
+      environment:
+        CHROME_BIN: "/usr/bin/google-chrome"
 jobs:
-  build:
-    docker:
-      - image: circleci/node:6.11.4-browsers
-        environment:
-          CHROME_BIN: "/usr/bin/google-chrome"
+  test:
+    <<: *defaults
     steps:
       - checkout
       - restore_cache:
@@ -29,10 +33,13 @@ jobs:
           command: npm run build
       - run:
           name: test-node
-          command: npm run test-node
+          command: npm run coverage
           environment:
-            REPORTER: mocha-junit-reporter
+            REPORTER: mocha-circleci-reporter
             MOCHA_FILE: junit/test-results.xml
+      - run:
+          name: coveralls
+          command: cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
       - run:
           name: test-browser
           command: npm run test-browser
@@ -48,10 +55,38 @@ jobs:
       - store_artifacts:
           path: junit
       - store_artifacts:
-          path: doc
+          path: docs
           prefix: documentations
       - store_artifacts:
           path: coverage
           prefix: coverage
       - store_test_results:
           path: coverage/coverage.json
+deploy:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
+      - run:
+          name: Publish package
+          command: npm publish
+
+workflows:
+  version: 2
+  test-deploy:
+    jobs:
+      - test:
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /.*/
+      - deploy:
+          requires:
+            - test
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/

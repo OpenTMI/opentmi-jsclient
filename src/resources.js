@@ -5,7 +5,9 @@ const _ = require('lodash');
 
 // application modules
 const Resource = require('./resource');
-const {QueryBase, Collection, notImplemented} = require('./utils');
+const {
+  QueryBase, Collection, Document, notImplemented
+} = require('./utils');
 
 /**
  * @class ResourcesQuery
@@ -150,6 +152,15 @@ class Resources extends Collection {
    */
   update() {
     return this._notImplemented();
+  }
+
+  /**
+   * Create new Resource
+   * @return {Resource} returns new result
+   */
+  create() {
+    const NewResource = Document.IsNewDocument(Resource);
+    return new NewResource(this._transport);
   }
 }
 
