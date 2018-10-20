@@ -62,7 +62,7 @@ jobs:
           prefix: coverage
       - store_test_results:
           path: coverage/coverage.json
-deploy:
+  deploy:
     <<: *defaults
     steps:
       - attach_workspace:
