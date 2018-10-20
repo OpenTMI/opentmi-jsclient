@@ -60,7 +60,7 @@ class Authentication {
     invariant(_.isString(token), 'token should be string');
     invariant(_.isString(service), 'service should be string');
     return this._transport
-      .post(`/auth/${service}/token`, {token}, {})
+      .post(`/auth/${service}/token`, {access_token: token}, {}) // eslint-disable-line camelcase
       .then((response) => {
         invariant(response.data.token, 'there should be token');
         debug(`Login response: ${JSON.stringify(response.data)}`);
