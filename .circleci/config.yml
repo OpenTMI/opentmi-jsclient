@@ -1,68 +1,111 @@
 version: 2
 
+workflows:
+  version: 2
+  test-deploy:
+    jobs:
+      - test-node6:
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /.*/
+      - test-node8:
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /.*/
+      - test-node-latest:
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /.*/
+      - publish:
+          requires:
+            - test
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+
+
 defaults: &defaults
   working_directory: ~/repo
   docker:
     - image: circleci/node:6.11.4-browsers
       environment:
-        CHROME_BIN: "/usr/bin/google-chrome"
+       CHROME_BIN: "/usr/bin/google-chrome"
+  steps:
+    - checkout
+    - restore_cache:
+        key: dependency-cache-{{ checksum "package.json" }}
+    - run:
+        name: versions
+        command: |
+          node --version
+          npm --version
+    - run:
+        name: install-npm
+        command: npm install
+    - save_cache:
+        key: dependency-cache-{{ checksum "package.json" }}
+        paths:
+          - ./node_modules
+    - run:
+        name: clean
+        command: rm -f lib/opentmi-client.js lib/opentmi-client.min.js
+    - run:
+        name: build
+        command: npm run build
+    - run:
+        name: test-node
+        command: npm run coverage
+        environment:
+          REPORTER: mocha-circleci-reporter
+          MOCHA_FILE: junit/test-results.xml
+    - run:
+        name: coveralls
+        command: cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+    - run:
+        name: test-browser
+        command: npm run test-browser
+    - run:
+        name: lint
+        command: npm run lint
+        when: always
+    - run:
+        name: doc
+        command: npm run doc
+    - store_test_results:
+        path: junit
+    - store_artifacts:
+        path: junit
+    - store_artifacts:
+        path: docs
+        prefix: documentations
+    - store_artifacts:
+        path: coverage
+        prefix: coverage
+    - store_test_results:
+        path: coverage/coverage.json
 jobs:
-  test:
+  test-node6:
     <<: *defaults
-    steps:
-      - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: versions
-          command: |
-            node --version
-            npm --version
-      - run:
-          name: install-npm
-          command: npm install
-      - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - ./node_modules
-      - run:
-          name: clean
-          command: rm -f lib/opentmi-client.js lib/opentmi-client.min.js
-      - run:
-          name: build
-          command: npm run build
-      - run:
-          name: test-node
-          command: npm run coverage
-          environment:
-            REPORTER: mocha-circleci-reporter
-            MOCHA_FILE: junit/test-results.xml
-      - run:
-          name: coveralls
-          command: cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
-      - run:
-          name: test-browser
-          command: npm run test-browser
-      - run:
-          name: lint
-          command: npm run lint
-          when: always
-      - run:
-          name: doc
-          command: npm run doc
-      - store_test_results:
-          path: junit
-      - store_artifacts:
-          path: junit
-      - store_artifacts:
-          path: docs
-          prefix: documentations
-      - store_artifacts:
-          path: coverage
-          prefix: coverage
-      - store_test_results:
-          path: coverage/coverage.json
-  deploy:
+    docker:
+    - image: circleci/node:6.11.4-browsers
+      environment:
+       CHROME_BIN: "/usr/bin/google-chrome"
+  test-node8:
+    <<: *defaults
+    docker:
+    - image: circleci/node:8.11.1-browsers
+      environment:
+       CHROME_BIN: "/usr/bin/google-chrome"
+  test-node-latest:
+    <<: *defaults
+    docker:
+    - image: circleci/node:latest-browsers
+      environment:
+       CHROME_BIN: "/usr/bin/google-chrome"
+    
+  publish:
     <<: *defaults
     steps:
       - checkout
@@ -75,19 +118,3 @@ jobs:
           name: Publish package
           command: npm publish
 
-workflows:
-  version: 2
-  test-deploy:
-    jobs:
-      - test:
-          filters:  # required since `deploy` has tag filters AND requires `build`
-            tags:
-              only: /.*/
-      - deploy:
-          requires:
-            - test
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
