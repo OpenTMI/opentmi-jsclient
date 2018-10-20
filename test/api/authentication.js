@@ -53,8 +53,8 @@ describe('Authentication', function () {
       });
     });
   });
-  describe('login with 3rd party access token', function () {
 
+  describe('login with 3rd party access token', function () {
     it('success', function (done) {
       // Match against an exact URL value
       const token = 'mytoken';
