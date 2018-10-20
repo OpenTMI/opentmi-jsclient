@@ -45,7 +45,7 @@ defaults: &defaults
           npm --version
     - run:
         name: install-npm
-        command: npm i && npm i babel-helper-evaluate-path
+        command: npm install
     - save_cache:
         key: dependency-cache-{{ checksum "package.json" }}
         paths:
