@@ -30,10 +30,6 @@ workflows:
 
 defaults: &defaults
   working_directory: ~/repo
-  docker:
-    - image: circleci/node:6.11.4-browsers
-      environment:
-       CHROME_BIN: "/usr/bin/google-chrome"
   steps:
     - checkout
     - run: node --version > _tmp_file
@@ -46,7 +42,7 @@ defaults: &defaults
           npm --version
     - run:
         name: npm-install
-        command: npmv=$(echo $(npm -v) | head -c 1); if [ "$npmv" -lt "6" ]; then npm install; npm ci; fi
+        command: npm $NPM_CI_INSTALL
 
     - save_cache:
         key: dependency-cache-{{ checksum "_tmp_file" }}-{{ checksum "package-lock.json" }}
@@ -96,18 +92,21 @@ jobs:
     - image: circleci/node:6.11.4-browsers
       environment:
        CHROME_BIN: "/usr/bin/google-chrome"
+       NPM_CI_INSTALL: "install"
   test-node8:
     <<: *defaults
     docker:
     - image: circleci/node:8.11.1-browsers
       environment:
        CHROME_BIN: "/usr/bin/google-chrome"
+       NPM_CI_INSTALL: "install"
   test-node-latest:
     <<: *defaults
     docker:
     - image: circleci/node:latest-browsers
       environment:
        CHROME_BIN: "/usr/bin/google-chrome"
+       NPM_CI_INSTALL: "ci"
   publish:
     <<: *defaults
     steps:
