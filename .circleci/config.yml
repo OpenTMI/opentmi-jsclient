@@ -31,23 +31,23 @@ workflows:
 defaults: &defaults
   working_directory: ~/repo
   docker:
-    - image: circleci/node:6.11.4-browsers
-      environment:
-       CHROME_BIN: "/usr/bin/google-chrome"
+  - image: circleci/node:6.11.4
   steps:
     - checkout
+    - run: node --version > _tmp_file
     - restore_cache:
-        key: dependency-cache-{{ checksum "package.json" }}
+        key: dependency-cache-{{ checksum "_tmp_file" }}-{{ checksum "package-lock.json" }}
     - run:
         name: versions
         command: |
           node --version
           npm --version
     - run:
-        name: install-npm
-        command: npm install
+        name: npm-install
+        command: npm $NPM_CI_INSTALL
+
     - save_cache:
-        key: dependency-cache-{{ checksum "package.json" }}
+        key: dependency-cache-{{ checksum "_tmp_file" }}-{{ checksum "package-lock.json" }}
         paths:
           - ./node_modules
     - run:
@@ -91,27 +91,31 @@ jobs:
   test-node6:
     <<: *defaults
     docker:
-    - image: circleci/node:6.11.4-browsers
+    - image: circleci/node:6.14.4-browsers
       environment:
        CHROME_BIN: "/usr/bin/google-chrome"
+       NPM_CI_INSTALL: "install"
   test-node8:
     <<: *defaults
     docker:
-    - image: circleci/node:8.11.1-browsers
+    - image: circleci/node:8.12.0-browsers
       environment:
        CHROME_BIN: "/usr/bin/google-chrome"
+       NPM_CI_INSTALL: "ci"
   test-node-latest:
     <<: *defaults
     docker:
     - image: circleci/node:latest-browsers
       environment:
-       CHROME_BIN: "/usr/bin/google-chrome"  
+       CHROME_BIN: "/usr/bin/google-chrome"
+       NPM_CI_INSTALL: "ci"
   publish:
     <<: *defaults
     steps:
       - checkout
+      - run: node --version > _tmp_file
       - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: dependency-cache-{{ checksum "_tmp_file" }}-{{ checksum "package-lock.json" }}
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
