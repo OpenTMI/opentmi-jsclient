@@ -42,12 +42,12 @@ defaults: &defaults
     - run:
         name: versions
         command: |
-          npmv=$(echo $(npm -v) | head -c 1); if [ "$npmv" -lt "6" ]; then npm cache clean --force && sudo npm i -g npm@latest; else echo "Node.js Docker Team finally decided to include npm v6+ in latest image; you can remove this script now"; fi
           node --version
           npm --version
     - run:
-        name: install-npm
-        command: npm ci
+        name: npm-install
+        command: npmv=$(echo $(npm -v) | head -c 1); if [ "$npmv" -lt "6" ]; then npm install; npm ci; fi
+
     - save_cache:
         key: dependency-cache-{{ checksum "_tmp_file" }}-{{ checksum "package-lock.json" }}
         paths:
