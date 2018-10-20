@@ -53,6 +53,7 @@ describe('Authentication', function () {
       });
     });
   });
+
   describe('login with 3rd party access token', function () {
 
     it('success', function (done) {

@@ -31,7 +31,7 @@ class Authentication {
    * @return {Promise.<string>} - return a token
    */
   login(email, password) {
-    invariant(!_.isString(this._transport.token), 'is logged out alread!');
+    invariant(!_.isString(this._transport.token), 'is logged out already!');
     invariant(_.isString(email), 'email should be string');
     invariant(_.isString(password), 'password should be string');
     return this._transport
@@ -55,8 +55,8 @@ class Authentication {
    * @param {string}service token service, default: Github
    * @return {Promise<string>} - return token
    */
-  loginWithToken(token, service='github') {
-    invariant(!_.isString(this._transport.token), 'is logged out alread!');
+  loginWithToken(token, service = 'github') {
+    invariant(!_.isString(this._transport.token), 'is logged out already!');
     invariant(_.isString(token), 'token should be string');
     invariant(_.isString(service), 'service should be string');
     return this._transport
