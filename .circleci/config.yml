@@ -30,6 +30,8 @@ workflows:
 
 defaults: &defaults
   working_directory: ~/repo
+  docker:
+  - image: circleci/node:6.11.4
   steps:
     - checkout
     - run: node --version > _tmp_file
