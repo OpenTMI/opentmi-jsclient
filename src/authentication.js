@@ -28,18 +28,39 @@ class Authentication {
    * Login to OpenTMI
    * @param {string}email user email address
    * @param {string}password user password
-   * @param {string}token - optional token
    * @return {Promise.<string>} - return a token
    */
-  login(email, password, token = undefined) {
+  login(email, password) {
     invariant(!_.isString(this._transport.token), 'is logged out alread!');
-    if (_.isString(token)) {
-      this._transport.token = token;
-    }
     invariant(_.isString(email), 'email should be string');
     invariant(_.isString(password), 'password should be string');
     return this._transport
       .post('/auth/login', {email, password}, {})
+      .then((response) => {
+        invariant(response.data.token, 'there should be token');
+        debug(`Login response: ${JSON.stringify(response.data)}`);
+        this._transport.token = response.data.token;
+        return this._transport.token;
+      })
+      .catch((error) => {
+        debug(`Login error: ${error.message}`);
+        this._transport.token = undefined;
+        throw error;
+      });
+  }
+
+  /**
+   * Login using access token
+   * @param {string}token service authentication token
+   * @param {string}service token service, default: Github
+   * @return {Promise<string>} - return token
+   */
+  loginWithToken(token, service='github') {
+    invariant(!_.isString(this._transport.token), 'is logged out alread!');
+    invariant(_.isString(token), 'token should be string');
+    invariant(_.isString(service), 'service should be string');
+    return this._transport
+      .post(`/auth/${service}/token`, {token}, {})
       .then((response) => {
         invariant(response.data.token, 'there should be token');
         debug(`Login response: ${JSON.stringify(response.data)}`);
