@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: authentication.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: authentication.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const invariant = require('invariant');
+const _ = require('lodash');
+const Promise = require('bluebird');
+
+// application modules
+const {debug} = require('./utils');
+
+/**
+ * Authentication controller
+ * This class provides login API's like login, logout
+ * @example
+ * const auth = new Authentication(transport);
+ * auth
+ *   .login('user@email.com', 'password')
+ *   .whoami().then(user => console.log(user.toString()));
+ */
+class Authentication {
+  /**
+   * Constructor for Authentication controller
+   * @param {Transport} transport - transport layer for communication
+   */
+  constructor(transport) {
+    invariant(transport, 'transport is mandatory');
+    this._transport = transport;
+  }
+
+  /**
+   * Login to OpenTMI
+   * @param {string}email user email address
+   * @param {string}password user password
+   * @return {Promise.&lt;string>} - return a token
+   */
+  login(email, password) {
+    invariant(!_.isString(this._transport.token), 'is logged out already!');
+    invariant(_.isString(email), 'email should be string');
+    invariant(_.isString(password), 'password should be string');
+    return this._transport
+      .post('/auth/login', {email, password}, {})
+      .then((response) => {
+        invariant(response.data.token, 'there should be token');
+        debug(`Login response: ${JSON.stringify(response.data)}`);
+        this._transport.token = response.data.token;
+        return this._transport.token;
+      })
+      .catch((error) => {
+        debug(`Login error: ${error.message}`);
+        this._transport.token = undefined;
+        throw error;
+      });
+  }
+
+  /**
+   * Login using access token
+   * @param {string}token service authentication token
+   * @param {string}service token service, default: Github
+   * @return {Promise&lt;string>} - return token
+   */
+  loginWithToken(token, service = 'github') {
+    invariant(!_.isString(this._transport.token), 'is logged out already!');
+    invariant(_.isString(token), 'token should be string');
+    invariant(_.isString(service), 'service should be string');
+    return this._transport
+      .post(`/auth/${service}/token`, {access_token: token}, {}) // eslint-disable-line camelcase
+      .then((response) => {
+        invariant(response.data.token, 'there should be token');
+        debug(`Login response: ${JSON.stringify(response.data)}`);
+        this._transport.token = response.data.token;
+        return this._transport.token;
+      })
+      .catch((error) => {
+        debug(`Login error: ${error.message}`);
+        this._transport.token = undefined;
+        throw error;
+      });
+  }
+
+  /**
+   * Find out who I'm.
+   * Returns plain object with some details about yourself.
+   * @return {Promise&lt;object>} resolves user details
+   */
+  whoami() {
+    return this._transport.emit('whoami');
+  }
+
+  /**
+   * Logout
+   * @return {Promise} resolves when logged out succesfully
+   */
+  logout() {
+    invariant(_.isString(this._transport.token), 'you are not logged in, jwt token missing');
+    this._transport._token = undefined;
+    return this._transport.isConnected ?
+      this._transport.disconnect() : Promise.resolve();
+  }
+}
+
+module.exports = Authentication;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Admin.html">Admin</a></li><li><a href="Authentication.html">Authentication</a></li><li><a href="Cluster.html">Cluster</a></li><li><a href="Document.html">Document</a></li><li><a href="Event.html">Event</a></li><li><a href="Events.html">Events</a></li><li><a href="EventsQuery.html">EventsQuery</a></li><li><a href="Group.html">Group</a></li><li><a href="IsNewDocument.html">IsNewDocument</a></li><li><a href="Item.html">Item</a></li><li><a href="Items.html">Items</a></li><li><a href="ItemsQuery.html">ItemsQuery</a></li><li><a href="Loan.html">Loan</a></li><li><a href="LoanItem.html">LoanItem</a></li><li><a href="Loans.html">Loans</a></li><li><a href="MongooseQueryClient.html">MongooseQueryClient</a></li><li><a href="QueryBase.html">QueryBase</a></li><li><a href="Resource.html">Resource</a></li><li><a href="Resources.html">Resources</a></li><li><a href="ResourcesQuery.html">ResourcesQuery</a></li><li><a href="Results.html">Results</a></li><li><a href="ResultsQuery.html">ResultsQuery</a></li><li><a href="Schemas.html">Schemas</a></li><li><a href="Testcases.html">Testcases</a></li><li><a href="TestcasesQuery.html">TestcasesQuery</a></li><li><a href="Transport.html">Transport</a></li><li><a href="User.html">User</a></li><li><a href="Users.html">Users</a></li><li><a href="UsersQuery.html">UsersQuery</a></li></ul><h3>Global</h3><ul><li><a href="global.html#beginningOfDay">beginningOfDay</a></li><li><a href="global.html#endOfDay">endOfDay</a></li><li><a href="global.html#notImplemented">notImplemented</a></li><li><a href="global.html#timeSince">timeSince</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Oct 20 2018 08:17:35 GMT+0300 (EEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
