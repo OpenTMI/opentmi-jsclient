@@ -1,5 +1,6 @@
 <h1 align="center">opentmi-jsclient</h1>
 
+[![npm version](https://img.shields.io/npm/v/opentmi-jsclient.svg)](https://www.npmjs.com/package/opentmi-jsclient)
 [![CircleCI](https://circleci.com/gh/OpenTMI/opentmi-jsclient/tree/master.svg?style=svg)](https://circleci.com/gh/OpenTMI/opentmi-jsclient/tree/master)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![License badge](https://img.shields.io/badge/license-MIT-blue.svg)](https://img.shields.io)
@@ -15,6 +16,11 @@ Extendable for custom API's provided by opentmi addons.
 ## Documentation
 [API documentation](https://opentmi.github.io/opentmi-jsclient/)
 
+## Installation
+
+```
+npm i opentmi-jsclient
+```
 
 ## Build
 
