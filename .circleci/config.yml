@@ -98,10 +98,10 @@ jobs:
   test-node8:
     <<: *defaults
     docker:
-    - image: circleci/node:8.11.1-browsers
+    - image: circleci/node:8.12.0-browsers
       environment:
        CHROME_BIN: "/usr/bin/google-chrome"
-       NPM_CI_INSTALL: "install"
+       NPM_CI_INSTALL: "ci"
   test-node-latest:
     <<: *defaults
     docker:
