@@ -89,7 +89,7 @@ class ResourcesQuery extends QueryBase {
    */
   status(status) {
     const STATUS = ['active', 'maintenance', 'broken'];
-    invariant(_.contains(STATUS, status), `Status is not one of ${STATUS.join(', ')}`);
+    invariant(STATUS.indexOf(status)>=0, `Status '${status}' is not one of "${STATUS.join('", "')}"`);
     return this.has({status: {value: status}});
   }
 
@@ -123,7 +123,7 @@ class ResourcesQuery extends QueryBase {
    */
   haveTags(tags) {
     invariant(_.isArray(tags), 'tags should be an array');
-    return _.reduce(tags, this.haveTag.bind(this), this);
+    return _.reduce(tags, (acc, tag) => this.haveTag(tag), this);
   }
 }
 

@@ -25,6 +25,14 @@ describe('Resource', function () {
     assert.equal(res.id, '123');
     assert.equal(res.isDirty(), true);
   });
+  it('resources update', function () {
+    const resources = new Resources(transport);
+    return resources.update()
+      .reflect()
+      .then((promise) => {
+        assert.equal(promise.isRejected(), true);
+      });
+  });
   it('constructing with valid json', function () {
     const resourceJson = {_id: '123', name: 'X', __v: 0};
     const res = new Resource(transport, resourceJson);
@@ -53,5 +61,34 @@ describe('Resource', function () {
     assert.equal(res.name('Y').location.site('oulu').name(), 'Y');
     assert.deepEqual(res.getChanges(), {name: 'Y', location: {site: 'oulu'}});
     assert.equal(res.isDirty(), true);
+  });
+  describe('find', function () {
+    it('base', function () {
+      moxios.stubRequest('/api/v0/resources?', {
+        status: 200,
+        response: []
+      });
+      const resources = new Resources(transport);
+      transport.token = 'abc';
+      const find = resources.find();
+      return find.exec();
+    });
+    it('apis', function () {
+      const resources = new Resources(transport);
+      const find = resources.find()
+        .name('abc')
+        .id('asd')
+        .hwid('abc')
+        .hwsn('abc')
+        .hasParent()
+        .hasParent('abc')
+        .hasNoParent()
+        .type('x')
+        .status('active')
+        .usageType('manual')
+        .haveTag('test')
+        .haveTags(['a', 'b']);
+      assert.ok(find);
+    });
   });
 });
