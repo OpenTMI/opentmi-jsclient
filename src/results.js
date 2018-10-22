@@ -1,4 +1,5 @@
 // 3rd party modules
+const Promise = require('bluebird');
 const _ = require('lodash');
 const invariant = require('invariant');
 
@@ -128,7 +129,21 @@ class Results extends Collection {
           });
         });
     }
-    return Promise.reject(new Error('Event is not supported'));
+    return Promise.reject(new Error(`Event ${event} is not supported`));
+  }
+
+  /**
+   * remove event listener
+   * @param {String}event event name
+   * @param {Function}callback callback to be removed
+   * @return {Promise} resolves when ready
+   */
+  removeListener(event, callback) {
+    if (event === 'new') {
+      return this._transport.sio('/results')
+        .then(socket => socket.removeListener(event, callback));
+    }
+    return Promise.reject(new Error(`Event ${event} is not supported`))
   }
 
   /**
