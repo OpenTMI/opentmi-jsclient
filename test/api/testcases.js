@@ -28,8 +28,23 @@ describe('Testcase', function () {
   });
   describe('find', function () {
     it('base', function () {
+      moxios.stubRequest('/api/v0/testcases?', {
+        status: 200,
+        response: []
+      });
       const tests = new Testcases(transport);
+      transport.token = 'abc';
       const find = tests.find();
+      return find.exec();
+    });
+    it('apis', function () {
+      const tests = new Testcases(transport);
+      const find = tests.find()
+        .isArchived()
+        .tcid('abc')
+        .isSkip()
+        .type('alpha');
+      assert.ok(find);
     });
   });
 });

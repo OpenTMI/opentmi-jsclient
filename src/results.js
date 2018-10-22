@@ -143,7 +143,7 @@ class Results extends Collection {
       return this._transport.sio('/results')
         .then(socket => socket.removeListener(event, callback));
     }
-    return Promise.reject(new Error(`Event ${event} is not supported`))
+    return Promise.reject(new Error(`Event ${event} is not supported`));
   }
 
   /**

@@ -69,13 +69,8 @@ describe('Results', function () {
       const find = results.find()
       return find.exec();
     });
-    it('base', function () {
-      moxios.stubRequest('/api/v0/results?', {
-        status: 200,
-        response: []
-      });
+    it('apis', function () {
       const results = new Results(transport);
-      transport.token = 'abc';
       const find = results.find()
         .isFailed()
         .isPass()
@@ -85,6 +80,7 @@ describe('Results', function () {
         .verdict('pass')
         .isHW()
         .containsNote('hello');
+      assert.ok(find);
     });
   });
 });
