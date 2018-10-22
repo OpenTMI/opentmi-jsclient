@@ -66,7 +66,7 @@ describe('Results', function () {
       });
       const results = new Results(transport);
       transport.token = 'abc';
-      const find = results.find()
+      const find = results.find();
       return find.exec();
     });
     it('apis', function () {
