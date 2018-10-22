@@ -89,7 +89,7 @@ class ResourcesQuery extends QueryBase {
    */
   status(status) {
     const STATUS = ['active', 'maintenance', 'broken'];
-    invariant(STATUS.indexOf(status)>=0, `Status '${status}' is not one of "${STATUS.join('", "')}"`);
+    invariant(STATUS.indexOf(status) >= 0, `Status '${status}' is not one of "${STATUS.join('", "')}"`);
     return this.has({status: {value: status}});
   }
 
