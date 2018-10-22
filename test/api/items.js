@@ -39,6 +39,14 @@ describe('Items', function () {
       assert.equal(item.reference('link').reference(), 'link');
       assert.equal(`${item}`, 'cat: cm - aa');
     });
+    it('getImage', function () {
+      moxios.stubRequest('/api/v0/items/123/image', {
+        status: 200,
+        response: ''
+      });
+      const item = new Item(transport, {_id: '123'});
+      return item.getImage();
+    });
   });
   describe('find', function () {
     it('base', function () {
@@ -56,6 +64,7 @@ describe('Items', function () {
       const find = item.find()
         .name('me')
         .available(1)
+        .available()
         .categoryAccessories()
         .categoryBoards()
         .categoryComponents()

@@ -30,15 +30,12 @@ class ItemsQuery extends QueryBase {
 
   /**
    * Find items by availability
-   * @param {Number|undefined}available - should be at least 1 or available amount of resources
+   * @param {Number}available - should be at least 1 or available amount of resources
    * @return {ItemsQuery} returns this
    */
-  available(available = undefined) {
+  available(available = 1) {
     invariant(_.isInteger(available), 'available should be a number');
-    if (_.isUndefined(available)) {
-      return this.has({available: {$gt: 0}});
-    }
-    return this.has({available});
+    return this.has({available: {$gte: available}});
   }
 
 
