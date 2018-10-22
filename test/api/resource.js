@@ -95,8 +95,10 @@ describe('Resource', () => {
           geo: 123
         },
         hw: {
-          sn: '12', imei: '34',
-          id: '123', firmware: {name: 'q', version: '1'}
+          sn: '12',
+          imei: '34',
+          id: '123',
+          firmware: {name: 'q', version: '1'}
         }
       };
       assert.deepEqual(res.getChanges(), changes);

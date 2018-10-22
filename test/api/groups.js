@@ -17,7 +17,7 @@ describe('Groups', function () {
   });
   it('is ok', function () {
     const group = new Groups(transport);
-     assert.ok(group);
+    assert.ok(group);
   });
   it('update is not implemented', function () {
     const group = new Groups(transport);
