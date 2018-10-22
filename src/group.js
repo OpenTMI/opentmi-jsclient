@@ -37,7 +37,7 @@ class Group extends Document {
    * @return {boolean} returns true if group is admin
    */
   isAdmin() {
-    return this.name() === 'admin';
+    return this.name === 'admin';
   }
 }
 

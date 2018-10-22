@@ -42,7 +42,7 @@ class Item extends Document {
    * @return {Item|String} return manufactorer or Item
    */
   manufacturer(name) {
-    return this.getOrSet({'manufacturer.name': name});
+    return this.getOrSet('manufacturer.name', name);
   }
 
   /**

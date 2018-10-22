@@ -16,7 +16,7 @@ class ItemsQuery extends QueryBase {
    * @return {ItemsQuery} returns this
    */
   barcode(barcode) {
-    return this.has({barcode: barcode});
+    return this.has({barcode});
   }
 
   /**
@@ -25,7 +25,7 @@ class ItemsQuery extends QueryBase {
    * @return {ItemsQuery} returns this
    */
   name(name) {
-    return this.has({name: name});
+    return this.has({name});
   }
 
   /**
@@ -34,11 +34,11 @@ class ItemsQuery extends QueryBase {
    * @return {ItemsQuery} returns this
    */
   available(available = undefined) {
-    invariant(_.isNumber(available), 'available should be a number');
+    invariant(_.isInteger(available), 'available should be a number');
     if (_.isUndefined(available)) {
       return this.has({available: {$gt: 0}});
     }
-    return this.has({available: available});
+    return this.has({available});
   }
 
 
@@ -55,8 +55,8 @@ class ItemsQuery extends QueryBase {
       'board',
       'component',
       'other'];
-    invariant(_.indexOf(allowedValues, category) !== -1, 'should be allowed category');
-    return this.has({category: category});
+    invariant(allowedValues.indexOf(category) >= -1, 'should be allowed category');
+    return this.has({category});
   }
   /**
    * Find only accessories
