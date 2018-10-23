@@ -1,7 +1,7 @@
 const assert = require('assert');
 const moxios = require('moxios');
 
-const {Transport, Testcases} = require('../../src');
+const {Transport, Testcases, Testcase} = require('../../src');
 
 describe('Testcase', function () {
   let transport;
@@ -26,9 +26,31 @@ describe('Testcase', function () {
     assert.equal(test.id, '123');
     assert.equal(test.isDirty(), true);
   });
+  describe('Testcase', function () {
+    it('ok', function () {
+      const test = new Testcase(transport);
+      assert.ok(test);
+    });
+    it('ok', function () {
+      const resultJson = {
+        _id: '123',
+        cre: {time: new Date()},
+        tcid: 'id',
+        history: {durationAvg: 1},
+        other_info: {purpose: 'test'}
+      };
+      const test = new Testcase(transport, resultJson);
+      assert.equal(test.tcid(), 'id');
+      assert.equal(test.name, 'id');
+      assert.equal(test.testcaseId, 'id');
+      assert.equal(test.duration(), 1);
+      assert.equal(test.purpose(), 'test');
+      assert.ok(`${test}`);
+    });
+  });
   describe('find', function () {
     it('base', function () {
-      moxios.stubRequest('/api/v0/testcases?', {
+      moxios.stubRequest('/api/v0/testcases', {
         status: 200,
         response: []
       });

@@ -10,6 +10,7 @@
         "mocha/no-exclusive-tests": "error",
         "chai-expect/missing-assertion": "error",
         "chai-expect/terminating-properties": "error",
+        "no-unused-expressions": "off",
         "prefer-arrow-callback": "off",
         "func-names": "off"
     }

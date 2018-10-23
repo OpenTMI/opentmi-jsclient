@@ -27,7 +27,7 @@ class Document extends Base {
       debug('Construct existing document');
       // old object
       invariant(_.isPlainObject(originalJson), 'originalJson should be plain object');
-      invariant(_.isString(originalJson[this._idProperty]), 'originalJson should have id');
+      invariant(_.isString(originalJson[this._idProperty]), `originalJson should have ${this._idProperty}`);
       this._original = _.cloneDeep(originalJson);
       this._resource = _.cloneDeep(originalJson);
     }
