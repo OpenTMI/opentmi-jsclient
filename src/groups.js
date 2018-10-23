@@ -37,7 +37,7 @@ class Groups extends Collection {
 
   /**
    * Find groups
-   * @return {GroupsQuery} Returns query object to find Users
+   * @return {GroupsQuery} Returns query object to find Groups
    */
   find() {
     return new GroupsQuery(this, Group);
