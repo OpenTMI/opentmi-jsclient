@@ -26,7 +26,7 @@ describe('Admin', function () {
     return admin.version()
       .then((data) => {
         expect(data).to.be.deep.equal({version});
-      })
+      });
   });
   describe('upgrade', function () {
     it('without reload', function () {

@@ -19,7 +19,7 @@ describe('Cluster', function () {
     const cluster = new Cluster(transport);
     expect(cluster).to.be.ok;
   });
-  it('data require refresh', function () {
+  it('data require refresh', function () {
     moxios.stubRequest('/api/v0/clusters', {
       status: 200,
       response: 'ok'
@@ -29,9 +29,9 @@ describe('Cluster', function () {
     return cluster.refresh()
       .then(() => {
         expect(cluster.data).to.be.equal('ok');
-      })
+      });
   });
-  it('refresh rejection', function () {
+  it('refresh rejection', function () {
     moxios.stubRequest('/api/v0/clusters', {
       status: 500,
       response: 'oh'
@@ -43,7 +43,7 @@ describe('Cluster', function () {
         expect(promise.isRejected()).to.be.true;
       });
   });
-  it('status and workers api', function () {
+  it('status and workers api', function () {
     moxios.stubRequest('/api/v0/clusters', {
       status: 200,
       response: {workers: ['a'], a: 1}
@@ -53,7 +53,7 @@ describe('Cluster', function () {
       .then(() => {
         expect(cluster.status).to.be.deep.equal({a: 1});
         expect(cluster.workers).to.be.deep.equal(['a']);
-      })
+      });
   });
   it('restartWorkers', function () {
     moxios.stubRequest('/api/v0/restart', {

@@ -90,8 +90,8 @@ class Loan extends Document {
 
   /**
    * Add loan item
-   * @param {object}item
-   * @return {Loan}
+   * @param {object}item item as json
+   * @return {Loan} returns Loan
    */
   addItem(item) {
     invariant(_.isPlainObject(item), 'item should be json');

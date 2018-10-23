@@ -30,7 +30,7 @@ describe('Loans', function () {
   it('get user loan', function () {
     moxios.stubRequest('/api/v0/loans?q=%7B%22loaner%22%3A%22123%22%7D', {
       status: 200,
-      response: [{_id:'1'}]
+      response: [{_id: '1'}]
     });
     transport.token = 'abc';
     const user = {id: '123'};
