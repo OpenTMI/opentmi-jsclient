@@ -1,8 +1,12 @@
+// 3rd party modules
+const _ = require('lodash');
+const invariant = require('invariant');
 // application modules
 const {Document} = require('./utils');
-const _ = require('lodash');
 const Item = require('./item');
 const Resource = require('./resource');
+
+
 /** @class LoanItem */
 class LoanItem {
   /**
@@ -83,6 +87,19 @@ class Loan extends Document {
    * @return {Loan|String} returns notes or Loan
    */
   notes(value) { return this.getOrSet('notes', value); }
+
+  /**
+   * Add loan item
+   * @param {object}item
+   * @return {Loan}
+   */
+  addItem(item) {
+    invariant(_.isPlainObject(item), 'item should be json');
+    const items = this.get('loan_items', []);
+    items.push(item);
+    this.set('loan_items', items);
+    return this;
+  }
 
   /**
    * Resolve loan items

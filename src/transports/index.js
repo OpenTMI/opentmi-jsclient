@@ -233,7 +233,7 @@ class Transport {
     });
     debug(`Requesting: ${JSON.stringify(config)}`);
     const startTime = new Date();
-    return this.Rest
+    return Promise.try(() => this.Rest
       .request(config)
       .then((data) => {
         const duration = timeSince(startTime);
@@ -277,7 +277,7 @@ class Transport {
           debug('Error', error.message);
         }
         throw error;
-      });
+      }));
     // source.cancel('Operation canceled by the user
   }
 
