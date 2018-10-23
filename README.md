@@ -2,6 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/opentmi-jsclient.svg)](https://www.npmjs.com/package/opentmi-jsclient)
 [![CircleCI](https://circleci.com/gh/OpenTMI/opentmi-jsclient/tree/master.svg?style=svg)](https://circleci.com/gh/OpenTMI/opentmi-jsclient/tree/master)
+[![Coverage Status](https://coveralls.io/repos/github/OpenTMI/opentmi-jsclient/badge.svg?branch=master)](https://coveralls.io/github/OpenTMI/opentmi-jsclient?branch=master)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![License badge](https://img.shields.io/badge/license-MIT-blue.svg)](https://img.shields.io)
 [![Greenkeeper badge](https://badges.greenkeeper.io/OpenTMI/opentmi-jsclient.svg)](https://greenkeeper.io/)
