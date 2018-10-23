@@ -2,6 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/opentmi-jsclient.svg)](https://www.npmjs.com/package/opentmi-jsclient)
 [![CircleCI](https://circleci.com/gh/OpenTMI/opentmi-jsclient/tree/master.svg?style=svg)](https://circleci.com/gh/OpenTMI/opentmi-jsclient/tree/master)
+[![Coverage Status](https://coveralls.io/repos/github/OpenTMI/opentmi-jsclient/badge.svg?branch=master)](https://coveralls.io/github/OpenTMI/opentmi-jsclient?branch=master)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![License badge](https://img.shields.io/badge/license-MIT-blue.svg)](https://img.shields.io)
 [![Greenkeeper badge](https://badges.greenkeeper.io/OpenTMI/opentmi-jsclient.svg)](https://greenkeeper.io/)
@@ -9,9 +10,9 @@
 Promise based [OpenTMI](https://github.com/opentmi/opentmi) javascript client for node.js and browser.
 Extendable for custom API's provided by opentmi addons.
 
+
 ## Requirements
-* [socket.io-client](https://github.com/socketio/socket.io-client) (for socketio connections)
-* [axios](https://github.com/axios/axios) (Promise based http client)
+* [opentmi backend](https://github.com/opentmi/opentmi)
 
 ## Documentation
 [API documentation](https://opentmi.github.io/opentmi-jsclient/)
@@ -35,7 +36,6 @@ build api documentations
 ```
 
 **Note:** all available commands are visible when you run: `npm run`
-
 
 ## Sample
 
