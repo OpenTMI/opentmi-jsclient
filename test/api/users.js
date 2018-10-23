@@ -42,7 +42,7 @@ describe('Users', function () {
   });
   describe('find', function () {
     it('base', function () {
-      moxios.stubRequest('/api/v0/users?', {
+      moxios.stubRequest('/api/v0/users', {
         status: 200,
         response: []
       });

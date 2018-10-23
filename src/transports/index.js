@@ -284,11 +284,11 @@ class Transport {
   /**
    * HTTP Get request to server
    * @param {string} url - path to the server
-   * @param {object} data - json data
+   * @param {object} params - query parameters
    * @return {Promise} - resolves response object
    */
-  get(url, data = undefined) {
-    return this.request({url, data});
+  get(url, params) {
+    return this.request({url, params});
   }
 
   /**
@@ -308,10 +308,13 @@ class Transport {
    * Put request
    * @param {String}url uri for request
    * @param {object}data json object to be send
+   * @param {object}params json object for query parameters
    * @return {Promise} - resolves response object
    */
-  put(url, data) {
-    return this.request({url, method: 'put', data});
+  put(url, data, params) {
+    return this.request({
+      url, method: 'put', params, data
+    });
   }
 
   /**

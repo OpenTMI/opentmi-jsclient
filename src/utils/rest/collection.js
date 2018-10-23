@@ -2,6 +2,8 @@
 const Promise = require('bluebird');
 const invariant = require('invariant');
 const _ = require('lodash');
+const querystring = require('querystring');
+
 
 // application modules
 const Base = require('./base');
@@ -9,10 +11,11 @@ const Base = require('./base');
 
 class Collection extends Base {
   _find(query) {
-    invariant(_.isString(query), 'query hould be a string');
+    invariant(_.isString(query), 'query should be a string');
     return Promise.try(() => {
       invariant(this._transport.isLoggedIn, 'Transport should be logged in');
-      return this._transport.get(`${this.colPath()}?${query}`)
+      const params = _.clone(querystring.parse(query));
+      return this._transport.get(this.colPath(), params)
         .then(resp => resp.data);
     });
   }
@@ -20,7 +23,7 @@ class Collection extends Base {
   _update(data, query = undefined) {
     return this._transport.put({
       path: this._path,
-      query: query ? query.toString() : undefined,
+      params: query ? _.clone(querystring.parse(query.toString())) : undefined,
       data
     });
   }

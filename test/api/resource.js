@@ -107,7 +107,7 @@ describe('Resource', function () {
   });
   describe('find', function () {
     it('base', function () {
-      moxios.stubRequest('/api/v0/resources?', {
+      moxios.stubRequest('/api/v0/resources', {
         status: 200,
         response: []
       });

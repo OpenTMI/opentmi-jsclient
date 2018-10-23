@@ -85,7 +85,7 @@ describe('Results', function () {
   });
   describe('find', function () {
     it('base', function () {
-      moxios.stubRequest('/api/v0/results?', {
+      moxios.stubRequest('/api/v0/results', {
         status: 200,
         response: []
       });

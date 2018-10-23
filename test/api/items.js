@@ -50,7 +50,7 @@ describe('Items', function () {
   });
   describe('find', function () {
     it('base', function () {
-      moxios.stubRequest('/api/v0/items?', {
+      moxios.stubRequest('/api/v0/items', {
         status: 200,
         response: []
       });

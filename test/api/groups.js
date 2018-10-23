@@ -36,7 +36,7 @@ describe('Groups', function () {
   });
   describe('find', function () {
     it('base', function () {
-      moxios.stubRequest('/api/v0/groups?', {
+      moxios.stubRequest('/api/v0/groups', {
         status: 200,
         response: []
       });
