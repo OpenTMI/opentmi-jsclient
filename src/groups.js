@@ -8,11 +8,11 @@ const Group = require('./group');
 const {QueryBase, Collection, notImplemented} = require('./utils');
 
 /**
- * @class UsersQuery
+ * @class GroupsQuery
  * @extends QueryBase
  */
 class GroupsQuery extends QueryBase {
-  /* Find users by name
+  /* Find group by name
    * @param {string} name
    * @return {Query}
    */
@@ -27,7 +27,7 @@ class GroupsQuery extends QueryBase {
  */
 class Groups extends Collection {
   /**
-   * Constructor for Resources model
+   * Constructor for Groups model
    * @param {Transport} transport - transport object
    */
   constructor(transport) {
@@ -36,8 +36,8 @@ class Groups extends Collection {
   }
 
   /**
-   * Find Users
-   * @return {UsersQuery} Returns query object to find Users
+   * Find groups
+   * @return {GroupsQuery} Returns query object to find Users
    */
   find() {
     return new GroupsQuery(this, Group);
