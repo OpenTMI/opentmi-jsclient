@@ -33,7 +33,7 @@ class MongooseQueryClient {
     invariant(_.isString(str), 'str should be string');
     this._query = querystring.parse(str);
     if (_.has(this._query, 'q')) {
-      this._query.q = JSON.parse(_.get(this._query, 'q'));
+      this._query.q = JSON.parse(this._query.q);
     }
     return this;
   }

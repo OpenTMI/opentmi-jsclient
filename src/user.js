@@ -1,6 +1,7 @@
 // 3rd party modules
 const _ = require('lodash');
 const Promise = require('bluebird');
+const invariant = require('invariant');
 
 // application modules
 const {Document} = require('./utils');
@@ -15,6 +16,8 @@ class User extends Document {
    * @param {Object}userJson User data as plain json object
    */
   constructor(transport, userJson) {
+    invariant(_.isPlainObject(userJson), 'userJson should be an object');
+    invariant(_.isString(userJson._id), '_id should be an string');
     super(transport, `/api/v0/users/${userJson._id}`, userJson);
   }
 
@@ -79,10 +82,11 @@ class User extends Document {
 
   /**
    * Check if user belong to admin group
-   * @return {Promise.<boolean>} not implemented
+   * @return {Promise.<boolean>} resolves when ready
    */
   isAdmin() {
-    return this._isNotImplemented('is admin is not implemented');
+    return this.groups()
+      .then(groups => !!_.find(groups, g => g.isAdmin()));
   }
 
   /**

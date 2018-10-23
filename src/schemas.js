@@ -1,5 +1,6 @@
 const invariant = require('invariant');
 const Promise = require('bluebird');
+const _ = require('lodash');
 
 
 /**
@@ -42,7 +43,7 @@ class Schemas {
    */
   getAllSchemas() {
     return this.collections()
-      .then(colls => Promise.each(colls, this.schema.bind(this)));
+      .then(colls => Promise.all(_.map(colls, this.schema.bind(this))));
   }
 }
 

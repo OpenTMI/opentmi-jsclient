@@ -17,6 +17,12 @@ describe('Query', function () {
   it('is empty by default', function () {
     assert.equal(q.toString(), '');
   });
+  it('from string', function () {
+    q.fromString('t=count&f=name&q={"name":"abc"}');
+    assert.equal(q.type, 'count');
+    assert.equal(q._query.f, 'name');
+    assert.deepEqual(q.query, {name: 'abc'});
+  });
 
   describe('works with query type', function () {
     it('find', function () {

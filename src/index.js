@@ -2,6 +2,9 @@ const Authentication = require('./authentication');
 const Schemas = require('./schemas');
 const Admin = require('./admin');
 const Users = require('./users');
+const User = require('./user');
+const Groups = require('./groups');
+const Group = require('./group');
 const Cluster = require('./cluster');
 const Resources = require('./resources');
 const Resource = require('./resource');
@@ -23,6 +26,9 @@ module.exports = {
   Schemas,
   Admin,
   Users,
+  User,
+  Group,
+  Groups,
   Cluster,
   Resources,
   Resource,
