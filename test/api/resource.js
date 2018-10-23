@@ -3,19 +3,19 @@ const moxios = require('moxios');
 
 const {Transport, Resource, Resources} = require('../../src');
 
-describe('Resource', () => {
+describe('Resource', function () {
   let transport;
-  beforeEach(() => {
+  beforeEach(function () {
     // import and pass your custom axios instance to this method
     moxios.install();
     transport = new Transport();
   });
 
-  afterEach(() => {
+  afterEach(function () {
     // import and pass your custom axios instance to this method
     moxios.uninstall();
   });
-  it('create new resource', () => {
+  it('create new resource', function () {
     const resourceJson = {_id: '123', name: 'X', __v: 0};
     const resources = new Resources(transport);
     const res = resources.create();
@@ -25,7 +25,7 @@ describe('Resource', () => {
     assert.equal(res.id, '123');
     assert.equal(res.isDirty(), true);
   });
-  it('resources update', () => {
+  it('resources update', function () {
     const resources = new Resources(transport);
     return resources.update()
       .reflect()
@@ -33,7 +33,7 @@ describe('Resource', () => {
         assert.equal(promise.isRejected(), true);
       });
   });
-  it('constructing with valid json', () => {
+  it('constructing with valid json', function () {
     const resourceJson = {_id: '123', name: 'X', __v: 0};
     const res = new Resource(transport, resourceJson);
     assert.equal(res.name(), 'X');
@@ -44,26 +44,26 @@ describe('Resource', () => {
     assert.deepEqual(res.getChanges(), {});
     assert.deepEqual(res.version, 0);
   });
-  it('constructing with invalid json', () => {
+  it('constructing with invalid json', function () {
     const resourceJson = 'invalid';
     assert.throws(() => new Resource(transport, resourceJson), Error);
   });
-  describe('modify', () => {
-    it('isDirty if change happen', () => {
+  describe('modify', function () {
+    it('isDirty if change happen', function () {
       const resourceJson = {_id: '123', name: 'X', __v: 0};
       const res = new Resource(transport, resourceJson);
       res.name('Y');
       assert.deepEqual(res.getChanges(), {name: 'Y'});
       assert.equal(res.isDirty(), true);
     });
-    it('possible to change multiple', () => {
+    it('possible to change multiple', function () {
       const resourceJson = {_id: '123', name: 'X', __v: 0};
       const res = new Resource(transport, resourceJson);
       assert.equal(res.name('Y').location.site('oulu').name(), 'Y');
       assert.deepEqual(res.getChanges(), {name: 'Y', location: {site: 'oulu'}});
       assert.equal(res.isDirty(), true);
     });
-    it('apis', () => {
+    it('apis', function () {
       const resourceJson = {_id: '123', name: 'X', __v: 0};
       const res = new Resource(transport, resourceJson);
       res.name('Y')
@@ -105,8 +105,8 @@ describe('Resource', () => {
       assert.equal(res.isDirty(), true);
     });
   });
-  describe('find', () => {
-    it('base', () => {
+  describe('find', function () {
+    it('base', function () {
       moxios.stubRequest('/api/v0/resources?', {
         status: 200,
         response: []
@@ -116,7 +116,7 @@ describe('Resource', () => {
       const find = resources.find();
       return find.exec();
     });
-    it('apis', () => {
+    it('apis', function () {
       const resources = new Resources(transport);
       const find = resources.find()
         .name('abc')
