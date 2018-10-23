@@ -28,7 +28,7 @@ describe('Loans', function () {
       });
   });
   it('get user loan', function () {
-    moxios.stubRequest(/api\/v0\/loans\?.*/, {
+    moxios.stubRequest('/api/v0/loans?q=%7B%22loaner%22:%22123%22%7D', {
       status: 200,
       response: [{_id: '1'}]
     });
@@ -56,11 +56,11 @@ describe('Loans', function () {
       const loanItems = loan.loanItems();
       const item0 = loanItems[0];
       transport.token = '123';
-      moxios.stubRequest(/\/api\/v0\/resources\?.*/, {
+      moxios.stubRequest('/api/v0/resources?q=%7B%22_id%22:%22rid%22%7D', {
         status: 200,
         response: [{_id: 'rid'}]
       });
-      moxios.stubRequest(/\/api\/v0\/items\?.*/, {
+      moxios.stubRequest('/api/v0/items?q=%7B%22_id%22:%22itemId%22%7D', {
         status: 200,
         response: [{_id: 'itemId'}]
       });
