@@ -1,7 +1,7 @@
 const assert = require('assert');
 const moxios = require('moxios');
 
-const {Transport, Results} = require('../../src');
+const {Transport, Results, Result} = require('../../src');
 
 describe('Results', function () {
   let transport;
@@ -57,6 +57,31 @@ describe('Results', function () {
       .then((promise) => {
         assert.equal(promise.isRejected(), true);
       });
+  });
+  describe('Result', function () {
+    it('ok', function () {
+      const result = new Result(transport);
+      assert.ok(result);
+    });
+    it('ok', function () {
+      const resultJson = {
+        _id: '123',
+        cre: {time: new Date()},
+        tcid: 'id',
+        exec: {
+          verdict: 'pass',
+          duration: 123
+        }
+      };
+      const result = new Result(transport, resultJson);
+      assert.equal(result.duration(), 123);
+      assert.equal(result.tcid(), 'id');
+      assert.equal(result.name, 'id');
+      assert.equal(result.testcaseId, 'id');
+      assert.equal(result.verdict(), 'pass');
+      assert.equal(result.time().toString(), resultJson.cre.time.toString());
+      assert.ok(`${result}`);
+    });
   });
   describe('find', function () {
     it('base', function () {

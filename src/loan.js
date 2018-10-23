@@ -3,29 +3,31 @@ const _ = require('lodash');
 const invariant = require('invariant');
 // application modules
 const {Document} = require('./utils');
-const Item = require('./item');
-const Resource = require('./resource');
+const Items = require('./items');
+const Resources = require('./resources');
 
 
 /** @class LoanItem */
 class LoanItem {
   /**
    * LoanItem constructor
-   * @param {Object}item plain object
+   * @param {Transport}transport transport layer
+   * @param {object}data json object
    */
-  constructor(item) {
-    this._item = item;
+  constructor(transport, data = {}) {
+    this._data = data;
+    this._transport = transport;
   }
   /**
    * get item as plain json
    * @return {Object} returns loanitem as plain json
    */
-  toJson() { return _.cloneDeep(this._item); }
+  toJson() { return _.cloneDeep(this._data); }
   /**
    * returns loan item as single line
    * @returns {String} loan item details as single line
    */
-  toString() { return this._item._id; }
+  toString() { return this._data.item; }
   /**
    * Get return date
    * @return {Date|undefined} Date when loan is returned, otherwise undefined.
@@ -37,15 +39,33 @@ class LoanItem {
    * get Item
    * @return {Item} returns Item
    */
-  get item() {
-    return new Item(this._item);
+  getItem() {
+    const items = new Items(this._transport);
+    return items.find().id(this._data.item).exec().then(list => list[0]);
+  }
+
+  /**
+   * Set item
+   * @param {Item}item item to add loan iten
+   */
+  set item(item) {
+    this._data.item = item.id;
   }
   /**
    * get resource
-   * @return {Resource} returns Resource
+   * @return {Promise<Resource>} resolves Resource
    */
-  get resource() {
-    return new Resource(this._item.resource);
+  getResource() {
+    const rs = new Resources(this._transport);
+    return rs.find().id(this._data.resource).exec().then(list => list[0]);
+  }
+
+  /**
+   * Set resource to loan item
+   * @param {Resource}resource unique loan resource
+   */
+  set resource(resource) {
+    this._data.resource = resource.id;
   }
 }
 
@@ -90,13 +110,13 @@ class Loan extends Document {
 
   /**
    * Add loan item
-   * @param {object}item item as json
-   * @return {Loan} returns Loan
+   * @param {Item} item object
+   * @return {LoanItem} returns Loan
    */
   addItem(item) {
-    invariant(_.isPlainObject(item), 'item should be json');
+    invariant(_.isObject(item), 'item should be object');
     const items = this.get('loan_items', []);
-    items.push(item);
+    items.push(item.toJson());
     this.set('loan_items', items);
     return this;
   }
@@ -106,7 +126,16 @@ class Loan extends Document {
    * @return {LoanItem} returns LoanItems
    */
   loanItems() {
-    return _.map(this.get('loan_items', []), item => new LoanItem(item));
+    const items = this.get('loan_items', []);
+    return _.map(items, item => new LoanItem(this._transport, item));
+  }
+
+  /**
+   * create new LoanItem class
+   * @return {LoanItem} get LoanItem constructor
+   */
+  newLoanItem() {
+    return new LoanItem(this._transport);
   }
 }
 

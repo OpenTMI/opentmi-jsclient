@@ -49,6 +49,26 @@ describe('Loans', function () {
       expect(loan.loaner('aa').loaner()).to.be.equal('aa');
       expect(loan.notes('jes').notes()).to.be.equal('jes');
       expect(`${loan}`).to.be.equal('aa');
+      const loanItem = loan.newLoanItem();
+      loanItem.item = {id: 'itemId', _id: 'itemId'};
+      loanItem.resource = {id: 'rid', _id: 'rid'};
+      loan.addItem(loanItem);
+      const loanItems = loan.loanItems();
+      const item0 = loanItems[0];
+      transport.token = '123';
+      moxios.stubRequest('/api/v0/resources?q=%7B%22_id%22%3A%22rid%22%7D', {
+        status: 200,
+        response: [{_id: 'rid'}]
+      });
+      moxios.stubRequest('/api/v0/items?q=%7B%22_id%22%3A%22itemId%22%7D', {
+        status: 200,
+        response: [{_id: 'itemId'}]
+      });
+      return Promise.all([item0.getItem(), item0.getResource()])
+        .then(([item, resource]) => {
+          expect(resource.id).to.be.equal('rid');
+          expect(item.id).to.be.equal('itemId');
+        });
     });
   });
   describe('find', function () {

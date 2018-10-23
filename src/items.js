@@ -10,6 +10,15 @@ const {QueryBase, Collection, notImplemented} = require('./utils');
  * @class ItemsQuery
  */
 class ItemsQuery extends QueryBase {
+  /* Find Items by id
+   * @param {string} id
+   * @return {MongooseQueryClient} returns this
+   */
+  id(id) {
+    invariant(_.isString(id), 'id should be a string');
+    return this.has({_id: id});
+  }
+
   /**
    * Find items by barcode
    * @param {String}barcode barcore to be find
@@ -37,7 +46,6 @@ class ItemsQuery extends QueryBase {
     invariant(_.isInteger(available), 'available should be a number');
     return this.has({available: {$gte: available}});
   }
-
 
   /**
    * Find items by category
