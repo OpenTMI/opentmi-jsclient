@@ -10,9 +10,9 @@
 Promise based [OpenTMI](https://github.com/opentmi/opentmi) javascript client for node.js and browser.
 Extendable for custom API's provided by opentmi addons.
 
+
 ## Requirements
-* [socket.io-client](https://github.com/socketio/socket.io-client) (for socketio connections)
-* [axios](https://github.com/axios/axios) (Promise based http client)
+* [opentmi backend](https://github.com/opentmi/opentmi)
 
 ## Documentation
 [API documentation](https://opentmi.github.io/opentmi-jsclient/)
@@ -36,7 +36,6 @@ build api documentations
 ```
 
 **Note:** all available commands are visible when you run: `npm run`
-
 
 ## Sample
 
