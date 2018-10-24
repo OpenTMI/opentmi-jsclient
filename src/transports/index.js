@@ -91,7 +91,7 @@ class Transport {
       const options = {
         query: `token=${this.token}`
       };
-      if (namespace.length>0 && !namespace.startsWith('/')) {
+      if (namespace.length > 0 && !namespace.startsWith('/')) {
         reject(new Error('namespace should start with /'));
         return;
       }

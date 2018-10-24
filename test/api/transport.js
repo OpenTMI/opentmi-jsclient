@@ -14,7 +14,7 @@ class IOClientMock {
     this.on = sinon.stub();
   }
   static IO(...args) {
-    return new IOClientMock(...args)
+    return new IOClientMock(...args);
   }
 }
 
@@ -125,7 +125,7 @@ describe('Transport', function () {
         return transport.connect('invalid')
           .reflect()
           .then((promise) => {
-            expect(promise.isRejected()).to.be.true
+            expect(promise.isRejected()).to.be.true;
             expect(transport.isConnected).to.be.false;
           });
       });
@@ -146,9 +146,7 @@ describe('Transport', function () {
           .then(() => transport.sio())
           .then((io) => {
             const calls = io.on.getCalls();
-            const getCb = (event) => {
-              return _.find(calls, c => c.args[0] === event).args[1]
-            };
+            const getCb = event => _.find(calls, c => c.args[0] === event).args[1];
             getCb('error')('error');
             getCb('reconnect')();
             getCb('reconnect_attempt')();
@@ -168,8 +166,8 @@ describe('Transport', function () {
         transport.token = '123';
         return transport.connect()
           .reflect()
-          .then((promise) => expect(promise.isRejected()).true);
-      })
-    })
+          .then(promise => expect(promise.isRejected()).true);
+      });
+    });
   });
 });
