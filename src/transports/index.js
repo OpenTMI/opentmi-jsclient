@@ -16,7 +16,7 @@ class Transport {
    * @param {Axios}Rest axios(default) -kind of object which provide REST API
    * @param {SocketIO}IO   socket.io-client(default) -kind of object which provide event based communication
    */
-  constructor(host = '', Rest = axios, IO = SocketIO) {
+  constructor(host = '', {Rest = axios, IO = SocketIO} = {}) {
     this.Rest = Rest;
     this.IO = IO;
     this._token = undefined;
@@ -81,7 +81,7 @@ class Transport {
 
   /**
    * Connect socketIO
-   * @param {string} namespace - optional namespace
+   * @param {string} namespace - optional namespace, should start with /
    * @return {Promise} resolves IO connection
    */
   connect(namespace = '') {
@@ -91,6 +91,10 @@ class Transport {
       const options = {
         query: `token=${this.token}`
       };
+      if (namespace.length > 0 && !namespace.startsWith('/')) {
+        reject(new Error('namespace should start with /'));
+        return;
+      }
       const sioUrl = `${this._url()}${namespace}`;
       debug(`socketIO url: ${sioUrl}, options: ${JSON.stringify(options)}`);
       const socket = this.IO(sioUrl, options);
@@ -121,7 +125,7 @@ class Transport {
         debug(error);
       });
       socket.on('exit', () => {
-        debug('Server is attemt to exit...');
+        debug('Server is attempt to exit...');
       });
       socket.on('pong', (latency) => {
         this._latency = latency;
@@ -146,12 +150,12 @@ class Transport {
 
   disconnectNamespace(namespace = '') {
     debug(`Disconnecting ns: ${namespace}`);
-    const socket = _.get(this._sockets, namespace);
-    return new Promise((resolve) => {
-      invariant(socket, 'socket is not open');
-      socket.once('disconnect', resolve);
-      socket.disconnect();
-    })
+    return this.sio(namespace)
+      .then(socket => new Promise((resolve) => {
+        invariant(socket, 'socket is not open');
+        socket.once('disconnect', resolve);
+        socket.disconnect();
+      }))
       .then(() => {
         debug('SocketIO disconnected');
         _.unset(this._sockets, namespace);
