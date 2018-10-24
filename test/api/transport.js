@@ -17,10 +17,10 @@ class IOClientMock {
       this._getOnceCb('disconnect')();
     });
   }
-  _getOnCb(event){
+  _getOnCb(event) {
     return _.find(this.on.getCalls(), c => c.args[0] === event).args[1];
   }
-  _getOnceCb(event){
+  _getOnceCb(event) {
     return _.find(this.once.getCalls(), c => c.args[0] === event).args[1];
   }
   static IO(...args) {
@@ -185,7 +185,7 @@ describe('Transport', function () {
           .then(() => transport.disconnect())
           .then(() => transport.sio())
           .reflect()
-          .then((promise) => expect(promise.isRejected()).to.be.true);
+          .then(promise => expect(promise.isRejected()).to.be.true);
       });
     });
   });

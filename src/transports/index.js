@@ -151,11 +151,11 @@ class Transport {
   disconnectNamespace(namespace = '') {
     debug(`Disconnecting ns: ${namespace}`);
     return this.sio(namespace)
-      .then((socket) => new Promise((resolve) => {
-      invariant(socket, 'socket is not open');
-      socket.once('disconnect', resolve);
-      socket.disconnect();
-    }))
+      .then(socket => new Promise((resolve) => {
+        invariant(socket, 'socket is not open');
+        socket.once('disconnect', resolve);
+        socket.disconnect();
+      }))
       .then(() => {
         debug('SocketIO disconnected');
         _.unset(this._sockets, namespace);
