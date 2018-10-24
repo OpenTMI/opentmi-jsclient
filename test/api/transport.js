@@ -12,6 +12,16 @@ class IOClientMock {
     this.once = sinon.stub();
     this.once.withArgs('connect').callsFake((event, cb) => cb());
     this.on = sinon.stub();
+    this.disconnect = sinon.stub();
+    this.disconnect.callsFake(() => {
+      this._getOnceCb('disconnect')();
+    });
+  }
+  _getOnCb(event){
+    return _.find(this.on.getCalls(), c => c.args[0] === event).args[1];
+  }
+  _getOnceCb(event){
+    return _.find(this.once.getCalls(), c => c.args[0] === event).args[1];
   }
   static IO(...args) {
     return new IOClientMock(...args);
@@ -145,8 +155,7 @@ describe('Transport', function () {
         return transport.connect()
           .then(() => transport.sio())
           .then((io) => {
-            const calls = io.on.getCalls();
-            const getCb = event => _.find(calls, c => c.args[0] === event).args[1];
+            const getCb = event => io._getOnCb(event);
             getCb('error')('error');
             getCb('reconnect')();
             getCb('reconnect_attempt')();
@@ -167,6 +176,16 @@ describe('Transport', function () {
         return transport.connect()
           .reflect()
           .then(promise => expect(promise.isRejected()).true);
+      });
+      it('disconnect', function () {
+        const transport = new Transport('localhost', {IO: IOClientMock.IO});
+        transport.token = '123';
+        return transport.connect()
+          .then(() => expect(transport.sio()).to.be.ok)
+          .then(() => transport.disconnect())
+          .then(() => transport.sio())
+          .reflect()
+          .then((promise) => expect(promise.isRejected()).to.be.true);
       });
     });
   });
