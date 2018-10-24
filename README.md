@@ -62,7 +62,7 @@ auth
 ```
 
 ### Browser
-```
+```javascript
 <script src="dist/opentmi-client.js"></script>
 <script>
 const {Authentication, Transport} = opentmiClient;
@@ -81,7 +81,7 @@ auth
 
 It is easy to create support for custom API's. See example below:
 
-```
+```javascript
 class CustomAPI {
   constructor(transport) {
     this._transport = transport;
