@@ -32,10 +32,10 @@
   "dependencies": {
     "axios": "^0.18.0",
     "bluebird": "^3.5.2",
-    "debug": "^4.0.1",
+    "debug": "^4.1.0",
     "invariant": "^2.2.4",
     "lodash": "^4.17.11",
-    "socket.io-client": "^2.1.1"
+    "socket.io-client": "^2.2.0"
   },
   "devDependencies": {
     "babel-helper-evaluate-path": "^0.5.0",
@@ -62,6 +62,6 @@
     "mocha-headless-chrome": "^2.0.0",
     "moxios": "^0.4.0",
     "sinon": "^6.3.4",
-    "socket.io": "^2.1.1"
+    "socket.io": "^2.2.0"
   }
 }
