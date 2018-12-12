@@ -84,6 +84,13 @@ class Event extends Document {
     if (value) invariant(Event.FACILITIES.indexOf(value) >= 0, 'Not allowed facility');
     return this.getOrSet('priority.facility', value);
   }
+  duration(value) {
+    if (value) invariant(_.isNumber(value), 'value should be an number');
+    return this.getOrSet('duration', value);
+  }
+  spare(value) {
+    return this.getOrSet('spare', value);
+  }
   id(value) {
     // e.g. PID of the process
     return this.getOrSet('id', value);

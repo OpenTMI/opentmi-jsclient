@@ -77,6 +77,8 @@ describe('Event', function () {
       .info()
       .debug()
       .alert()
+      .duration(2)
+      .spare(1)
       .facility('resource')
       .id('abc')
       .allocated()
@@ -94,6 +96,8 @@ describe('Event', function () {
       _id: '123',
       tag: 'test',
       id: 'abc',
+      duration: 2,
+      spare: 1,
       msg: 'hohhoi',
       priority: {level: 'alert', facility: 'resource'},
       msgid: 'ALLOCATED'
