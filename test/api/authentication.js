@@ -52,6 +52,32 @@ describe('Authentication', function () {
         done();
       });
     });
+    it('token expired', function () {
+      // Match against an exact URL value
+      const token = '123';
+      moxios.stubRequest('/auth/login', {
+        status: 200,
+        response: {token}
+      });
+      moxios.stubRequest('/test', {
+        status: 401,
+        response: 'error'
+      });
+
+      const transport = new Transport();
+      const auth = new Authentication(transport);
+
+      const _hasTokenExpired = sinon.stub(transport, '_hasTokenExpired');
+      _hasTokenExpired.onFirstCall().returns(true);
+      _hasTokenExpired.onSecondCall().returns(false);
+
+      return auth.login('email', 'password')
+        .then(() => transport.get('/test').reflect())
+        .then((promise) => {
+          assert.equal(promise.isRejected(), true);
+          assert.equal(transport.token, token);
+        });
+    });
   });
 
   describe('login with 3rd party access token', function () {

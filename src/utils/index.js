@@ -3,6 +3,7 @@ const QueryBase = require('./rest/queryBase');
 const Collection = require('./rest/collection');
 const Document = require('./rest/document');
 const retryUpdate = require('./retry');
+const Lock = require('./Lock');
 const {
   notImplemented, timeSince, beginningOfDay, endOfDay
 } = require('./utils');
@@ -18,5 +19,6 @@ module.exports = {
   beginningOfDay,
   endOfDay,
   notImplemented,
-  objectMerge
+  objectMerge,
+  Lock
 };
