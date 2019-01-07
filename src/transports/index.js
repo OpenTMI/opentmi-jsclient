@@ -31,7 +31,7 @@ class Transport {
 
   /**
    * Set refreshToken function
-   * @param {Function<Promise>}func Promise function that refresh token
+   * @param {Function}func Promise function that refresh token
    */
   set refreshToken(func) {
     invariant(_.isFunction(func) || _.isUndefined(func), 'func should be function or undefined');

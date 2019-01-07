@@ -46,7 +46,7 @@ class Lock {
 
   /**
    * Run promise with lock. Parallel promises will be postponed until previous is fulfilled.
-   * @param {Function<Promise>}then Promise function to be call
+   * @param {Function}then Promise function to be call
    * @return {Promise} resolves/rejects argument given "then"
    */
   withLock(then) {
