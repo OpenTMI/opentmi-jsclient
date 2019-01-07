@@ -4,7 +4,9 @@ const sinon = require('sinon');
 const querystring = require('querystring');
 
 const Query = require('../../src/utils/rest/mongooseQueryClient');
-const {retryUpdate, objectMerge, notImplemented, Lock} = require('../../src/utils');
+const {
+  retryUpdate, objectMerge, notImplemented, Lock
+} = require('../../src/utils');
 
 const toUrl = querystring.stringify;
 
