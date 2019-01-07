@@ -186,12 +186,11 @@ describe('utils', function () {
 describe('Lock', function () {
   it('resolves', function () {
     const locker = new Lock();
-    const lock = locker.obtainLock();
-    const pending = Promise.using(lock, () => Promise.resolve(1));
-    return pending.then((value) => {
-      assert.equal(value, 1);
-      assert.equal(locker.isResolved(), true);
-    });
+    return locker.withLock(() => Promise.resolve(1))
+      .then((value) => {
+        assert.equal(value, 1);
+        assert.equal(locker.isResolved(), true);
+      });
   });
   it('waits', function () {
     const locker = new Lock();

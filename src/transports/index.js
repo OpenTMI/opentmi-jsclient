@@ -39,10 +39,9 @@ class Transport {
   }
   _refreshToken() {
     if (!_.isFunction(this._refreshTokenFunc)) {
-      return Promise.reject('Refresh token function is missing');
+      return Promise.reject(new Error('Refresh token function is missing'));
     }
-    const lock = this._refreshTokenLock.obtainLock();
-    return Promise.using(lock, () => {
+    return this._refreshTokenLock.withLock(() => {
       this._token = undefined;
       return this._refreshTokenFunc()
         .then(() => {
@@ -53,10 +52,10 @@ class Transport {
   _decodedToken() {
     return jwtDecode(this._token);
   }
-  _hasTokenExpired(toleranceInSeconds = 10) {
+  _hasTokenExpired() {
     const {exp} = this._decodedToken();
     const now = Date.now() / 1000;
-    return (exp - toleranceInSeconds) < now;
+    return exp < now;
   }
 
   get _socket() {
