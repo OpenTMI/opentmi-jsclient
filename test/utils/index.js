@@ -1,9 +1,12 @@
+const Promise = require('bluebird');
 const assert = require('assert');
 const sinon = require('sinon');
 const querystring = require('querystring');
 
 const Query = require('../../src/utils/rest/mongooseQueryClient');
-const {retryUpdate, objectMerge, notImplemented} = require('../../src/utils');
+const {
+  retryUpdate, objectMerge, notImplemented, Lock
+} = require('../../src/utils');
 
 const toUrl = querystring.stringify;
 
@@ -179,5 +182,35 @@ describe('utils', function () {
         throw new Error('Should not pass');
       })
       .catch(() => {});
+  });
+});
+
+describe('Lock', function () {
+  it('resolves', function () {
+    const locker = new Lock();
+    return locker.withLock(() => Promise.resolve(1))
+      .then((value) => {
+        assert.equal(value, 1);
+        assert.equal(locker.isResolved(), true);
+      });
+  });
+  it('waits', function () {
+    const locker = new Lock();
+    let resolver;
+    const pending1 = Promise.using(locker.obtainLock(), () => new Promise((resolve) => {
+      resolver = resolve;
+    }));
+    const pending2 = Promise.using(locker.obtainLock(), () => Promise.resolve(2));
+    const validator = Promise.delay(10)
+      .then(() => {
+        assert.equal(pending1.isPending(), true);
+        assert.equal(pending2.isPending(), true);
+        resolver(1);
+      });
+    return Promise.all([pending1, pending2, validator])
+      .then(([first, second]) => {
+        assert.equal(first, 1);
+        assert.equal(second, 2);
+      });
   });
 });

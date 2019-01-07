@@ -4,9 +4,10 @@ const axios = require('axios');
 const Promise = require('bluebird');
 const invariant = require('invariant');
 const _ = require('lodash');
+const jwtDecode = require('jwt-decode');
 
 // application modules
-const {debug, timeSince} = require('../utils');
+const {debug, timeSince, Lock} = require('../utils');
 
 
 class Transport {
@@ -19,11 +20,42 @@ class Transport {
   constructor(host = '', {Rest = axios, IO = SocketIO} = {}) {
     this.Rest = Rest;
     this.IO = IO;
+    this._refreshTokenLock = new Lock();
+    this._refreshTokenFunc = undefined;
     this._token = undefined;
     this._host = host;
     this._latency = undefined;
     this._ioRequests = {};
     this._sockets = {};
+  }
+
+  /**
+   * Set refreshToken function
+   * @param {Function}func Promise function that refresh token
+   */
+  set refreshToken(func) {
+    invariant(_.isFunction(func) || _.isUndefined(func), 'func should be function or undefined');
+    this._refreshTokenFunc = func;
+  }
+  _refreshToken() {
+    if (!_.isFunction(this._refreshTokenFunc)) {
+      return Promise.reject(new Error('Refresh token function is missing'));
+    }
+    return this._refreshTokenLock.withLock(() => {
+      this._token = undefined;
+      return this._refreshTokenFunc()
+        .then(() => {
+          invariant(!this._hasTokenExpired(), 'Token is expired');
+        });
+    });
+  }
+  _decodedToken() {
+    return jwtDecode(this._token);
+  }
+  _hasTokenExpired() {
+    const {exp} = this._decodedToken();
+    const now = Date.now() / 1000;
+    return exp < now;
   }
 
   get _socket() {
@@ -228,7 +260,7 @@ class Transport {
   request(req) {
     const {CancelToken} = this.Rest;
     const source = CancelToken.source();
-    const config = _.defaults(req, {
+    const config = _.defaults({}, req, {
       url: '/',
       method: 'get',
       baseURL: this._host,
@@ -250,12 +282,19 @@ class Transport {
           // that falls out of the range of 2xx
           const data = _.get(error, 'response.data', {message: error.message});
           debug(`Request fails with status ${error.response.status}, ${JSON.stringify(data)}`);
-          if (error.response.status === 503) {
+          const status = _.get(error, 'response.status');
+          if (status === 503) {
             const retryAfterSeconds = _.get(data, 'retryAfter', 2);
             req.retryCount = _.get(req, 'retryCount', 1) - 1;
             if (req.retryCount > 0) {
               return Promise
                 .delay(retryAfterSeconds * 1000)
+                .then(() => this.request(req));
+            }
+          } else if (status === 401 && this._token) {
+            // Unauthorized
+            if (this._hasTokenExpired()) {
+              return this._refreshToken()
                 .then(() => this.request(req));
             }
           }

@@ -40,6 +40,7 @@ class Authentication {
         invariant(response.data.token, 'there should be token');
         debug(`Login response: ${JSON.stringify(response.data)}`);
         this._transport.token = response.data.token;
+        this._transport.refreshToken = this.login.bind(this, email, password);
         return this._transport.token;
       })
       .catch((error) => {
@@ -65,6 +66,7 @@ class Authentication {
         invariant(response.data.token, 'there should be token');
         debug(`Login response: ${JSON.stringify(response.data)}`);
         this._transport.token = response.data.token;
+        this._transport.refreshToken = this.loginWithToken.bind(this, token, service);
         return this._transport.token;
       })
       .catch((error) => {
@@ -90,6 +92,7 @@ class Authentication {
   logout() {
     invariant(_.isString(this._transport.token), 'you are not logged in, jwt token missing');
     this._transport._token = undefined;
+    this._transport.refreshToken = undefined;
     return this._transport.isConnected ?
       this._transport.disconnect() : Promise.resolve();
   }

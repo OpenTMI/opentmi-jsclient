@@ -34,6 +34,7 @@
     "bluebird": "^3.5.2",
     "debug": "^4.1.0",
     "invariant": "^2.2.4",
+    "jwt-decode": "^2.2.0",
     "lodash": "^4.17.11",
     "socket.io-client": "^2.2.0"
   },
