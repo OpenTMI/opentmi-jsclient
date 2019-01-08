@@ -81,6 +81,7 @@ describe('Event', function () {
       .spare(1)
       .facility('resource')
       .id('abc')
+      .traceid('123')
       .allocated()
       .released()
       .enterMaintenance()
@@ -100,7 +101,8 @@ describe('Event', function () {
       spare: 1,
       msg: 'hohhoi',
       priority: {level: 'alert', facility: 'resource'},
-      msgid: 'ALLOCATED'
+      msgid: 'ALLOCATED',
+      traceid: '123'
     };
     assert.deepEqual(res.toJson(), toBe);
   });
