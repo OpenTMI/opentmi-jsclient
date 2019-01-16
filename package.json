@@ -1,6 +1,6 @@
 {
   "name": "opentmi-jsclient",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "OpenTMI javascript client",
   "main": "src/index.js",
   "authors": [

@@ -291,9 +291,16 @@ class Transport {
                 .delay(retryAfterSeconds * 1000)
                 .then(() => this.request(req));
             }
-          } else if (status === 401 && this._token) {
+          } else if (status === 401) {
             // Unauthorized
-            if (this._hasTokenExpired()) {
+            let requireRefresh = false;
+            if (this._token) {
+              requireRefresh = this._hasTokenExpired();
+            } else if (!(_.get(req, 'url', '').startsWith('/auth/'))) {
+              // @todo server should send some indication that token has expired
+              requireRefresh = true;
+            }
+            if (requireRefresh) {
               return this._refreshToken()
                 .then(() => this.request(req));
             }
