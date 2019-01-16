@@ -291,9 +291,15 @@ class Transport {
                 .delay(retryAfterSeconds * 1000)
                 .then(() => this.request(req));
             }
-          } else if (status === 401 && this._token) {
+          } else if (status === 401) {
             // Unauthorized
-            if (this._hasTokenExpired()) {
+            let requireRefresh;
+            if (this._token) {
+              requireRefresh = this._hasTokenExpired();
+            } else {
+              requireRefresh = true;
+            }
+            if (requireRefresh) {
               return this._refreshToken()
                 .then(() => this.request(req));
             }
