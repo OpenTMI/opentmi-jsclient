@@ -45,7 +45,7 @@
     "bower": "^1.8.4",
     "browserify": "^16.2.3",
     "chai": "^4.2.0",
-    "coveralls": "^3.0.2",
+    "coveralls": "^3.0.5",
     "eslint": "^6.0.1",
     "eslint-config-airbnb-base": "^12.0.2",
     "eslint-config-mocha": "0.0.0",
