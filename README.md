@@ -5,7 +5,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/OpenTMI/opentmi-jsclient/badge.svg?branch=master&service=github)](https://coveralls.io/github/OpenTMI/opentmi-jsclient?branch=master)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![License badge](https://img.shields.io/badge/license-MIT-blue.svg)](https://img.shields.io)
-[![Greenkeeper badge](https://badges.greenkeeper.io/OpenTMI/opentmi-jsclient.svg)](https://greenkeeper.io/)
+
 
 Promise based [OpenTMI](https://github.com/opentmi/opentmi) javascript client for node.js and browser.
 Extendable for custom API's provided by opentmi addons.
