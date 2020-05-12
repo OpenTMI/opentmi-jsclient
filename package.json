@@ -22,7 +22,9 @@
     "clean": "make clean",
     "doc": "make doc",
     "lint": "make lint",
-    "lint-fix": "make lint-fix"
+    "lint-fix": "make lint-fix",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "keywords": [
     "opentmi",
@@ -31,12 +33,13 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.19.0",
-    "bluebird": "^3.7.1",
+    "bluebird": "^3.7.2",
     "debug": "^4.1.0",
     "invariant": "^2.2.4",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.15",
-    "socket.io-client": "^2.2.0"
+    "socket.io-client": "^2.3.0",
+    "snyk": "^1.316.2"
   },
   "devDependencies": {
     "babel-helper-evaluate-path": "^0.5.0",
@@ -64,5 +67,6 @@
     "moxios": "^0.4.0",
     "sinon": "^9.0.0",
     "socket.io": "^2.2.0"
-  }
+  },
+  "snyk": true
 }
