@@ -37,7 +37,7 @@
     "debug": "^4.2.0",
     "invariant": "^2.2.4",
     "jwt-decode": "^2.2.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "socket.io-client": "^2.3.0",
     "snyk": "^1.333.0"
   },
