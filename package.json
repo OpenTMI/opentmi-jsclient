@@ -39,7 +39,7 @@
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.20",
     "socket.io-client": "^2.3.0",
-    "snyk": "^1.381.2"
+    "snyk": "^1.395.0"
   },
   "devDependencies": {
     "babel-helper-evaluate-path": "^0.5.0",
