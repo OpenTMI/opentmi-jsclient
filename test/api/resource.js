@@ -70,6 +70,9 @@ describe('Resource', function () {
         .type('hw')
         .status.value('available')
         .status.note('hups')
+        .status.availability('sure')
+        .usage.type('aa')
+        .usage.group('group1')
         .location.site('oulu')
         .location.country('finland')
         .location.city('oulu')
@@ -80,6 +83,7 @@ describe('Resource', function () {
         .location.geo(123)
         .item.model('aa')
         .network.hostname('local')
+        .network.domain('domain')
         .hw.sn('12')
         .hw.imei('34')
         .hw.id('123')
@@ -90,7 +94,8 @@ describe('Resource', function () {
         type: 'hw',
         status: {
           value: 'available',
-          note: 'hups'
+          note: 'hups',
+          availability: 'sure'
         },
         item: {
           model: 'aa'
@@ -105,8 +110,13 @@ describe('Resource', function () {
           subRoom: 'b',
           geo: 123
         },
+        usage: {
+          type: 'aa',
+          group: 'group1'
+        },
         network: {
-          hostname: 'local'
+          hostname: 'local',
+          domain: 'domain'
         },
         hw: {
           sn: '12',
