@@ -35,6 +35,39 @@ class Resource extends Document {
   type(value) { return this.getOrSet('type', value); }
 
   /**
+   * Manage status properties
+   * @example
+   *   // set status
+   *   doc
+   *    .status.value('broken')
+   *    .status.note('does not work anymore')
+   *  @return {Object} Status object
+   */
+  get status() {
+    const status = {
+      value: function type(value) { return this.getOrSet('status.value', value); }.bind(this),
+      note: function note(value) { return this.getOrSet('status.note', value); }.bind(this),
+      availability: function availability(value) { return this.getOrSet('status.availability', value); }.bind(this)
+    };
+    return status;
+  }
+
+  /**
+   * Manage item properties
+   * @example
+   *   // set item model
+   *   doc
+   *    .item.model('ABC')
+   *  @return {Object} Item object
+   */
+  get item() {
+    const item = {
+      model: function type(value) { return this.getOrSet('item.model', value); }.bind(this)
+    };
+    return item;
+  }
+
+  /**
    * Manage hw informations
    * @example
    * doc
@@ -82,6 +115,39 @@ class Resource extends Document {
       geo: function geo(value) { return this.getOrSet('location.geo', value); }.bind(this)
     };
     return loc;
+  }
+
+  /**
+   * Manage usage properties
+   * @example
+   *   // set usage type
+   *   doc
+   *    .usage.type('automation')
+   *    .usage.note('finland')
+   *  @return {Object} Usage object
+   */
+  get usage() {
+    const usage = {
+      type: function type(value) { return this.getOrSet('usage.type', value); }.bind(this),
+      group: function note(value) { return this.getOrSet('usage.group', value); }.bind(this)
+    };
+    return usage;
+  }
+
+  /**
+   * Manage network properties
+   * @example
+   *   // set network hostname
+   *   doc
+   *    .network.hostname('localhost')
+   *  @return {Object} Usage object
+   */
+  get network() {
+    const network = {
+      hostname: function hostname(value) { return this.getOrSet('network.hostname', value); }.bind(this),
+      domain: function domain(value) { return this.getOrSet('network.domain', value); }.bind(this)
+    };
+    return network;
   }
 }
 

@@ -68,6 +68,11 @@ describe('Resource', function () {
       const res = new Resource(transport, resourceJson);
       res.name('Y')
         .type('hw')
+        .status.value('available')
+        .status.note('hups')
+        .status.availability('sure')
+        .usage.type('aa')
+        .usage.group('group1')
         .location.site('oulu')
         .location.country('finland')
         .location.city('oulu')
@@ -76,6 +81,9 @@ describe('Resource', function () {
         .location.room('a')
         .location.subRoom('b')
         .location.geo(123)
+        .item.model('aa')
+        .network.hostname('local')
+        .network.domain('domain')
         .hw.sn('12')
         .hw.imei('34')
         .hw.id('123')
@@ -84,6 +92,14 @@ describe('Resource', function () {
       const changes = {
         name: 'Y',
         type: 'hw',
+        status: {
+          value: 'available',
+          note: 'hups',
+          availability: 'sure'
+        },
+        item: {
+          model: 'aa'
+        },
         location: {
           site: 'oulu',
           country: 'finland',
@@ -93,6 +109,14 @@ describe('Resource', function () {
           room: 'a',
           subRoom: 'b',
           geo: 123
+        },
+        usage: {
+          type: 'aa',
+          group: 'group1'
+        },
+        network: {
+          hostname: 'local',
+          domain: 'domain'
         },
         hw: {
           sn: '12',
