@@ -62,7 +62,8 @@ class Resource extends Document {
    */
   get item() {
     const item = {
-      model: function type(value) { return this.getOrSet('item.model', value); }.bind(this)
+      model: function type(value) { return this.getOrSet('item.model', value); }.bind(this),
+      ref: function ref(value) { return this.getOrSet('item.ref', value); }.bind(this)
     };
     return item;
   }
@@ -90,7 +91,11 @@ class Resource extends Document {
       },
       sn: function sn(value) { return this.getOrSet('hw.sn', value); }.bind(this),
       imei: function imei(value) { return this.getOrSet('hw.imei', value); }.bind(this),
-      id: function id(value) { return this.getOrSet('hw.id', value); }.bind(this)
+      id: function id(value) { return this.getOrSet('hw.id', value); }.bind(this),
+      // eslint-disable-next-line camelcase
+      meta_data: function meta_data(key, value) {
+        return this.getOrSet(`hw.meta_data.${key}`, value);
+      }.bind(this)
     };
     return hw;
   }
@@ -112,6 +117,9 @@ class Resource extends Document {
       postcode: function postcode(value) { return this.getOrSet('location.postcode', value); }.bind(this),
       room: function room(value) { return this.getOrSet('location.room', value); }.bind(this),
       subRoom: function subRoom(value) { return this.getOrSet('location.subRoom', value); }.bind(this),
+      rack: function rack(value) { return this.getOrSet('location.rack', value); }.bind(this),
+      bed: function bed(value) { return this.getOrSet('location.bed', value); }.bind(this),
+      slot: function slot(value) { return this.getOrSet('location.slot', value); }.bind(this),
       geo: function geo(value) { return this.getOrSet('location.geo', value); }.bind(this)
     };
     return loc;

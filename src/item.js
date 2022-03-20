@@ -61,6 +61,10 @@ class Item extends Document {
   description(value) { return this.getOrSet('text_description', value); }
 
   reference(value) { return this.getOrSet('external_reference', value); }
+
+  inStock(value) { return this.getOrSet('in_stock', value); }
+
+  uniqueResources(value) { return this.getOrSet('unique_resources', value); }
 }
 
 module.exports = Item;

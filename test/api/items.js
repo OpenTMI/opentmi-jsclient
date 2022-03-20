@@ -37,6 +37,8 @@ describe('Items', function () {
       assert.equal(item.imageSrc('url').imageSrc(), 'url');
       assert.equal(item.description('note').description(), 'note');
       assert.equal(item.reference('link').reference(), 'link');
+      assert.equal(item.inStock(1).inStock(), 1);
+      assert.deepEqual(item.uniqueResources(['123']).uniqueResources(), ['123']);
       assert.equal(`${item}`, 'cat: cm - aa');
     });
     it('getImage', function () {
@@ -71,6 +73,14 @@ describe('Items', function () {
         .categoryOthers()
         .manufacturer('abc');
       assert.ok(find);
+    });
+    it('create new item', function () {
+      const itemJson = {_id: '123', name: 'X', __v: 0};
+      const items = new Items(transport);
+      const doc = items.create();
+      assert.equal(doc.isNew, true);
+      doc.overwrite(itemJson);
+      assert.equal(doc.name(), 'X');
     });
   });
 });

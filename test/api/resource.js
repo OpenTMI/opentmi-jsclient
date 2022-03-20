@@ -81,14 +81,19 @@ describe('Resource', function () {
         .location.room('a')
         .location.subRoom('b')
         .location.geo(123)
+        .location.rack('r1')
+        .location.bed('b2')
+        .location.slot('s3')
         .item.model('aa')
+        .item.ref('1234')
         .network.hostname('local')
         .network.domain('domain')
         .hw.sn('12')
         .hw.imei('34')
         .hw.id('123')
         .hw.firmware.name('q')
-        .hw.firmware.version('1');
+        .hw.firmware.version('1')
+        .hw.meta_data('a', 'b');
       const changes = {
         name: 'Y',
         type: 'hw',
@@ -98,7 +103,8 @@ describe('Resource', function () {
           availability: 'sure'
         },
         item: {
-          model: 'aa'
+          model: 'aa',
+          ref: '1234'
         },
         location: {
           site: 'oulu',
@@ -108,6 +114,9 @@ describe('Resource', function () {
           address: 'street',
           room: 'a',
           subRoom: 'b',
+          rack: 'r1',
+          bed: 'b2',
+          slot: 's3',
           geo: 123
         },
         usage: {
@@ -122,7 +131,8 @@ describe('Resource', function () {
           sn: '12',
           imei: '34',
           id: '123',
-          firmware: {name: 'q', version: '1'}
+          firmware: {name: 'q', version: '1'},
+          meta_data: {a: 'b'}
         }
       };
       assert.deepEqual(res.getChanges(), changes);
@@ -147,6 +157,7 @@ describe('Resource', function () {
         .id('asd')
         .hwid('abc')
         .hwsn('abc')
+        .itemModel('abc')
         .hasParent()
         .hasParent('abc')
         .hasNoParent()
