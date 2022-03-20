@@ -74,5 +74,13 @@ describe('Items', function () {
         .manufacturer('abc');
       assert.ok(find);
     });
+    it('create new item', function () {
+      const itemJson = {_id: '123', name: 'X', __v: 0};
+      const items = new Items(transport);
+      const doc = items.create();
+      assert.equal(doc.isNew, true);
+      doc.overwrite(itemJson);
+      assert.equal(doc.name(), 'X');
+    });
   });
 });
