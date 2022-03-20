@@ -4,7 +4,8 @@ const invariant = require('invariant');
 
 // application modules
 const Item = require('./item');
-const {QueryBase, Collection, notImplemented} = require('./utils');
+const {QueryBase, Collection, notImplemented, Document} = require('./utils');
+const Resource = require("./resource");
 
 /**
  * @class ItemsQuery
@@ -118,6 +119,15 @@ class Items extends Collection {
    */
   update() {
     return this._notImplemented('Item update is not implemented');
+  }
+
+  /**
+   * Create new Item
+   * @return {Item} returns new item
+   */
+  create() {
+    const NewItem = Document.IsNewDocument(Item);
+    return new NewItem(this._transport);
   }
 }
 

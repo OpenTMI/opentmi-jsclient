@@ -62,7 +62,8 @@ class Resource extends Document {
    */
   get item() {
     const item = {
-      model: function type(value) { return this.getOrSet('item.model', value); }.bind(this)
+      model: function type(value) { return this.getOrSet('item.model', value); }.bind(this),
+      ref: function ref(value) { return this.getOrSet('item.ref', value); }.bind(this)
     };
     return item;
   }
@@ -90,7 +91,10 @@ class Resource extends Document {
       },
       sn: function sn(value) { return this.getOrSet('hw.sn', value); }.bind(this),
       imei: function imei(value) { return this.getOrSet('hw.imei', value); }.bind(this),
-      id: function id(value) { return this.getOrSet('hw.id', value); }.bind(this)
+      id: function id(value) { return this.getOrSet('hw.id', value); }.bind(this),
+      meta_data: function meta_data(key, value) {
+        return this.getOrSet(`hw.meta_data.${key}`, value);
+      }.bind(this)
     };
     return hw;
   }

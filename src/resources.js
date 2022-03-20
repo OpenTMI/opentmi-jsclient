@@ -125,6 +125,16 @@ class ResourcesQuery extends QueryBase {
     invariant(_.isArray(tags), 'tags should be an array');
     return _.reduce(tags, (acc, tag) => this.haveTag(tag), this);
   }
+
+  /**
+   * Find resources by item.model
+   * @param {string} model model
+   * @return {ResourcesQuery} returns this
+   */
+  itemModel(model) {
+    invariant(_.isString(model), 'model should be a string');
+    return this.has({item: {model}});
+  }
 }
 
 
@@ -156,7 +166,7 @@ class Resources extends Collection {
 
   /**
    * Create new Resource
-   * @return {Resource} returns new result
+   * @return {Resource} returns new resource
    */
   create() {
     const NewResource = Document.IsNewDocument(Resource);
