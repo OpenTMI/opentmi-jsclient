@@ -4,8 +4,10 @@ const invariant = require('invariant');
 
 // application modules
 const Item = require('./item');
-const {QueryBase, Collection, notImplemented, Document} = require('./utils');
-const Resource = require("./resource");
+
+const {
+  QueryBase, Collection, notImplemented, Document
+} = require('./utils');
 
 /**
  * @class ItemsQuery
