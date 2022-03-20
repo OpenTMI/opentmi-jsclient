@@ -157,6 +157,7 @@ describe('Resource', function () {
         .id('asd')
         .hwid('abc')
         .hwsn('abc')
+        .itemModel('abc')
         .hasParent()
         .hasParent('abc')
         .hasNoParent()
