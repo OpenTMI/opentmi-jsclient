@@ -64,6 +64,8 @@ class Item extends Document {
 
   inStock(value) { return this.getOrSet('in_stock', value); }
 
+  available(value) { return this.getOrSet('available', value); }
+
   uniqueResources(value) { return this.getOrSet('unique_resources', value); }
 }
 

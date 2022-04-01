@@ -93,7 +93,9 @@ describe('Resource', function () {
         .hw.id('123')
         .hw.firmware.name('q')
         .hw.firmware.version('1')
-        .hw.meta_data('a', 'b');
+        .hw.meta_data('a', 'b')
+        .parent('123')
+        .childs(['987']);
       const changes = {
         name: 'Y',
         type: 'hw',
@@ -133,7 +135,9 @@ describe('Resource', function () {
           id: '123',
           firmware: {name: 'q', version: '1'},
           meta_data: {a: 'b'}
-        }
+        },
+        parent: '123',
+        childs: ['987']
       };
       assert.deepEqual(res.getChanges(), changes);
       assert.equal(res.isDirty(), true);
