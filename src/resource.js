@@ -157,6 +157,19 @@ class Resource extends Document {
     };
     return network;
   }
+  /**
+   * Get resource parent or set it
+   * @param {String}value resource parent id
+   * @return {string|Resource} resource parent id or Resource object
+   */
+  parent(value) { return this.getOrSet('parent', value); }
+
+  /**
+   * Get resource childs or set it
+   * @param {[String]}value resource childs id list
+   * @return {string|Resource} list of resource child ids or Resource object
+   */
+  childs(value) { return this.getOrSet('childs', value); }
 }
 
 module.exports = Resource;
