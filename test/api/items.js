@@ -38,6 +38,7 @@ describe('Items', function () {
       assert.equal(item.description('note').description(), 'note');
       assert.equal(item.reference('link').reference(), 'link');
       assert.equal(item.inStock(1).inStock(), 1);
+      assert.equal(item.available(5).available(), 5);
       assert.deepEqual(item.uniqueResources(['123']).uniqueResources(), ['123']);
       assert.equal(`${item}`, 'cat: cm - aa');
     });
